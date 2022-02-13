@@ -27,7 +27,7 @@ function MenuItem({
           {icon}
         </div>
       </ListItemIcon>
-      <ListItemText primary={<Typography style={{ color: '#fff' }}>{label}</Typography>} />
+      <ListItemText primary={<Typography style={{ color: '#fff', fontFamily: 'Maven Pro, sans-serif' }}>{label}</Typography>} />
     </ListItem>
   );
 }
