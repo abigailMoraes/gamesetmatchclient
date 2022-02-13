@@ -1,0 +1,10 @@
+{
+    "dashboard": "/dashboard",
+    "browseTournament": "/browse-tournament",
+    "tournamentHistory": "/tournament-history",
+    "manageTournaments": "/manage-tournaments",
+    "manageUsers": "/manage-users",
+    "settings": "/settings",
+    "logout": "/logout"
+
+}
