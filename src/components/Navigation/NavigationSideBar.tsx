@@ -24,7 +24,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import Paper from '@mui/material/Paper';
 
 import BrowseTournamentsGrid from '../BrowseTournaments/BrowseTournamentsGrid';
 import Dashboard from '../Dashboard/Dashboard';

@@ -14,7 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import styled from '@emotion/styled';
 
 export interface Tournament {
-  tournamentId: Number,
+  tournamentID: Number,
   name: String,
   description: String,
   startDate: Date,

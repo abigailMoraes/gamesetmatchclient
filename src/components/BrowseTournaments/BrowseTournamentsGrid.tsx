@@ -5,6 +5,8 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 import BrowseTournamentCard, { Tournament } from './BrowseTournamentCard';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
+import { getAllTournaments } from './TournamentsService';
+import { useEffect, useState } from 'react';
 
 
 export interface TournamentRow {
@@ -71,7 +73,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 1,
+      tournamentID: 1,
       name: 'Ping Pong Tournament',
       description: 'Some fun ping pong games',
       startDate: new Date(),
@@ -93,7 +95,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 2,
+      tournamentID: 2,
       name: 'Mario Kart',
       description: 'Racing',
       startDate: new Date(),
@@ -115,7 +117,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 3,
+      tournamentID: 3,
       name: '3x3 Basketball R.R.',
       description: 'Ball',
       startDate: new Date(),
@@ -137,7 +139,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 4,
+      tournamentID: 4,
       name: 'Rock, Paper, Scissors',
       description: 'Ready set match',
       startDate: new Date(),
@@ -159,7 +161,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 5,
+      tournamentID: 5,
       name: 'League of Legends',
       description: 'Computer games',
       startDate: new Date(),
@@ -181,7 +183,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 6,
+      tournamentID: 6,
       name: 'Tetris tourney',
       description: 'tetris.io',
       startDate: new Date(),
@@ -203,7 +205,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 7,
+      tournamentID: 7,
       name: 'Mini Golf',
       description: 'outdoor mini golf',
       startDate: new Date(),
@@ -225,7 +227,7 @@ const rows: TournamentRow[] = [
     startDate: new Date(),
     closeRegistrationDate: new Date(),
     allTournamentDetails: {
-      tournamentId: 8,
+      tournamentID: 8,
       name: 'Trivia',
       description: 'Test your knowledge',
       startDate: new Date(),
@@ -280,13 +282,18 @@ function CustomToolbar() {
 }
 
 export default function BrowseTournamentsGrid() {
+  const [rowData, setRows] = useState<TournamentRow[]>([]);
+  useEffect(() => {
+    getAllTournaments()
+    .then((data) => setRows(data));
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <DataGrid
       components={{ Toolbar: CustomToolbar }}
       isRowSelectable={(params: GridRowParams) => false}
       autoHeight
-      rows={rows}
+      rows={rowData}
       columns={columns}
       rowHeight={200}
       />
