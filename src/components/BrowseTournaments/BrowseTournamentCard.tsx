@@ -36,7 +36,7 @@ const StyledTypography = styled(Typography)`
 `;
 
 function BrowseTournamentCard(props: any) {
-  const tournament = props.tournament;
+  const { tournament } = props;
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,7 +46,7 @@ function BrowseTournamentCard(props: any) {
     setOpen(false);
   };
   return (
-    <Card style={{width:'100%', backgroundColor:'#27293C'}}>
+    <Card style={{ width: '100%', backgroundColor: '#27293C' }}>
       <CardContent>
         <StyledTypography variant="h5">
           {tournament.name}

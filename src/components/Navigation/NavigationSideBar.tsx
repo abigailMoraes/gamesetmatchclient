@@ -174,14 +174,14 @@ function NavigationSideBar() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-          <Routes>
-              <Route path={navigation.dashboard} element={<Dashboard />} />
-              <Route path={navigation.browseTournament} element={<BrowseTournamentsGrid />} />
-              <Route path={navigation.tournamentHistory} element={<TournamentHistory />} />
-              <Route path={navigation.manageTournaments} element={<ManageTournaments />} />
-              <Route path={navigation.manageUsers} element={<ManageUsers />} />
-              <Route path={navigation.settings} element={<Settings />} />
-            </Routes>
+        <Routes>
+          <Route path={navigation.dashboard} element={<Dashboard />} />
+          <Route path={navigation.browseTournament} element={<BrowseTournamentsGrid />} />
+          <Route path={navigation.tournamentHistory} element={<TournamentHistory />} />
+          <Route path={navigation.manageTournaments} element={<ManageTournaments />} />
+          <Route path={navigation.manageUsers} element={<ManageUsers />} />
+          <Route path={navigation.settings} element={<Settings />} />
+        </Routes>
       </Box>
     </Box>
   );
