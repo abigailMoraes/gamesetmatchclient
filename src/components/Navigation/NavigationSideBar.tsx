@@ -4,9 +4,9 @@ import {
   styled, useTheme, Theme, CSSObject,
 } from '@mui/material/styles';
 
-import {
-  Route, Routes,
-} from 'react-router-dom';
+// import {
+//   Route, Routes,
+// } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -25,16 +25,16 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 
-import BrowseTournamentsGrid from '../BrowseTournaments/BrowseTournamentsGrid';
-import Dashboard from '../Dashboard/Dashboard';
+// import BrowseTournamentsGrid from '../BrowseTournaments/BrowseTournamentsGrid';
+// import Dashboard from '../Dashboard/Dashboard';
 import MenuItem from './MenuItem';
 import LogoIcon from '../Logo/LogoIcon';
 import LogoName from '../Logo/LogoName';
 import navigation from './navigation.json';
-import TournamentHistory from '../TournamentHistory/TournamentHistory';
-import ManageTournaments from '../AdminComponents/ManageTournaments/ManageTournaments';
-import ManageUsers from '../AdminComponents/ManageUsers/ManageUsers';
-import Settings from '../Settings/Settings';
+// import TournamentHistory from '../TournamentHistory/TournamentHistory';
+// import ManageTournaments from '../AdminComponents/ManageTournaments/ManageTournaments';
+// import ManageUsers from '../AdminComponents/ManageUsers/ManageUsers';
+// import Settings from '../Settings/Settings';
 
 const drawerWidth = 240;
 
@@ -110,7 +110,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-function NavigationSideBar() {
+function NavigationSideBar(props: any) {
+  const { childComponent } = props;
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [isAdmin] = React.useState(true);
@@ -174,14 +175,7 @@ function NavigationSideBar() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Routes>
-          <Route path={navigation.dashboard} element={<Dashboard />} />
-          <Route path={navigation.browseTournament} element={<BrowseTournamentsGrid />} />
-          <Route path={navigation.tournamentHistory} element={<TournamentHistory />} />
-          <Route path={navigation.manageTournaments} element={<ManageTournaments />} />
-          <Route path={navigation.manageUsers} element={<ManageUsers />} />
-          <Route path={navigation.settings} element={<Settings />} />
-        </Routes>
+        {childComponent}
       </Box>
     </Box>
   );

@@ -5,6 +5,6 @@
     "manageTournaments": "/manage-tournaments",
     "manageUsers": "/manage-users",
     "settings": "/settings",
-    "logout": "/logout"
+    "logout": "/"
 
 }
