@@ -32,6 +32,7 @@ const StyledTypography = styled(Typography)`
    && {
     color: #fff;
     font-family: 'Abel', sans-serif;
+    text-align: left;
    }
 `;
 
