@@ -1,8 +1,11 @@
 import styled from "@emotion/styled";
+import { useAtom } from "jotai";
 import React, { useState } from "react";
 import { GoogleLogin } from "react-google-login";
+import { useNavigate } from "react-router-dom";
+import {loginDataAtom} from "../atoms/userAtom"
 
-const PageContainer = styled.div`
+export const PageContainer = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -11,14 +14,16 @@ const PageContainer = styled.div`
   background-color: #252525;
 `;
 
-const SpaceContainer = styled.div`
+export const SpaceContainer = styled.div`
   flex: 1;
 `;
+
 const ContentContainer = styled.div`
   display: flex;
   flex：direction: row;
   flex: 6;
 `;
+
 const SubContentContainer = styled.div`
   display:flex;
   justify-content: center;
@@ -27,7 +32,7 @@ const SubContentContainer = styled.div`
   border-right-width： 10px;
 `;
 
-const BigText = styled.h1`
+export const BigText = styled.h1`
   font-size: 3rem;
 `;
 
@@ -52,31 +57,37 @@ const GoogleLogo = styled.img`
 `;
 
 function GoogleAuth() {
-  const [loginData, setLoginData] = useState(
-    localStorage.getItem("loginData")
-      ? JSON.parse(localStorage.getItem("loginData") as string)
-      : null
-  );
+
+  const navigate = useNavigate();
+  const [loginData, setLoginData] = useAtom(loginDataAtom);
 
   const handleFailure = (result: any) => {
     alert(result);
   };
 
   const handleLogin = async (googleData: any) => {
-    // TODO: POST api to backend for verification
-    // const res = await fetch('api/google-login', {
+    // console.log("GoogleData", googleData)
+    // // TODO: POST api to backend for verification
+    // const res = await fetch('http://localhost:8080/api/googleTokenId', {
     //   method: 'POST',
     //   body: JSON.stringify({
-    //     token: googleData.tokenId,
+    //     tokenId: googleData.tokenId,
     //   }),
     //   headers: {
     //     'Content-Type': 'application/json',
     //   }
     // });
-    //   const data = await res.json()
+    // const data = await res.json()
+    // console.log("Data is", data, typeof(data))
+    // if (data.googleId) {
     //   setLoginData(data);
     //   localStorage.setItem('loginData', JSON.stringify(data));
-    console.log(googleData);
+    //   console.log("Data is", data)
+
+    // } else {
+    //   console.log("handleLogin: Login is not successful...")
+    // }
+    navigate("/signup");
   };
 
   const handleLogout = () => {
@@ -95,7 +106,7 @@ function GoogleAuth() {
           <img
             alt="logo"
             className="w-3/6"
-            src={require("../image/Logo.png")}
+            src={require("../image/logo.png")}
           />
         </SubContentContainer>
         <SubContentContainer>
@@ -149,7 +160,7 @@ function GoogleAuth() {
         </SubContentContainer>
       </ContentContainer>
       <SpaceContainer className="flex items-center justify-center">
-          <SmallText className="text-white"> Zoomers 2022 </SmallText>
+        <SmallText className="text-white"> Zoomers 2022 </SmallText>
       </SpaceContainer>
     </PageContainer>
   );
