@@ -7,7 +7,6 @@ import {
 import {
   Route, Routes,
 } from 'react-router-dom';
-
 import IconButton from '@mui/material/IconButton';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -23,7 +22,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 
@@ -161,11 +159,11 @@ function NavigationSideBar() {
           <MenuItem id="tournament-history" label="Tournament History" icon={<HistoryIcon />} route={navigation.tournamentHistory} />
           {
           isAdmin && (
-            <div>
+            <>
               <Divider />
               <MenuItem id="manage-tournaments" label="Manage Tournaments" icon={<AccountTreeIcon />} route={navigation.manageTournaments} />
               <MenuItem id="manage-users" label="Manage Users" icon={<ManageAccountsIcon />} route={navigation.manageUsers} />
-            </div>
+            </>
           )
         }
         </List>
@@ -173,7 +171,6 @@ function NavigationSideBar() {
           <MenuItem id="settings" label="Settings" icon={<SettingsIcon />} route={navigation.settings} />
           <MenuItem id="logout" label="Logout" icon={<LogoutIcon />} route={navigation.logout} />
         </div>
-
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
