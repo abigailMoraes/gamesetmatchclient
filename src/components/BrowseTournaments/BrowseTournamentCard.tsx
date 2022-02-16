@@ -55,32 +55,32 @@ function BrowseTournamentCard(props: any) {
           {tournament.description}
         </StyledTypography>
         <StyledTypography variant="body2">
-          Start Date: {new Date(tournament.startDate).toLocaleDateString("en-US")}
+          {`Start Date: ${new Date(tournament.startDate).toLocaleDateString('en-US')}`}
         </StyledTypography>
         <StyledTypography variant="body2">
-          Registration Closing Date: {new Date(tournament.closeRegistrationDate).toLocaleDateString("en-US")}
+          {`Registration Closing Date: ${new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
         </StyledTypography>
       </CardContent>
       <CardActions>
         <Button size="small" onClick={handleClickOpen}>Details</Button>
       </CardActions>
-      <Dialog open={open} onClose={handleClose} style={{color:'#2F3241'}}>
+      <Dialog open={open} onClose={handleClose} style={{ color: '#2F3241' }}>
         <DialogTitle>{tournament.name}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          Description: {tournament.description}
-          <br/>
-          Location: {tournament.location}
-          <br/>
-          Prize: {tournament.prize}
-          <br/>
-          Format: {tournament.format}
-          <br/>
-          Type: Players will be matched based on {tournament.type}
-          <br/>
-          Start Date: {new Date(tournament.startDate).toLocaleDateString("en-US")}
-          <br/>
-          Registration Closing Date:  {new Date(tournament.closeRegistrationDate).toLocaleDateString("en-US")}
+            {`Description: ${tournament.description}`}
+            <br />
+            {`Location: ${tournament.location}`}
+            <br />
+            {`Prize: ${tournament.prize}`}
+            <br />
+            {`Format: ${tournament.format}`}
+            <br />
+            {`Type: ${tournament.type}`}
+            <br />
+            {`Start Date: ${new Date(tournament.startDate).toLocaleDateString('en-US')}`}
+            <br />
+            {`Registration Closing Date: ${new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
