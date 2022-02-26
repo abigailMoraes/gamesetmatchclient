@@ -86,7 +86,10 @@ export default function BrowseTournamentsGrid() {
         styleOverrides: {
           root: {
             '& .MuiDataGrid-toolbarContainer button': {
-              color: mainTheme.palette.primary.contrastText,
+              color: mainTheme.palette.text.secondary,
+            },
+            '& .MuiTablePagination': {
+              color: mainTheme.palette.text.secondary,
             },
             '& .MuiDataGrid-cell': {
               borderBottomColor: mainTheme.palette.primary.main,
@@ -99,7 +102,6 @@ export default function BrowseTournamentsGrid() {
               borderBottomColor: mainTheme.palette.primary.main,
             },
             '& .MuiDataGrid-columnHeaderTitleContainer': {
-              color: mainTheme.palette.primary.contrastText,
               fontSize: 'x-large',
             },
             backgroundColor: mainTheme.palette.primary.main,

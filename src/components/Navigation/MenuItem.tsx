@@ -32,7 +32,7 @@ function MenuItem({
         </div>
       </ListItemIcon>
       <ListItemText primary={(
-        <Typography style={{ color: theme.palette.primary.contrastText }}>
+        <Typography>
           {label}
         </Typography>
     )}

@@ -12,11 +12,9 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#2F3241',
-      contrastText: '#FFF',
     },
     secondary: {
       main: '#D27C2C',
-      contrastText: '#E5E5E5',
     },
     info: {
       main: '#2196f3',
@@ -24,6 +22,11 @@ const theme = createTheme({
     background: {
       default: '#303030',
       paper: '#27293C',
+    },
+    text: {
+      primary: '#FFF',
+      secondary: '#D27C2C',
+      disabled: '#D27C2C',
     },
   },
   spacing: 8,

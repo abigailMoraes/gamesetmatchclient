@@ -41,7 +41,7 @@ function BrowseTournamentCard(props: any) {
   };
   return (
     <Card style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
-      <CardContent style={{ textAlign: 'left', color: theme.palette.primary.contrastText }}>
+      <CardContent style={{ textAlign: 'left' }}>
         <Typography variant="h5">
           {tournament.name}
         </Typography>
@@ -56,7 +56,7 @@ function BrowseTournamentCard(props: any) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" style={{ color: theme.palette.secondary.contrastText }} onClick={handleClickOpen}>Details</Button>
+        <Button size="small" color="secondary" onClick={handleClickOpen}>Details</Button>
       </CardActions>
       <Dialog open={open} onClose={handleClose} style={{ color: theme.palette.primary.main }}>
         <DialogTitle>{tournament.name}</DialogTitle>
