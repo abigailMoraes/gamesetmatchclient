@@ -10,8 +10,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
-
-import styled from '@emotion/styled';
+import { useTheme } from '@mui/styles';
+import { Theme } from '@mui/material';
 
 export interface Tournament {
   tournamentID: Number,
@@ -28,15 +28,8 @@ export interface Tournament {
   numberOfMatches: Number,
 }
 
-const StyledTypography = styled(Typography)`
-   && {
-    color: #fff;
-    font-family: 'Abel', sans-serif;
-    text-align: left;
-   }
-`;
-
 function BrowseTournamentCard(props: any) {
+  const theme = useTheme() as Theme;
   const { tournament } = props;
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -47,25 +40,25 @@ function BrowseTournamentCard(props: any) {
     setOpen(false);
   };
   return (
-    <Card style={{ width: '100%', backgroundColor: '#27293C' }}>
-      <CardContent>
-        <StyledTypography variant="h5">
+    <Card style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
+      <CardContent style={{ textAlign: 'left', color: theme.palette.primary.contrastText }}>
+        <Typography variant="h5">
           {tournament.name}
-        </StyledTypography>
-        <StyledTypography sx={{ mb: 1.5 }}>
+        </Typography>
+        <Typography sx={{ mb: 1.5 }}>
           {tournament.description}
-        </StyledTypography>
-        <StyledTypography variant="body2">
+        </Typography>
+        <Typography variant="body2">
           {`Start Date: ${new Date(tournament.startDate).toLocaleDateString('en-US')}`}
-        </StyledTypography>
-        <StyledTypography variant="body2">
+        </Typography>
+        <Typography variant="body2">
           {`Registration Closing Date: ${new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
-        </StyledTypography>
+        </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleClickOpen}>Details</Button>
+        <Button size="small" style={{ color: theme.palette.secondary.contrastText }} onClick={handleClickOpen}>Details</Button>
       </CardActions>
-      <Dialog open={open} onClose={handleClose} style={{ color: '#2F3241' }}>
+      <Dialog open={open} onClose={handleClose} style={{ color: theme.palette.primary.main }}>
         <DialogTitle>{tournament.name}</DialogTitle>
         <DialogContent>
           <DialogContentText>

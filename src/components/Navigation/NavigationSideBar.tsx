@@ -39,7 +39,7 @@ import Settings from '../Settings/Settings';
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  backgroundColor: '#2F3241',
+  backgroundColor: theme.palette.primary.main,
   width: drawerWidth,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -49,7 +49,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
-  backgroundColor: '#2F3241',
+  backgroundColor: theme.palette.primary.main,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -77,7 +77,7 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
-  backgroundColor: '#2F3241',
+  backgroundColor: theme.palette.primary.main,
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
@@ -126,7 +126,7 @@ function NavigationSideBar() {
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
-            style={{ color: '#D27C2C' }}
+            style={{ color: theme.palette.secondary.main }}
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
@@ -147,7 +147,7 @@ function NavigationSideBar() {
               <LogoName />
             </Box>
           )}
-          <IconButton onClick={handleDrawerClose} style={{ color: '#D27C2C', justifyContent: 'flex-end' }}>
+          <IconButton onClick={handleDrawerClose} style={{ color: theme.palette.secondary.main, justifyContent: 'flex-end' }}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>

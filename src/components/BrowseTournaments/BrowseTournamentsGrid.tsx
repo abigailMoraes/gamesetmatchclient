@@ -5,8 +5,9 @@ import {
 // When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import { ThemeProvider } from '@emotion/react';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, Theme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@mui/styles';
 import BrowseTournamentCard, { Tournament } from './BrowseTournamentCard';
 import TournamentService from './TournamentsService';
 
@@ -66,35 +67,6 @@ const columns: GridColDef[] = [
   },
 ];
 
-const bkgdColor = '#2F3241';
-const theme = createTheme({
-  components: {
-    // Use `MuiDataGrid` on both DataGrid and DataGridPro
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          '& .MuiDataGrid-cell': {
-            borderBottomColor: bkgdColor,
-          },
-          '& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-colCell:focus-within,  & .MuiDataGrid-columnHeader:focus-within':
-            {
-              outline: 0,
-            },
-          '& .MuiDataGrid-columnsContainer': {
-            borderBottomColor: bkgdColor,
-          },
-          '& .MuiDataGrid-columnHeaderTitleContainer': {
-            color: '#FFF',
-            fontSize: 'x-large',
-          },
-          backgroundColor: bkgdColor,
-          borderColor: bkgdColor,
-        },
-      },
-    },
-  },
-});
-
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
@@ -105,10 +77,44 @@ function CustomToolbar() {
 
 export default function BrowseTournamentsGrid() {
   const [rowData, setRows] = useState<TournamentRow[]>([]);
+  const mainTheme = useTheme() as Theme;
+
+  const theme = createTheme(mainTheme, {
+    components: {
+      // Use `MuiDataGrid` on both DataGrid and DataGridPro
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            '& .MuiDataGrid-toolbarContainer button': {
+              color: mainTheme.palette.primary.contrastText,
+            },
+            '& .MuiDataGrid-cell': {
+              borderBottomColor: mainTheme.palette.primary.main,
+            },
+            '& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-colCell:focus-within,  & .MuiDataGrid-columnHeader:focus-within':
+              {
+                outline: 0,
+              },
+            '& .MuiDataGrid-columnsContainer': {
+              borderBottomColor: mainTheme.palette.primary.main,
+            },
+            '& .MuiDataGrid-columnHeaderTitleContainer': {
+              color: mainTheme.palette.primary.contrastText,
+              fontSize: 'x-large',
+            },
+            backgroundColor: mainTheme.palette.primary.main,
+            borderColor: mainTheme.palette.primary.main,
+          },
+        },
+      },
+    },
+  });
+
   useEffect(() => {
     TournamentService.getAll()
       .then((data) => setRows(data));
   }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <DataGrid
