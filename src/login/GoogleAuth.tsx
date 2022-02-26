@@ -62,7 +62,7 @@ function GoogleAuth() {
   const [loginData, setLoginData] = useAtom(loginDataAtom);
 
   const handleFailure = (result: any) => {
-    alert(result);
+    console.log(result);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
