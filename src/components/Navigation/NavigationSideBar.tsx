@@ -28,8 +28,7 @@ import List from '@mui/material/List';
 import BrowseTournamentsGrid from '../BrowseTournaments/BrowseTournamentsGrid';
 import Dashboard from '../Dashboard/Dashboard';
 import MenuItem from './MenuItem';
-import LogoIcon from '../Logo/LogoIcon';
-import LogoName from '../Logo/LogoName';
+import LogoIconNameSideBySide from '../Logo/LogoIconNameSideBySide';
 import navigation from './navigation.json';
 import TournamentHistory from '../TournamentHistory/TournamentHistory';
 import ManageTournaments from '../AdminComponents/ManageTournaments/ManageTournaments';
@@ -142,10 +141,7 @@ function NavigationSideBar() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           {open && (
-            <Box style={{ width: '50px', height: '50px', justifyContent: 'flex-start' }}>
-              <LogoIcon />
-              <LogoName />
-            </Box>
+            <LogoIconNameSideBySide />
           )}
           <IconButton onClick={handleDrawerClose} style={{ color: theme.palette.secondary.main, justifyContent: 'flex-end' }}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
