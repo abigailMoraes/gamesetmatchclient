@@ -1,6 +1,7 @@
 {
     "dashboard": "dashboard",
     "browseTournament": "browse-tournament",
+    "registerTournament": "/register-tournament",
     "tournamentHistory": "tournament-history",
     "manageTournaments": "manage-tournaments",
     "manageUsers": "manage-users",
