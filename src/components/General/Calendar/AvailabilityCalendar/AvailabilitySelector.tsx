@@ -21,7 +21,7 @@ export type Availability = {
 const daysPerView = 5;
 const roundMinutesToDays = (roundDuration:number) => {
   const duration = moment.duration(roundDuration, 'minutes');
-  return duration.days();
+  return duration.asDays();
 };
 
 export function setUpDateRange(startDate:Date, roundDuration:number):Availability[] {
@@ -31,7 +31,7 @@ export function setUpDateRange(startDate:Date, roundDuration:number):Availabilit
   while (i < days) {
     const currDate = dates.add(startDate, i, 'day');
     const dayOfWeek = currDate.getDay();
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
       days += 1;
     }
 
