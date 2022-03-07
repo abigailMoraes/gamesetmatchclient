@@ -1,8 +1,14 @@
 import React from 'react';
+import Button from '@mui/material/Button';
 
-function StyledButton() {
+interface IStyledButton {
+  buttonText:string;
+  handleClick:React.MouseEventHandler<HTMLButtonElement> | undefined;
+}
+
+function StyledButton({ buttonText, handleClick }:IStyledButton) {
   return (
-    <div>StyledButton</div>
+    <Button size="small" color="secondary" onClick={handleClick}>{buttonText}</Button>
   );
 }
 

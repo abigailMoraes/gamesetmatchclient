@@ -6,10 +6,11 @@ import {
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from '@mui/styles';
-import BrowseTournamentCard, { Tournament } from './BrowseTournamentCard';
-import TournamentService from './TournamentsService';
+import CircularProgress from '@mui/material/CircularProgress';
+import BrowseTournamentCard from './BrowseTournamentCard';
+import TournamentService, { Tournament } from './TournamentsService';
 
 export interface TournamentRow {
   id: Number,
@@ -22,12 +23,6 @@ export interface TournamentRow {
 }
 
 const columns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    hide: true,
-    sortable: false,
-  },
   {
     field: 'name',
     headerName: 'Name',
@@ -62,7 +57,6 @@ const columns: GridColDef[] = [
     flex: 1,
     sortable: false,
     disableColumnMenu: true,
-    // eslint-disable-next-line max-len
     renderCell: (params: GridRenderCellParams<any>) => <BrowseTournamentCard tournament={params.value} />,
   },
 ];
@@ -77,6 +71,7 @@ function CustomToolbar() {
 
 export default function BrowseTournamentsGrid() {
   const [rowData, setRows] = useState<TournamentRow[]>([]);
+  const [loading, setLoading] = useState(true);
   const mainTheme = useTheme() as Theme;
 
   const theme = createTheme(mainTheme, {
@@ -112,21 +107,27 @@ export default function BrowseTournamentsGrid() {
     },
   });
 
-  useEffect(() => {
+  // TODO: fix this so it only gets called once, move to parent and only pass data?
+  React.useEffect(() => {
     TournamentService.getAll()
-      .then((data) => setRows(data));
-  }, []);
+      .then((data) => {
+        setLoading(false);
+        setRows(data);
+      });
+  }, [loading]);
 
   return (
     <ThemeProvider theme={theme}>
-      <DataGrid
-        components={{ Toolbar: CustomToolbar }}
-        isRowSelectable={() => false}
-        autoHeight
-        rows={rowData}
-        columns={columns}
-        rowHeight={200}
-      />
+      {loading ? <CircularProgress /> : (
+        <DataGrid
+          components={{ Toolbar: CustomToolbar }}
+          isRowSelectable={() => false}
+          autoHeight
+          rows={rowData}
+          columns={columns}
+          rowHeight={200}
+        />
+      )}
     </ThemeProvider>
   );
 }
