@@ -34,7 +34,11 @@ const theme = createTheme({
     text: {
       primary: '#FFF',
       secondary: '#D27C2C',
-      disabled: '#D27C2C',
+      disabled: '#967654',
+    },
+    action: {
+      disabledBackground: '#967654',
+      disabled: '#967654',
     },
   },
   spacing: 8,

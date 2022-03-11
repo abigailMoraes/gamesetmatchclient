@@ -14,21 +14,7 @@ import { Theme, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import navigation from '../Navigation/navigation.json';
-
-export interface Tournament {
-  tournamentID: Number,
-  name: String,
-  description: String,
-  startDate: Date,
-  location: String,
-  maxParticipants: Number,
-  prize: String,
-  format: String,
-  type: String,
-  closeRegistrationDate: Date,
-  matchDuration: Number,
-  numberOfMatches: Number,
-}
+import { Tournament } from './TournamentsService';
 
 interface IDetail {
   label:String,
@@ -49,13 +35,29 @@ function Detail({ label, value }:IDetail) {
   );
 }
 
-function BrowseTournamentCard(props: any) {
+function RegistrationButton({ registered, handleClick }:any) {
+  return (
+    <Button
+      size="small"
+      color="secondary"
+      onClick={handleClick}
+      disabled={registered}
+    >
+      {registered ? 'Already registered' : 'Register'}
+    </Button>
+  );
+}
+
+interface BrowseTournamentCardProps {
+  tournament:Tournament,
+}
+
+function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
   const theme = useTheme() as Theme;
   const navigate = useNavigate();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const { tournament } = props;
   const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
+  const openDetails = () => {
     setOpen(true);
   };
 
@@ -84,8 +86,8 @@ function BrowseTournamentCard(props: any) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" color="secondary" onClick={handleClickOpen}>Details</Button>
-        <Button size="small" color="secondary" onClick={navigateToRegister}>Register</Button>
+        <Button size="small" color="secondary" onClick={openDetails}>Details</Button>
+        <RegistrationButton registered={tournament.registered} handleClick={navigateToRegister} />
       </CardActions>
       <Dialog
         fullScreen={fullScreen}
@@ -109,7 +111,7 @@ function BrowseTournamentCard(props: any) {
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={handleClose}>Cancel</Button>
-          <Button color="secondary" onClick={navigateToRegister}>Register</Button>
+          <RegistrationButton registered={tournament.registered} handleClick={navigateToRegister} />
         </DialogActions>
       </Dialog>
     </Card>
