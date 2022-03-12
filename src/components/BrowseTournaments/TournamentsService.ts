@@ -45,8 +45,19 @@ const registerForTournament = (tournamentID: Number, body: RegisterForTournament
   body: JSON.stringify(body),
 });
 
+export interface Registrant {
+  userID: Number,
+  name: String,
+  email: String,
+  skillLevel: String,
+}
+
+const getRegistrants = (tournamentID:number) => fetch(`${baseURL}/${tournamentID}/registrants`)
+  .then((response) => response.json());
+
 const TournamentService = {
   getAll,
   registerForTournament,
+  getRegistrants,
 };
 export default TournamentService;
