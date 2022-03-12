@@ -102,6 +102,9 @@ function GoogleAuth() {
           .catch((err) => console.log(err));
         return true;
       },
+      signInFailure(error: any) {
+        alert(error);
+      },
     },
   };
 
