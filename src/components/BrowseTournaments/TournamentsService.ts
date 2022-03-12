@@ -18,6 +18,7 @@ export interface Tournament {
   roundDuration: Number,
   registered:boolean,
 }
+
 const getAll = () => fetch(baseURL)
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
@@ -31,9 +32,9 @@ const getAll = () => fetch(baseURL)
   })));
 
 export interface RegisterForTournamentBody {
-  userID:number,
-  availabilities:Availability[]
-  skillLevel?:string;
+  userID: number,
+  availabilities: Availability[]
+  skillLevel?: string;
 }
 
 const registerForTournament = (tournamentID: Number, body: RegisterForTournamentBody) => fetch(`${baseURL}/${tournamentID}/register`, {

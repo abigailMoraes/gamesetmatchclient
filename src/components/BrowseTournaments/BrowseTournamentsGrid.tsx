@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
   {
     field: 'startDate',
     headerName: 'Start Date',
-    type: 'number',
+    type: 'date',
     hide: true,
   },
   {
@@ -48,6 +48,7 @@ const columns: GridColDef[] = [
   {
     field: 'closeRegistrationDate',
     headerName: 'Registration Closing Date',
+    type: 'date',
     hide: true,
   },
   {

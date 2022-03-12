@@ -43,7 +43,7 @@ function RegistrationButton({ registered, handleClick }:any) {
       onClick={handleClick}
       disabled={registered}
     >
-      {registered ? 'Already registered' : 'Register'}
+      {registered ? 'Registered' : 'Register'}
     </Button>
   );
 }
