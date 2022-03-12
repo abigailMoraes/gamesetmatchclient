@@ -1,12 +1,10 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Settings from '@mui/icons-material/Settings';
 import GoogleAuth from './login/GoogleAuth';
 import SignUp from './login/SignUp';
-
 import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import BrowseTournamentsGrid from './components/BrowseTournaments/BrowseTournamentsGrid';
@@ -82,5 +80,4 @@ function App() {
     </ThemeProvider>
   );
 }
-
 export default App;
