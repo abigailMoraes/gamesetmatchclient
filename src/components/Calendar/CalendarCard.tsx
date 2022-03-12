@@ -3,12 +3,14 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
 import React, { useEffect, useState } from 'react';
+import MatchService from './MatchService';
 // import MatchCard from './MatchHistoryCard';
 
 function CalendarCard() {
   moment.locale('en-US');
   const localizer = momentLocalizer(moment);
   const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(undefined);
 
@@ -17,15 +19,13 @@ function CalendarCard() {
     setModalState(true);
   };
 
-  const getMatches = () => {
-    fetch('http://localhost:REACT_APP_API_DOMAIN')
-      .then((response) => response)
-      .then((response) => response.json()).then((data) => setMatches(data));
-  };
-
   useEffect(() => {
-    getMatches();
-  }, []);
+    MatchService.getAll()
+      .then((data) => {
+        setLoading(false);
+        setMatches(data);
+      });
+  }, [loading]);
 
   const events = matches.map((match:any) => ({
     id: match.matchID,
