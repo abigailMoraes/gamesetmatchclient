@@ -23,11 +23,13 @@ export interface Match {
   description: String,
 }
 
+// TODO: Lift this interface into the general component section
 interface IDetail {
   label:String,
   value:String
 }
 
+// TODO: Lift this function into the general component section
 function Detail({ label, value }:IDetail) {
   return (
     <div style={{ display: 'inline-flex' }}>

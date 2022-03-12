@@ -18,7 +18,7 @@ function CalendarCard() {
   };
 
   const getMatches = () => {
-    fetch('http://localhost:8080/api/match/involves/user/1')
+    fetch('http://localhost:REACT_APP_API_DOMAIN')
       .then((response) => response)
       .then((response) => response.json()).then((data) => setMatches(data));
   };

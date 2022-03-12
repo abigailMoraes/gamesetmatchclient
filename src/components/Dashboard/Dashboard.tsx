@@ -5,6 +5,7 @@ import MatchHistoryGrid from '../Calendar/MatchHistoryGrid';
 
 import './Dashboard.css';
 
+// TODO: pull hard coded styling to a theme
 function Dashboard() {
   // const theme = useTheme() as Theme;
   return (

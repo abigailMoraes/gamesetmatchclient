@@ -1,6 +1,6 @@
 import { Match } from './MatchHistoryCard';
 
-const getAll = () => fetch('http://localhost:8080/api/match/involves/user/1')
+const getAll = () => fetch(`${process.env.REACT_APP_API_DOMAIN}/match/involves/user/1`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => ({
     id: item.matchID,
     result: item.result,
@@ -14,7 +14,7 @@ const getAll = () => fetch('http://localhost:8080/api/match/involves/user/1')
     allMatchDetails: item,
   })));
 
-const getPastMatches = () => fetch('http://localhost:8080/api/match/history/involves/user/1')
+const getPastMatches = () => fetch(`${process.env.REACT_APP_API_DOMAIN}/match/history/involves/user/1`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => ({
     id: item.matchID,
     result: item.result,
@@ -28,7 +28,7 @@ const getPastMatches = () => fetch('http://localhost:8080/api/match/history/invo
     allMatchDetails: item,
   })));
 
-const getMatchInformationByMatchID = (id:number) => fetch(`http://localhost:8080/api/match/${id}`)
+const getMatchInformationByMatchID = (id:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/match/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => ({
     id: item.matchID,
     result: item.result,

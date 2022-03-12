@@ -127,7 +127,7 @@ export default function MatchHistoryGrid() {
   });
 
   useEffect(() => {
-    MatchService.getPastMatches().then((data) => data).then((data) => setRows(data));
+    MatchService.getPastMatches().then((data) => setRows(data));
   }, []);
   return (
     <ThemeProvider theme={theme}>
