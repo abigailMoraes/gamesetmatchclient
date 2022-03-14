@@ -9,12 +9,14 @@ import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+
 import { useTheme } from '@mui/styles';
 import { Theme, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import navigation from '../Navigation/navigation.json';
 import { Tournament } from './TournamentsService';
+import ViewRegistrants from './ViewRegistrants';
 
 interface IDetail {
   label:String,
@@ -43,7 +45,7 @@ function RegistrationButton({ registered, handleClick }:any) {
       onClick={handleClick}
       disabled={registered}
     >
-      {registered ? 'Already registered' : 'Register'}
+      {registered ? 'Registered' : 'Register'}
     </Button>
   );
 }
@@ -93,9 +95,8 @@ function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        style={{ color: theme.palette.primary.main }}
       >
-        <DialogContent>
+        <DialogContent style={{ backgroundColor: theme.palette.primary.main }}>
           <Typography variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
             {tournament.name}
           </Typography>
@@ -108,8 +109,9 @@ function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
             <Detail label="Start Date" value={new Date(tournament.startDate).toLocaleDateString('en-US')} />
             <Detail label="Register by" value={new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')} />
           </Container>
+          <ViewRegistrants tournamentID={tournament.tournamentID} />
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ backgroundColor: theme.palette.primary.main }}>
           <Button color="secondary" onClick={handleClose}>Cancel</Button>
           <RegistrationButton registered={tournament.registered} handleClick={navigateToRegister} />
         </DialogActions>
