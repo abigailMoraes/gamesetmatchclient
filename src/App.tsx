@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Settings from '@mui/icons-material/Settings';
-import GoogleAuth from './login/GoogleAuth';
+import GoogleAuth from './login/FirebaseAuth';
 import SignUp from './login/SignUp';
 
 import NavigationSideBar from './components/Navigation/NavigationSideBar';

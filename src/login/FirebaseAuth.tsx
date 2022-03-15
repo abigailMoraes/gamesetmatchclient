@@ -73,7 +73,7 @@ const GoogleLogo = styled.img`
   max-width: 70%;
 `;
 
-function GoogleAuth() {
+function FirebaseAuth() {
   const [loginData, setLoginData] = useAtom(loginDataAtom);
 
   // Configure FirebaseUI.
@@ -137,4 +137,4 @@ function GoogleAuth() {
   );
 }
 
-export default GoogleAuth;
+export default FirebaseAuth;
