@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Settings from '@mui/icons-material/Settings';
-import GoogleAuth from './login/GoogleAuth';
+import FirebaseAuth from './login/FirebaseAuth';
 import SignUp from './login/SignUp';
 import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -64,7 +64,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <div className="App">
         <Routes>
-          <Route path="/" element={<GoogleAuth />} />
+          <Route path="/" element={<FirebaseAuth />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<NavigationSideBar />}>
             <Route path={navigation.dashboard} element={<Dashboard />} />
