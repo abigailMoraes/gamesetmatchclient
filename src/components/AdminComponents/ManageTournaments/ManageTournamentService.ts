@@ -1,3 +1,4 @@
+import { Tournament } from '../../BrowseTournaments/TournamentsService';
 import handleErrors from '../../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
@@ -45,8 +46,21 @@ const updateTournament = (tournamentID:Number, body: UpdateTournamentRequestBody
   body: JSON.stringify(body),
 }).then((resp) => handleErrors(resp));
 
+const getUsersCreatedTournaments = (userID:number, status:number) => fetch(`${baseURL}/user/${userID}/tournaments?status=${status}`)
+  .then((response) => response.json())
+  .then((data) => data.map((item: Tournament) => ({
+    id: item.tournamentID,
+    name: item.name,
+    description: item.description,
+    location: item.location,
+    startDate: item.startDate,
+    closeRegistrationDate: item.closeRegistrationDate,
+    allTournamentDetails: item,
+  })));
+
 const ManageTournamentService = {
   createTournament,
   updateTournament,
+  getUsersCreatedTournaments,
 };
 export default ManageTournamentService;

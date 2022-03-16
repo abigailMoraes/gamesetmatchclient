@@ -19,8 +19,8 @@ export interface TournamentRow {
   allTournamentDetails: Tournament
 }
 
-interface GridCardComponentProps {
-  tournament:Tournament
+export interface GridCardComponentProps {
+  tournament?:Tournament
 }
 
 function CustomToolbar() {
@@ -34,7 +34,7 @@ function CustomToolbar() {
 interface TournamentDisplayGridProps {
   gridTitle:string;
   tournaments: TournamentRow[];
-  GridCardComponent:React.FC<GridCardComponentProps>;
+  GridCardComponent:any ;
 }
 export default function TournamentDisplayGrid({ gridTitle, tournaments, GridCardComponent }: TournamentDisplayGridProps) {
   const mainTheme = useTheme() as Theme;
