@@ -14,7 +14,7 @@ import StyledButton from '../General/StyledButton';
 import AvailabilitySelector, { Availability, setUpDateRange } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 import TournamentService, { RegisterForTournamentBody, Tournament } from './TournamentsService';
 import StatusModal from '../General/StatusModal';
-import { loginDataAtom } from '../../atoms/userAtom';
+import { userIDAtom } from '../../atoms/userAtom';
 
 interface RegisterTournamentState {
   tournament:Tournament;
@@ -30,13 +30,13 @@ function RegisterTournament() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const userData = useAtomValue(loginDataAtom);
+  const userID = useAtomValue(userIDAtom);
 
   const submitRegistration = () => {
     setLoading(true);
 
     const registration:RegisterForTournamentBody = {
-      userID: userData ? userData.id : -1,
+      userID,
       availabilities: roundAvailability,
     };
 

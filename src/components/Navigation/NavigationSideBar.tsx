@@ -25,18 +25,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 
-// import BrowseTournamentsGrid from '../BrowseTournaments/BrowseTournamentsGrid';
-// import Dashboard from '../Dashboard/Dashboard';
 import { useAtom } from 'jotai';
 import MenuItem from './MenuItem';
 import LogoIconNameSideBySide from '../Logo/LogoIconNameSideBySide';
 import navigation from './navigation.json';
-import { loginDataAtom } from '../../atoms/userAtom';
-// import TournamentHistory from '../TournamentHistory/TournamentHistory';
-// import ManageTournaments from '../AdminComponents/ManageTournaments/ManageTournaments';
-// import ManageUsers from '../AdminComponents/ManageUsers/ManageUsers';
-// import Settings from '../Settings/Settings';
-// import RegisterTournament from '../BrowseTournaments/RegisterTournament';
+import { emptyUser, loginDataAtomPersistence } from '../../atoms/userAtom';
 
 const drawerWidth = 240;
 
@@ -115,8 +108,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 function NavigationSideBar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [userData, setUserData] = useAtom(loginDataAtom);
-  const [isAdmin] = React.useState(userData ? userData.isAdmin === 1 : false);
+  const [userData, setUserData] = useAtom(loginDataAtomPersistence);
+  const [isAdmin] = React.useState(userData ? userData.isAdmin >= 1 : false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -126,7 +119,7 @@ function NavigationSideBar() {
   };
 
   const handleLogout = () => {
-    setUserData(null);
+    setUserData(emptyUser);
   };
 
   return (

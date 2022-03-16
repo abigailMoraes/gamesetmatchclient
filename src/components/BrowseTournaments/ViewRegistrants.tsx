@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { CircularProgress } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import TournamentService, { Registrant } from './TournamentsService';
-import { loginDataAtom } from '../../atoms/userAtom';
+import { userIDAtom } from '../../atoms/userAtom';
 
 interface ViewRegistrantsProps {
   tournamentID: Number;
@@ -54,8 +54,7 @@ function ViewRegistrants({ tournamentID }:ViewRegistrantsProps) {
   const [expanded, setExpanded] = React.useState(false);
   const [registrants, setRegistrants] = React.useState<Registrant[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const userData = useAtomValue(loginDataAtom);
-  const currUserID = userData ? userData.id : -1;
+  const userID = useAtomValue(userIDAtom);
 
   const handleChange = () => () => {
     if (!expanded) {
@@ -85,7 +84,7 @@ function ViewRegistrants({ tournamentID }:ViewRegistrantsProps) {
         <Typography variant="body1">View Registered</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        {loading ? <CircularProgress /> : <RegistrantList registrants={registrants} currentUserID={currUserID} />}
+        {loading ? <CircularProgress /> : <RegistrantList registrants={registrants} currentUserID={userID} />}
       </AccordionDetails>
     </Accordion>
   );
