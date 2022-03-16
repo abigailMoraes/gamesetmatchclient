@@ -11,11 +11,10 @@ import MatchHistoryCard, { Match } from './MatchHistoryCard';
 import MatchService from './MatchService';
 
 export interface MatchHistoryRow {
-  id: Number,
-  result: Number,
+  id: number,
   startTime: Date,
   endTime: Date,
-  duration: Number,
+  duration: number,
   type: String,
   name: String,
   location: String,
@@ -29,11 +28,6 @@ const columns: GridColDef[] = [
     headerName: 'ID',
     hide: true,
     sortable: false,
-  },
-  {
-    field: 'result',
-    headerName: 'Result',
-    hide: true,
   },
   {
     field: 'startTime',
@@ -127,7 +121,7 @@ export default function MatchHistoryGrid() {
   });
 
   useEffect(() => {
-    MatchService.getPastMatches().then((data) => setRows(data));
+    MatchService.getPastMatches(1).then((data) => setRows(data));
   }, []);
   return (
     <ThemeProvider theme={theme}>

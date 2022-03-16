@@ -12,15 +12,24 @@ import { Theme, useMediaQuery } from '@mui/material';
 import Container from '@mui/material/Container';
 
 export interface Match {
-  matchID: Number,
-  result: Number,
+  results: String,
+  attendance: String,
+  matchID: number,
   startTime: Date,
   endTime: Date,
-  duration: Number,
+  duration: number,
   type: String,
   name: String,
   location: String,
   description: String,
+}
+
+export interface User {
+  userID: number,
+  firebaseID: String,
+  name: String,
+  email: String,
+  is_admin: number,
 }
 
 // TODO: Lift this interface into the general component section
@@ -78,8 +87,8 @@ function MatchHistoryCard(props: any) {
       </CardActions>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
         onClose={handleClose}
+        open={open}
         style={{ color: theme.palette.primary.main }}
       >
         <DialogContent>

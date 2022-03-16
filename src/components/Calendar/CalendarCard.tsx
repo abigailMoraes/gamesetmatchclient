@@ -1,24 +1,21 @@
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer, Event } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
 import React, { useEffect, useState } from 'react';
 import MatchService from './MatchService';
-// import MatchCard from './MatchHistoryCard';
+import MatchHistoryDialogue from './MatchHistoryDialogue';
+import { Match, User } from './MatchHistoryCard';
+import UserService from './UserService';
 
 function CalendarCard() {
   moment.locale('en-US');
   const localizer = momentLocalizer(moment);
   const [matches, setMatches] = useState([]);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(undefined);
-
-  const handleSelectedEvent = (event:any) => {
-    setSelectedEvent(event);
-    setModalState(true);
-  };
-
+  const [selectedMatch, setSelectedMatch] = useState<Match>(matches[0]);
   useEffect(() => {
     MatchService.getAll()
       .then((data) => {
@@ -26,27 +23,34 @@ function CalendarCard() {
         setMatches(data);
       });
   }, [loading]);
-
-  const events = matches.map((match:any) => ({
-    id: match.matchID,
-    title: match.name,
-    start: new Date(match.startTime),
-    end: new Date(match.endTime),
+  const events:Event[] = matches.map((item:any) => ({
+    title: item.name,
+    start: new Date(item.startTime),
+    end: new Date(item.endTime),
     allDay: false,
+    resource: item.id,
   }));
+  const [selectedEvent, setSelectedEvent] = useState<Event>();
+  const handleSelectedEvent = (event: Event) => {
+    setSelectedEvent(event);
+    setSelectedMatch(matches[events.indexOf(event)]);
+    UserService.getMatchParticipants(event.resource).then((data) => setParticipants(data));
+    setModalState(true);
+  };
   // eslint-disable-next-line react/no-unstable-nested-components
   function Modal() {
     return (
       <div className={`modal-${modalState ? 'show' : 'hide'}`}>
-        <div className="MatchCard" />
+        <div className="modal-content">
+          <MatchHistoryDialogue match={selectedMatch} participants={participants} />
+        </div>
       </div>
-
     );
   }
   return (
-    <div className="Calendar">
-      {selectedEvent && <Modal />}
+    <div>
       <Calendar
+        selected={selectedEvent}
         step={60}
         min={new Date(0, 0, 0, 9, 0, 0)}
         max={new Date(0, 0, 0, 22, 0, 0)}
@@ -56,10 +60,13 @@ function CalendarCard() {
         allDayAccessor="allDay"
         startAccessor="start"
         endAccessor="end"
+        resourceAccessor="resource"
         views={['month', 'week', 'day', 'agenda']}
         style={{ height: 500, margin: '50px' }}
-        onSelectEvent={(e) => handleSelectedEvent(e)}
+        onSelectEvent={(e) => { handleSelectedEvent(e); }}
+        popup
       />
+      {selectedEvent && <Modal />}
     </div>
   );
 }
