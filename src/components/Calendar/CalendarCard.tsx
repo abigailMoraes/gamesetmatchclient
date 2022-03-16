@@ -5,7 +5,7 @@ import './Calendar.css';
 import React, { useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import MatchService from './MatchService';
-import { loginDataAtom } from '../../atoms/userAtom';
+import { userIDAtom } from '../../atoms/userAtom';
 // import MatchCard from './MatchHistoryCard';
 
 function CalendarCard() {
@@ -15,8 +15,7 @@ function CalendarCard() {
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(undefined);
-  const userData = useAtomValue(loginDataAtom);
-  const userID = userData ? userData.id : -1;
+  const userID = useAtomValue(userIDAtom);
 
   const handleSelectedEvent = (event:any) => {
     setSelectedEvent(event);

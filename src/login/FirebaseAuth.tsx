@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import { useNavigate } from 'react-router-dom';
-import { loginDataAtom } from '../atoms/userAtom';
+import { loginDataAtomPersistence } from '../atoms/userAtom';
 import 'firebase/compat/auth';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
@@ -76,7 +76,7 @@ const GoogleLogo = styled.img`
 
 function FirebaseAuth() {
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useAtom(loginDataAtom);
+  const [loginData, setLoginData] = useAtom(loginDataAtomPersistence);
 
   // Configure FirebaseUI.
   const uiConfig = {
