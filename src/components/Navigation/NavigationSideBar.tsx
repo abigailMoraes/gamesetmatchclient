@@ -27,9 +27,11 @@ import List from '@mui/material/List';
 
 // import BrowseTournamentsGrid from '../BrowseTournaments/BrowseTournamentsGrid';
 // import Dashboard from '../Dashboard/Dashboard';
+import { useAtom } from 'jotai';
 import MenuItem from './MenuItem';
 import LogoIconNameSideBySide from '../Logo/LogoIconNameSideBySide';
 import navigation from './navigation.json';
+import { loginDataAtom } from '../../atoms/userAtom';
 // import TournamentHistory from '../TournamentHistory/TournamentHistory';
 // import ManageTournaments from '../AdminComponents/ManageTournaments/ManageTournaments';
 // import ManageUsers from '../AdminComponents/ManageUsers/ManageUsers';
@@ -113,7 +115,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 function NavigationSideBar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [isAdmin] = React.useState(true);
+  const [userData, setUserData] = useAtom(loginDataAtom);
+  const [isAdmin] = React.useState(userData ? userData.isAdmin === 1 : false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -121,6 +124,11 @@ function NavigationSideBar() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const handleLogout = () => {
+    setUserData(null);
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" open={open}>
@@ -165,7 +173,7 @@ function NavigationSideBar() {
         </List>
         <div style={{ position: 'absolute', bottom: 0 }}>
           <MenuItem id="settings" label="Settings" icon={<SettingsIcon />} route={navigation.settings} />
-          <MenuItem id="logout" label="Logout" icon={<LogoutIcon />} route={navigation.logout} />
+          <MenuItem id="logout" label="Logout" icon={<LogoutIcon />} route={navigation.logout} onClick={handleLogout} />
         </div>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
