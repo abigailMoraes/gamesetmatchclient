@@ -1,6 +1,6 @@
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 
-const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournament`;
+const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
 export interface Tournament {
   tournamentID: number,
