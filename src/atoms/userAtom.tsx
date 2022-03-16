@@ -1,4 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 import { atom } from 'jotai';
 
-export const loginDataAtom = atom(null);
+interface UserData {
+  email: string
+  firebaseId:string
+  id: number
+  isAdmin: number
+  name: string
+}
+export const loginDataAtom = atom<UserData | null>(null);

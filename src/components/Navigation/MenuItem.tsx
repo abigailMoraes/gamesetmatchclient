@@ -12,16 +12,21 @@ interface MenuItemParams {
   label: string,
   route:string,
   icon: React.ReactNode;
+  // eslint-disable-next-line react/require-default-props
+  onClick?:() => void;
 }
 
 function MenuItem({
-  id, label, route, icon,
+  id, label, route, icon, onClick,
 }:MenuItemParams) {
   const navigate = useNavigate();
 
   const theme = useTheme() as Theme;
 
   const routeToPage = () => {
+    if (onClick) {
+      onClick();
+    }
     navigate(route);
   };
   return (

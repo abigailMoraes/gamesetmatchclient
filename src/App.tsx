@@ -1,10 +1,12 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Route, Routes } from 'react-router-dom';
+import {
+  Navigate, Route, Routes, useLocation,
+} from 'react-router-dom';
 import './App.css';
 import Settings from '@mui/icons-material/Settings';
+import { useAtomValue } from 'jotai';
 import FirebaseAuth from './login/FirebaseAuth';
-import SignUp from './login/SignUp';
 import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import BrowseTournamentsGrid from './components/BrowseTournaments/BrowseTournamentsGrid';
@@ -13,6 +15,7 @@ import TournamentHistory from './components/TournamentHistory/TournamentHistory'
 import ManageTournaments from './components/AdminComponents/ManageTournaments/ManageTournaments';
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
+import { loginDataAtom } from './atoms/userAtom';
 
 const theme = createTheme({
   palette: {
@@ -59,21 +62,36 @@ const theme = createTheme({
   },
 });
 
+function RequireAuth({ children }: { children: JSX.Element }) {
+  // let auth = useAuth();
+  const userData = useAtomValue(loginDataAtom);
+  const location = useLocation();
+
+  if (!userData) {
+    // Redirect them to the /login page, but save the current location they were
+    // trying to go to when they were redirected. This allows us to send them
+    // along to that page after they login, which is a nicer user experience
+    // than dropping them off on the home page.
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return children;
+}
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <Routes>
           <Route path="/" element={<FirebaseAuth />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/" element={<NavigationSideBar />}>
-            <Route path={navigation.dashboard} element={<Dashboard />} />
-            <Route path={navigation.browseTournament} element={<BrowseTournamentsGrid />} />
-            <Route path={navigation.registerTournament} element={<RegisterTournament />} />
-            <Route path={navigation.tournamentHistory} element={<TournamentHistory />} />
-            <Route path={navigation.manageTournaments} element={<ManageTournaments />} />
-            <Route path={navigation.manageUsers} element={<ManageUsers />} />
-            <Route path={navigation.settings} element={<Settings />} />
+          <Route path="/" element={<RequireAuth><NavigationSideBar /></RequireAuth>}>
+            <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />
+            <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />
+            <Route path={navigation.registerTournament} element={<RequireAuth><RegisterTournament /></RequireAuth>} />
+            <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistory /></RequireAuth>} />
+            <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournaments /></RequireAuth>} />
+            <Route path={navigation.manageUsers} element={<RequireAuth><ManageUsers /></RequireAuth>} />
+            <Route path={navigation.settings} element={<RequireAuth><Settings /></RequireAuth>} />
           </Route>
         </Routes>
       </div>
