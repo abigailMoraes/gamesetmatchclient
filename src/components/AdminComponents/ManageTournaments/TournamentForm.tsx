@@ -79,7 +79,7 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
       .date()
       .min(
         minDate,
-        'Registration close date can not be in the past',
+        'Registration close date cannot be in the past',
       ),
   });
 
@@ -198,7 +198,7 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
               error={formik.touched.closeRegistrationDate && Boolean(formik.errors.closeRegistrationDate)}
               helperText={
                   (formik.touched.closeRegistrationDate && formik.errors.closeRegistrationDate)
-                    ? 'Registration close date can not be in the past' : ''
+                    ? 'Registration close date cannot be in the past' : ''
                 }
             />
             <StyledDatePicker
