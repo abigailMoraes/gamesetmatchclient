@@ -20,7 +20,7 @@ import ViewRegistrants from './ViewRegistrants';
 
 interface IDetail {
   label:String,
-  value:String
+  value:any
 }
 
 function Detail({ label, value }:IDetail) {

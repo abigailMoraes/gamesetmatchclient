@@ -9,6 +9,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import React from 'react';
 import { useTheme } from '@emotion/react';
 import { Theme } from '@mui/material/styles';
+import styled from '@emotion/styled';
 
 interface StatusModalProps{
   open:boolean,
@@ -18,12 +19,18 @@ interface StatusModalProps{
   isError:boolean
 }
 
+const StyledDialog = styled(Dialog)`
+.MuiDialog-paper{
+  align-items:center
+}
+`;
+
 function StatusModal({
   open, handleDialogClose, dialogTitle, dialogText, isError,
 }:StatusModalProps) {
   const theme = useTheme() as Theme;
   return (
-    <Dialog
+    <StyledDialog
       open={open}
       onClose={handleDialogClose}
       aria-labelledby="alert-dialog-title"
@@ -44,7 +51,7 @@ function StatusModal({
           Continue
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 }
 
