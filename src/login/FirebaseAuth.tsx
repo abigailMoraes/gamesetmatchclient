@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
+import { useNavigate } from 'react-router-dom';
 import { loginDataAtom } from '../atoms/userAtom';
 import 'firebase/compat/auth';
 
@@ -74,6 +75,7 @@ const GoogleLogo = styled.img`
 `;
 
 function FirebaseAuth() {
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useAtom(loginDataAtom);
 
   // Configure FirebaseUI.
@@ -98,9 +100,10 @@ function FirebaseAuth() {
           .then((res) => res.json())
           .then((data) => {
             setLoginData(data);
+            navigate('/dashboard');
           })
           .catch((err) => console.log(err));
-        return true;
+        return false;
       },
       signInFailure(error: any) {
         alert(error);
