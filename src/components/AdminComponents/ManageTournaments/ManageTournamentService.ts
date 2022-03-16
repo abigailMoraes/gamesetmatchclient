@@ -1,3 +1,5 @@
+import handleErrors from '../../General/ServiceHelper';
+
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
 
 interface CreateTournamentRequestBody {
@@ -6,8 +8,8 @@ interface CreateTournamentRequestBody {
   startDate: Date,
   location: string,
   prize: string,
-  format: string,
-  type: string,
+  format: number,
+  type: number,
   closeRegistrationDate: Date,
   matchDuration: number,
   numberOfMatches: number,
@@ -20,7 +22,7 @@ const createTournament = (body: CreateTournamentRequestBody) => fetch(`${baseURL
     'Content-Type': 'application/json',
   },
   body: JSON.stringify(body),
-});
+}).then((resp) => handleErrors(resp));
 
 interface UpdateTournamentRequestBody {
   name: string,
@@ -28,8 +30,8 @@ interface UpdateTournamentRequestBody {
   startDate: Date,
   location: string,
   prize: string,
-  format: string,
-  type: string,
+  format: number,
+  type: number,
   closeRegistrationDate: Date,
   matchDuration: number,
   numberOfMatches: number,
@@ -41,7 +43,7 @@ const updateTournament = (tournamentID:Number, body: UpdateTournamentRequestBody
     'Content-Type': 'application/json',
   },
   body: JSON.stringify(body),
-});
+}).then((resp) => handleErrors(resp));
 
 const ManageTournamentService = {
   createTournament,

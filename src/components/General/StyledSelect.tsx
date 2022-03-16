@@ -14,7 +14,7 @@ interface StyledSelectProps {
   label:string,
   onChange:(arg0:SelectChangeEvent) => void,
   selectOptions:SelectProps[],
-  value:string
+  value:any
   width?:number,
   required?:boolean
 }
