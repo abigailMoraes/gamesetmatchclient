@@ -3,19 +3,19 @@ import { Availability } from '../General/Calendar/AvailabilityCalendar/Availabil
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournament`;
 
 export interface Tournament {
-  tournamentID: Number,
-  name: String,
-  description: String,
+  tournamentID: number,
+  name: string,
+  description: string,
   startDate: Date,
-  location: String,
-  maxParticipants: Number,
-  prize: String,
-  format: String,
-  type: String,
+  location: string,
+  maxParticipants: number,
+  prize: string,
+  format: number,
+  type: number,
   closeRegistrationDate: Date,
-  matchDuration: Number,
-  numberOfMatches: Number,
-  roundDuration: Number,
+  matchDuration: number,
+  numberOfMatches: number,
+  roundDuration: number,
   registered:boolean,
 }
 
