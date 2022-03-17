@@ -1,4 +1,4 @@
-import { Match } from './MatchHistoryCard';
+import { Match } from './MatchInterface';
 
 function setMatchDetails(item: Match) {
   return {
@@ -16,27 +16,44 @@ function setMatchDetails(item: Match) {
   };
 }
 
-const getAll = () => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/involves/user/1`)
+const getAll = (id: number) => fetch(`http://localhost:8080/api/match/involves/user/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
 
-const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/history/involves/user/${id}`)
+const getPastMatches = (id: number) => fetch(`http://localhost:8080/api/match/history/involves/user/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
 
-const getMatchInformationByMatchID = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}`)
+const getMatchInformationByMatchID = (id: number) => fetch(`http://localhost:8080/api/match/${id}`)
   .then((response) => response.json()).then((data) => setMatchDetails(data));
 
 const confirmMatchAttendance = (id: number, mid: number) => fetch(
-  `${process.env.REACT_APP_API_DOMAIN}/api/match/confirm/${id}/${mid}`,
-  { method: 'PUT' },
-).then((response) => response.json()).then((resp) => { console.warn(resp); });
+  `http://localhost:8080/api/match/confirm/${id}/${mid}`,
+  {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ attendance: 'Yes', userID: id, matchID: mid }),
+  },
+);
 
 const dropOutOfMatch = (id: number, mid: number) => fetch(
-  `${process.env.REACT_APP_API_DOMAIN}/api/match/dropOut/${id}/${mid}`,
-  { method: 'PUT' },
-).then((response) => response.json()).then((resp) => { console.warn(resp); });
+  `http://localhost:8080/api/match/dropOut/${id}/${mid}`,
+  {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ attendance: 'No', userID: id, matchID: mid }),
+  },
+);
+
+const updateMatchResults = (id: number, mid: number, result: String) => fetch(
+  `http://localhost:8080/api/match/update/results/${id}/${mid}`,
+  {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ results: result, userID: id, matchID: mid }),
+  },
+);
 
 const MatchService = {
-  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch,
+  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults,
 };
 
 export default MatchService;

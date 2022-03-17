@@ -3,10 +3,13 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
 import React, { useEffect, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { userIDAtom } from '../../atoms/userAtom';
 import MatchService from './MatchService';
 import MatchHistoryDialogue from './MatchHistoryDialogue';
-import { Match, User } from './MatchHistoryCard';
+import { User } from './MatchHistoryCard';
 import UserService from './UserService';
+import { Match } from './MatchInterface';
 
 function CalendarCard() {
   moment.locale('en-US');
@@ -16,8 +19,9 @@ function CalendarCard() {
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<Match>(matches[0]);
+  const userID = useAtomValue(userIDAtom);
   useEffect(() => {
-    MatchService.getAll()
+    MatchService.getAll(userID)
       .then((data) => {
         setLoading(false);
         setMatches(data);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,21 +8,14 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { useTheme } from '@mui/styles';
-import { Theme, useMediaQuery } from '@mui/material';
+import {
+  FormControl, InputLabel, MenuItem, Select, SelectChangeEvent,
+  Theme, useMediaQuery,
+} from '@mui/material';
 import Container from '@mui/material/Container';
-
-export interface Match {
-  results: String,
-  attendance: String,
-  matchID: number,
-  startTime: Date,
-  endTime: Date,
-  duration: number,
-  type: String,
-  name: String,
-  location: String,
-  description: String,
-}
+import { useAtomValue } from 'jotai';
+import { userIDAtom } from '../../atoms/userAtom';
+import MatchService from './MatchService';
 
 export interface User {
   userID: number,
@@ -55,9 +48,12 @@ function Detail({ label, value }:IDetail) {
 
 function MatchHistoryCard(props: any) {
   const theme = useTheme() as Theme;
+  const userID = useAtomValue(userIDAtom);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { match } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [result, setResult] = useState(match.result);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -66,24 +62,46 @@ function MatchHistoryCard(props: any) {
     setOpen(false);
   };
 
+  const handleOpenUpdate = () => {
+    setUpdateOpen(true);
+  };
+
+  const handleUpdateMatchResults = () => {
+    MatchService.updateMatchResults(userID, match.matchID, result).then(() => {
+      match.results = result;
+    }).then(() => window.location.reload());
+  };
+
+  const handleResultChange = (event:SelectChangeEvent) => {
+    setResult(event.target.value as string);
+  };
+
   return (
     <Card style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
       <CardContent style={{ textAlign: 'left' }}>
-        <Typography variant="h5">
+        <Typography variant="h6">
           {match.name}
         </Typography>
-        <Typography sx={{ mb: 1.5 }}>
+        <Typography variant="body2">
           {match.description}
         </Typography>
         <Typography variant="body2">
-          {`Start Time: ${new Date(match.startTime).toLocaleDateString('en-US')}`}
+          {`Date: ${new Date(match.startTime).toLocaleDateString('en-US')}`}
         </Typography>
         <Typography variant="body2">
-          {`End Time: ${new Date(match.endTime).toLocaleDateString('en-US')}`}
+          {`Time: ${new Date(match.startTime).toLocaleTimeString(
+            'en-US',
+            { hour: '2-digit', minute: '2-digit' },
+          )}`}
+        </Typography>
+        <Typography variant="body2">
+          {`Result: ${match.results}`}
         </Typography>
       </CardContent>
       <CardActions>
         <Button size="small" color="secondary" onClick={handleClickOpen}>Details</Button>
+        {match.results === 'TBD' && match.attendance === 'Yes'
+          ? <Button size="small" color="secondary" onClick={handleOpenUpdate}>Update Results</Button> : null}
       </CardActions>
       <Dialog
         fullScreen={fullScreen}
@@ -101,13 +119,59 @@ function MatchHistoryCard(props: any) {
           <Container style={{ display: 'flex', flexDirection: 'column' }}>
             <Detail label="Location" value={match.location} />
             <Detail label="Round" value={match.type} />
-            <Detail label="Start Time" value={new Date(match.startTime).toLocaleDateString('en-US')} />
-            <Detail label="End Time" value={new Date(match.endTime).toLocaleDateString('en-US')} />
+            <Detail
+              label="Date"
+              value={new Date(match.startTime).toLocaleDateString(
+                'en-US',
+                { hour: '2-digit', minute: '2-digit' },
+              )}
+            />
+            <Detail
+              label="Start Time"
+              value={new Date(match.startTime).toLocaleTimeString(
+                'en-US',
+                { hour: '2-digit', minute: '2-digit' },
+              )}
+            />
+            <Detail
+              label="End Time"
+              value={new Date(match.endTime).toLocaleTimeString(
+                'en-US',
+                { hour: '2-digit', minute: '2-digit' },
+              )}
+            />
+            <Detail label="Result" value={match.results} />
           </Container>
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={handleClose}>Cancel</Button>
-          <Button color="secondary">Update Results</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        fullScreen={fullScreen}
+        onClose={handleClose}
+        open={updateOpen}
+        style={{ color: theme.palette.primary.main }}
+      >
+        <DialogContent>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Result</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={result}
+              onChange={handleResultChange}
+              label="Result"
+            >
+              <MenuItem value="Win">Win</MenuItem>
+              <MenuItem value="Loss">Loss</MenuItem>
+              <MenuItem value="Draw">Draw</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button color="secondary" onClick={handleClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleUpdateMatchResults}>Update</Button>
         </DialogActions>
       </Dialog>
     </Card>

@@ -7,8 +7,11 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useTheme } from '@mui/styles';
-import MatchHistoryCard, { Match } from './MatchHistoryCard';
+import { useAtomValue } from 'jotai';
+import MatchHistoryCard from './MatchHistoryCard';
+import { userIDAtom } from '../../atoms/userAtom';
 import MatchService from './MatchService';
+import { Match } from './MatchInterface';
 
 export interface MatchHistoryRow {
   id: number,
@@ -87,6 +90,7 @@ function CustomToolbar() {
 export default function MatchHistoryGrid() {
   const [rowData, setRows] = useState<MatchHistoryRow[]>([]);
   const mainTheme = useTheme() as Theme;
+  const userID = useAtomValue(userIDAtom);
   const theme = createTheme(mainTheme, {
     components: {
       // Use `MuiDataGrid` on both DataGrid and DataGridPro
@@ -121,7 +125,7 @@ export default function MatchHistoryGrid() {
   });
 
   useEffect(() => {
-    MatchService.getPastMatches(1).then((data) => setRows(data));
+    MatchService.getPastMatches(userID).then((data) => setRows(data));
   }, []);
   return (
     <ThemeProvider theme={theme}>

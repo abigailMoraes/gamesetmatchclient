@@ -10,10 +10,10 @@ function setUserDetails(item: User) {
 
   };
 }
-const getAll = () => fetch(`${process.env.REACT_APP_API_DOMAIN}/user/all`)
+const getAll = () => fetch('http://localhost:8080/user/all')
   .then((response) => (response.json())).then((data) => data.map((item: User) => setUserDetails(item)));
 
-const getMatchParticipants = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/${id}`)
+const getMatchParticipants = (id: number) => fetch(`http://localhost:8080/api/participants/match/${id}`)
   .then((response) => (response.json())).then((data) => data.map((item:User) => setUserDetails(item)));
 
 const UserService = {
