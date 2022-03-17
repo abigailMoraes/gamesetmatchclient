@@ -10,18 +10,20 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { CircularProgress } from '@mui/material';
+import { useAtomValue } from 'jotai';
 import TournamentService, { Registrant } from './TournamentsService';
+import { userIDAtom } from '../../atoms/userAtom';
 
 interface ViewRegistrantsProps {
-  tournamentID: number;
+  tournamentID: Number;
 }
 
 interface RegistrantListProps {
   registrants: Registrant[];
-  currentUser:any;
+  currentUserID:number;
 }
 
-function RegistrantList({ registrants, currentUser }:RegistrantListProps):JSX.Element {
+function RegistrantList({ registrants, currentUserID }:RegistrantListProps):JSX.Element {
   if (!registrants) {
     return <div>There was an error with retreiving registrants, try again later or contact the administrator</div>;
   }
@@ -39,7 +41,7 @@ function RegistrantList({ registrants, currentUser }:RegistrantListProps):JSX.El
       >
         {registrants.map((registrant:Registrant) => (
           <ListItem key={`item-${registrant.userID}`}>
-            <ListItemText>{`${registrant.name} [${registrant.email}] ${registrant.userID === currentUser.id ? '(you)' : ''}`}</ListItemText>
+            <ListItemText>{`${registrant.name} [${registrant.email}] ${registrant.userID === currentUserID ? '(you)' : ''}`}</ListItemText>
           </ListItem>
         ))}
       </List>
@@ -52,9 +54,7 @@ function ViewRegistrants({ tournamentID }:ViewRegistrantsProps) {
   const [expanded, setExpanded] = React.useState(false);
   const [registrants, setRegistrants] = React.useState<Registrant[]>([]);
   const [loading, setLoading] = React.useState(false);
-
-  // TODO: update to logged in user
-  const currUser = { id: 1 };
+  const userID = useAtomValue(userIDAtom);
 
   const handleChange = () => () => {
     if (!expanded) {
@@ -84,7 +84,7 @@ function ViewRegistrants({ tournamentID }:ViewRegistrantsProps) {
         <Typography variant="body1">View Registered</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        {loading ? <CircularProgress /> : <RegistrantList registrants={registrants} currentUser={currUser} />}
+        {loading ? <CircularProgress /> : <RegistrantList registrants={registrants} currentUserID={userID} />}
       </AccordionDetails>
     </Accordion>
   );

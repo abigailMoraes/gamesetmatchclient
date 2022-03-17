@@ -9,8 +9,10 @@ import { createTheme, Theme } from '@mui/material/styles';
 import { useState } from 'react';
 import { useTheme } from '@mui/styles';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useAtomValue } from 'jotai';
 import BrowseTournamentCard from './BrowseTournamentCard';
 import TournamentService, { Tournament } from './TournamentsService';
+import { userIDAtom } from '../../atoms/userAtom';
 
 export interface TournamentRow {
   id: Number,
@@ -74,6 +76,7 @@ export default function BrowseTournamentsGrid() {
   const [rowData, setRows] = useState<TournamentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const mainTheme = useTheme() as Theme;
+  const userID = useAtomValue(userIDAtom);
 
   const theme = createTheme(mainTheme, {
     components: {
@@ -110,7 +113,7 @@ export default function BrowseTournamentsGrid() {
 
   // TODO: fix this so it only gets called once, move to parent and only pass data?
   React.useEffect(() => {
-    TournamentService.getAll()
+    TournamentService.getAll(userID)
       .then((data) => {
         setLoading(false);
         setRows(data);
