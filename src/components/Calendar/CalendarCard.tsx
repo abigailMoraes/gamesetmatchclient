@@ -49,6 +49,7 @@ function CalendarCard() {
           <MatchHistoryDialogue match={selectedMatch} participants={participants} />
         </div>
       </div>
+
     );
   }
   return (

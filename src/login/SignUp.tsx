@@ -5,7 +5,7 @@ import {
   Field, Form, Formik, FormikHelpers,
 } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { PageContainer, SpaceContainer, BigText } from './GoogleAuth';
+import { PageContainer, SpaceContainer, BigText } from './FirebaseAuth';
 
 const ContentContainer = styled.div`
   display: flex;

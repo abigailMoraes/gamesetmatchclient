@@ -3,81 +3,25 @@ import {
   DataGrid, GridColDef, GridToolbarContainer, GridToolbarFilterButton, GridRenderCellParams,
 } from '@mui/x-data-grid';
 // When using TypeScript 4.x and above
+import type {} from '@mui/x-data-grid/themeAugmentation';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
 import { useTheme } from '@mui/styles';
-import { useAtomValue } from 'jotai';
-import MatchHistoryCard from './MatchHistoryCard';
-import { userIDAtom } from '../../atoms/userAtom';
-import MatchService from './MatchService';
-import { Match } from './MatchInterface';
+import { Tournament } from '../BrowseTournaments/TournamentsService';
 
-export interface MatchHistoryRow {
-  id: number,
-  startTime: Date,
-  endTime: Date,
-  duration: number,
-  type: String,
+export interface TournamentRow {
+  id: Number,
   name: String,
-  location: String,
   description: String,
-  allMatchDetails: Match
+  location: String,
+  startDate: Date,
+  closeRegistrationDate: Date,
+  allTournamentDetails: Tournament
 }
 
-const columns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    hide: true,
-    sortable: false,
-  },
-  {
-    field: 'startTime',
-    headerName: 'Start Time',
-    hide: true,
-  },
-  {
-    field: 'endTime',
-    headerName: 'End Time',
-    hide: true,
-  },
-  {
-    field: 'duration',
-    headerName: 'Duration',
-    hide: true,
-  },
-  {
-    field: 'type',
-    headerName: 'Type',
-    hide: true,
-  },
-  {
-    field: 'name',
-    headerName: 'Name',
-    hide: true,
-  },
-  {
-    field: 'location',
-    headerName: 'Location',
-    hide: true,
-  },
-  {
-    field: 'description',
-    headerName: 'Description',
-    sortable: false,
-    hide: true,
-  },
-  {
-    field: 'allMatchDetails',
-    headerName: 'Match History',
-    hide: false,
-    flex: 1,
-    sortable: false,
-    disableColumnMenu: true,
-    renderCell: (params: GridRenderCellParams<any>) => <MatchHistoryCard match={params.value} />,
-  },
-];
+interface GridCardComponentProps {
+  tournament:Tournament
+}
 
 function CustomToolbar() {
   return (
@@ -87,9 +31,14 @@ function CustomToolbar() {
   );
 }
 
-export default function MatchHistoryGrid() {
-  const [rowData, setRows] = useState<MatchHistoryRow[]>([]);
+interface TournamentDisplayGridProps {
+  gridTitle:string;
+  tournaments: TournamentRow[];
+  GridCardComponent:React.FC<GridCardComponentProps>;
+}
+export default function TournamentDisplayGrid({ gridTitle, tournaments, GridCardComponent }: TournamentDisplayGridProps) {
   const mainTheme = useTheme() as Theme;
+
   const theme = createTheme(mainTheme, {
     components: {
       // Use `MuiDataGrid` on both DataGrid and DataGridPro
@@ -106,9 +55,9 @@ export default function MatchHistoryGrid() {
               borderBottomColor: mainTheme.palette.primary.main,
             },
             '& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-colCell:focus-within,  & .MuiDataGrid-columnHeader:focus-within':
-                            {
-                              outline: 0,
-                            },
+              {
+                outline: 0,
+              },
             '& .MuiDataGrid-columnsContainer': {
               borderBottomColor: mainTheme.palette.primary.main,
             },
@@ -123,16 +72,53 @@ export default function MatchHistoryGrid() {
     },
   });
 
-  useEffect(() => {
-    MatchService.getPastMatches(userID).then((data) => setRows(data));
-  }, []);
+  const columns: GridColDef[] = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      hide: true,
+    },
+    {
+      field: 'description',
+      headerName: 'Description',
+      sortable: false,
+      hide: true,
+    },
+    {
+      field: 'startDate',
+      headerName: 'Start Date',
+      type: 'date',
+      hide: true,
+    },
+    {
+      field: 'location',
+      headerName: 'Location',
+      hide: true,
+    },
+    {
+      field: 'closeRegistrationDate',
+      headerName: 'Registration Closing Date',
+      type: 'date',
+      hide: true,
+    },
+    {
+      field: 'allTournamentDetails',
+      headerName: gridTitle,
+      hide: false,
+      flex: 1,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: (params: GridRenderCellParams<any>) => <GridCardComponent tournament={params.value} />,
+    },
+  ];
+
   return (
     <ThemeProvider theme={theme}>
       <DataGrid
         components={{ Toolbar: CustomToolbar }}
         isRowSelectable={() => false}
         autoHeight
-        rows={rowData}
+        rows={tournaments}
         columns={columns}
         rowHeight={200}
       />

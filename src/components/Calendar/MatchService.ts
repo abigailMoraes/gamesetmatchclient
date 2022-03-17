@@ -16,17 +16,17 @@ function setMatchDetails(item: Match) {
   };
 }
 
-const getAll = (id: number) => fetch(`http://localhost:8080/api/match/involves/user/${id}`)
+const getAll = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/match/involves/user/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
 
-const getPastMatches = (id: number) => fetch(`http://localhost:8080/api/match/history/involves/user/${id}`)
+const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/match/history/involves/user/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
 
-const getMatchInformationByMatchID = (id: number) => fetch(`http://localhost:8080/api/match/${id}`)
+const getMatchInformationByMatchID = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}`)
   .then((response) => response.json()).then((data) => setMatchDetails(data));
 
 const confirmMatchAttendance = (id: number, mid: number) => fetch(
-  `http://localhost:8080/api/match/confirm/${id}/${mid}`,
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/confirm/${id}/${mid}`,
   {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,7 @@ const confirmMatchAttendance = (id: number, mid: number) => fetch(
 );
 
 const dropOutOfMatch = (id: number, mid: number) => fetch(
-  `http://localhost:8080/api/match/dropOut/${id}/${mid}`,
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/dropOut/${id}/${mid}`,
   {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -44,7 +44,7 @@ const dropOutOfMatch = (id: number, mid: number) => fetch(
 );
 
 const updateMatchResults = (id: number, mid: number, result: String) => fetch(
-  `http://localhost:8080/api/match/update/results/${id}/${mid}`,
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/update/results/${id}/${mid}`,
   {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
