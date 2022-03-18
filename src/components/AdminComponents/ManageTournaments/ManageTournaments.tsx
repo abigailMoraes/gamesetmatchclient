@@ -80,7 +80,6 @@ function ManageTournaments() {
   };
 
   React.useMemo(() => {
-    console.log('updating');
     ManageTournamentService.getUsersCreatedTournaments(userData.id, statusBasedOnTab(value))
       .then((data) => setTournaments(data))
       .catch(() => console.log('error'));
