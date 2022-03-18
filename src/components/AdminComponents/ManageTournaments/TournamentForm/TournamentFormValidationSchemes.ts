@@ -23,10 +23,6 @@ export const validationSchemaCreate = yup.object({
     .number()
     .min(1, 'Must be greater than 0')
     .required('Match Duration is required'),
-  numberOfMatches: yup
-    .number()
-    .min(1, 'Must be greater than 0')
-    .required('Number of matches is required'),
   startDate: yup
     .date()
     .min(new Date()),

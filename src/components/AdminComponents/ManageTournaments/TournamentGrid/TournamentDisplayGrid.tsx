@@ -7,6 +7,7 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/styles';
+import Grid from '@mui/material/Grid';
 import { Tournament } from '../../../BrowseTournaments/TournamentsService';
 import GridCardOpenForRegistration from './GridCardOpenForRegistration';
 import GridCardOngoing from './GridCardOngoing';
@@ -144,20 +145,22 @@ export default function TournamentDisplayGrid({
   ];
 
   return (
-    <ThemeProvider theme={theme}>
-      <div style={{ height: '100vh', width: '100%' }}>
-        <div style={{ display: 'flex', height: '100%' }}>
-          <div style={{ flexGrow: 1 }}>
-            <DataGrid
-              components={{ Toolbar: CustomToolbar }}
-              isRowSelectable={() => false}
-              rows={tournaments}
-              columns={columns}
-              rowHeight={200}
-            />
+    <Grid container maxWidth="md">
+      <ThemeProvider theme={theme}>
+        <div style={{ height: '100vh', width: '100%' }}>
+          <div style={{ display: 'flex', height: '100%' }}>
+            <div style={{ flexGrow: 1 }}>
+              <DataGrid
+                components={{ Toolbar: CustomToolbar }}
+                isRowSelectable={() => false}
+                rows={tournaments}
+                columns={columns}
+                rowHeight={200}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Grid>
   );
 }

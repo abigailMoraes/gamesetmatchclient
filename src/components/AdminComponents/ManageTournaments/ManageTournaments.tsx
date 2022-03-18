@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useAtomValue } from 'jotai';
-import StyledButton from '../../General/StyledButton';
+import Button from '@mui/material/Button';
 import TournamentForm from './TournamentForm/TournamentForm';
 import TournamentDisplayGrid, { TournamentRow } from './TournamentGrid/TournamentDisplayGrid';
 import { loginDataAtom } from '../../../atoms/userAtom';
@@ -90,12 +90,12 @@ function ManageTournaments() {
   return (
     <Container maxWidth="xl">
       <Paper sx={{ p: 2 }}>
-        <Grid container spacing={2} justifyContent="space-between">
+        <Grid container maxWidth="md" spacing={2} justifyContent="space-between">
           <Grid item>
             <Typography variant="h5">Manage your tournaments</Typography>
           </Grid>
           <Grid item px={4}>
-            <StyledButton buttonText="+ Create Tournament" handleClick={openTournamentForm} />
+            <Button variant="contained" size="medium" color="secondary" onClick={openTournamentForm}>+ Create Tournament</Button>
           </Grid>
           <Grid item sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

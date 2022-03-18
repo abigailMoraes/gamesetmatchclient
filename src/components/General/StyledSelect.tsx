@@ -1,10 +1,10 @@
 /* eslint-disable react/require-default-props */
-import { FormControl } from '@mui/material';
+import { TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import InputLabel from '@mui/material/InputLabel';
+// import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import React from 'react';
+// import Select from '@mui/material/Select';
+import React, { ChangeEvent } from 'react';
 
 interface SelectProps {
   value:number,
@@ -13,7 +13,7 @@ interface SelectProps {
 interface StyledSelectProps {
   id:string,
   label:string,
-  onChange:(arg0:SelectChangeEvent) => void,
+  onChange:(arg0:ChangeEvent<any>) => void,
   selectOptions:SelectProps[],
   value:any
   width?:number,
@@ -25,20 +25,29 @@ function StyledSelect({
 }:StyledSelectProps) {
   return (
     <Grid item xs={width}>
-      <FormControl fullWidth>
-        <InputLabel id={id}>{label}</InputLabel>
-        <Select
-          labelId={id}
-          id={`simple-select-${id}`}
-          value={value}
-          label={label}
-          onChange={onChange}
-          fullWidth
-          required={required}
-        >
-          {selectOptions.map((item:SelectProps) => <MenuItem key={item.value} value={item.value}>{item.text}</MenuItem>)}
-        </Select>
-      </FormControl>
+      <TextField
+        color="secondary"
+        fullWidth
+        id={id}
+        select
+        label={label}
+        className="textField"
+        value={value}
+        onChange={onChange}
+        SelectProps={{
+          MenuProps: {
+            className: 'menu',
+          },
+        }}
+        variant="outlined"
+        required={required}
+      >
+        {selectOptions.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.text}
+          </MenuItem>
+        ))}
+      </TextField>
     </Grid>
   );
 }

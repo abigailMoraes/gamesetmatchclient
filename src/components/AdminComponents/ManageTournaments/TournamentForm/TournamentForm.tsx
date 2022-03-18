@@ -195,11 +195,11 @@ function TournamentForm({
               endAdornment="minutes"
             />
             <StyledSelect
-              id="bestOfSerices"
+              id="numberOfMatches"
               label="Series Type"
               selectOptions={SeriesType.map((text, index) => ({ value: index, text }))}
-              value={formik.values.format}
-              onChange={formik.handleChange}
+              value={formik.values.numberOfMatches}
+              onChange={formik.handleChange('numberOfMatches')}
               width={6}
             />
             <StyledSelect
@@ -207,7 +207,7 @@ function TournamentForm({
               label="Format"
               selectOptions={FormatType.map((text, index) => ({ value: index, text }))}
               value={formik.values.format}
-              onChange={formik.handleChange}
+              onChange={formik.handleChange('format')}
               width={6}
             />
             <StyledSelect
@@ -215,7 +215,7 @@ function TournamentForm({
               label="Match participants"
               selectOptions={MatchingType.map((text, index) => ({ value: index, text }))}
               value={formik.values.type}
-              onChange={formik.handleChange}
+              onChange={formik.handleChange('type')}
               width={6}
             />
             <StyledDatePicker

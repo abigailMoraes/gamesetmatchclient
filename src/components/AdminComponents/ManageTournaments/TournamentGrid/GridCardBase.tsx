@@ -70,7 +70,7 @@ function GridCardManageTournamentBase({
       <Grid
         container
         sx={{
-          px: 2, py: 4, display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
+          px: 2, py: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
         }}
       >
         <Grid item style={{ textAlign: 'left' }}>
@@ -86,6 +86,9 @@ function GridCardManageTournamentBase({
           <Typography variant="body2">
             {`Registration Closing Date: ${new Date(currentTournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
           </Typography>
+          <Box sx={{ mt: 1 }}>
+            <Button size="small" color="secondary" onClick={openDetails}>Details</Button>
+          </Box>
         </Grid>
         <Grid
           item
@@ -108,7 +111,6 @@ function GridCardManageTournamentBase({
             </span>
           </Tooltip>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Button size="small" color="secondary" onClick={openDetails}>Details</Button>
             {buttonName && <Button size="small" color="secondary" onClick={onButtonClick}>{buttonName}</Button>}
           </Box>
         </Grid>
