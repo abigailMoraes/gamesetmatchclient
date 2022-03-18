@@ -26,7 +26,7 @@ const getMatchInformationByMatchID = (id: number) => fetch(`${process.env.REACT_
   .then((response) => response.json()).then((data) => setMatchDetails(data));
 
 const confirmMatchAttendance = (id: number, mid: number) => fetch(
-  `${process.env.REACT_APP_API_DOMAIN}/api/match/confirm/${id}/${mid}`,
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/userAttendance`,
   {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,7 @@ const confirmMatchAttendance = (id: number, mid: number) => fetch(
 );
 
 const dropOutOfMatch = (id: number, mid: number) => fetch(
-  `${process.env.REACT_APP_API_DOMAIN}/api/match/dropOut/${id}/${mid}`,
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/userAttendance`,
   {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -44,7 +44,7 @@ const dropOutOfMatch = (id: number, mid: number) => fetch(
 );
 
 const updateMatchResults = (id: number, mid: number, result: String) => fetch(
-  `${process.env.REACT_APP_API_DOMAIN}/api/match/update/results/${id}/${mid}`,
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/userResults`,
   {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
