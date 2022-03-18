@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import Container from '@mui/material/Container';
 import React from 'react';
 import Tabs from '@mui/material/Tabs';
@@ -8,11 +9,12 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useAtomValue } from 'jotai';
 import StyledButton from '../../General/StyledButton';
-import TournamentForm from './TournamentForm';
-import TournamentDisplayGrid, { TournamentRow } from '../../General/TournamentDisplayGrid';
-import GridCardOpenForRegistration from './GridCardOpenForRegistration';
+import TournamentForm from './TournamentForm/TournamentForm';
+import TournamentDisplayGrid, { TournamentRow } from './TournamentGrid/TournamentDisplayGrid';
 import { loginDataAtom } from '../../../atoms/userAtom';
+import { GridCardTypes, TabNames, TournamentStatus } from './ManageTournamentsEnums';
 import ManageTournamentService from './ManageTournamentService';
+import { Tournament } from '../../BrowseTournaments/TournamentsService';
 
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props
@@ -48,35 +50,52 @@ function a11yProps(index: number) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
+
+function statusBasedOnTab(value:number):number {
+  let status = TournamentStatus.OpenForRegistration;
+  if (value === TabNames.ManageSchedule) {
+    status = TournamentStatus.ScheduleReadyForReview;
+  }
+
+  if (value === TabNames.Ongoing) {
+    status = TournamentStatus.Ongoing;
+  }
+  return status;
+}
 function ManageTournaments() {
   const [value, setValue] = React.useState(0);
   const [tournaments, setTournaments] = React.useState<TournamentRow[]>([]);
   const [open, setOpen] = React.useState(false);
   const userData = useAtomValue(loginDataAtom);
+  const [formTournament, setFormTournament] = React.useState<Tournament | undefined>(undefined);
+  const [gridUpate, setGridUpdate] = React.useState(true);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const openTournamentModal = () => {
+  const openTournamentForm = () => {
+    setFormTournament(undefined);
     setOpen(!open);
   };
 
-  React.useEffect(() => {
-    ManageTournamentService.getUsersCreatedTournaments(userData.id, 0)
+  React.useMemo(() => {
+    console.log('updating');
+    ManageTournamentService.getUsersCreatedTournaments(userData.id, statusBasedOnTab(value))
       .then((data) => setTournaments(data))
       .catch(() => console.log('error'));
-  }, [value]);
+    setGridUpdate(false);
+  }, [value, gridUpate]);
 
   return (
-    <Container>
-      <Paper>
+    <Container maxWidth="xl">
+      <Paper sx={{ p: 2 }}>
         <Grid container spacing={2} justifyContent="space-between">
           <Grid item>
             <Typography variant="h5">Manage your tournaments</Typography>
           </Grid>
           <Grid item px={4}>
-            <StyledButton buttonText="+ Create Tournament" handleClick={openTournamentModal} />
+            <StyledButton buttonText="+ Create Tournament" handleClick={openTournamentForm} />
           </Grid>
           <Grid item sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -94,22 +113,36 @@ function ManageTournaments() {
                 <Tab label="In Progress" {...a11yProps(2)} />
               </Tabs>
             </Box>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={value} index={TabNames.OpenForRegistration}>
               <TournamentDisplayGrid
-                gridTitle="Tournaments open for registration"
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+                gridTitle=""
                 tournaments={tournaments}
-                GridCardComponent={<GridCardOpenForRegistration />}
+                gridCardComponentName={GridCardTypes.OpenForRegistration}
               />
             </TabPanel>
-            <TabPanel value={value} index={1}>
-              Item Two
+            <TabPanel value={value} index={TabNames.ManageSchedule}>
+              <TournamentDisplayGrid
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+                gridTitle=""
+                tournaments={tournaments}
+                gridCardComponentName={GridCardTypes.ManageSchedule}
+              />
             </TabPanel>
-            <TabPanel value={value} index={2}>
-              Item Three
+            <TabPanel value={value} index={TabNames.Ongoing}>
+              <TournamentDisplayGrid
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+                gridTitle=""
+                tournaments={tournaments}
+                gridCardComponentName={GridCardTypes.Ongoing}
+              />
             </TabPanel>
           </Grid>
         </Grid>
-        <TournamentForm open={open} setOpen={setOpen} />
+        <TournamentForm tournament={formTournament} currentTab={value} updateGrid={setGridUpdate} open={open} setOpen={setOpen} />
       </Paper>
     </Container>
   );

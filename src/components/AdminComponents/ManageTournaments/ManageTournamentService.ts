@@ -17,7 +17,7 @@ interface CreateTournamentRequestBody {
   adminHostsTournament:number
 }
 
-const createTournament = (body: CreateTournamentRequestBody) => fetch(`${baseURL}/tournament`, {
+const createTournament = (body: CreateTournamentRequestBody) => fetch(`${baseURL}/tournaments`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -38,15 +38,15 @@ interface UpdateTournamentRequestBody {
   numberOfMatches: number,
 }
 
-const updateTournament = (tournamentID:Number, body: UpdateTournamentRequestBody) => fetch(`${baseURL}/tournament/${tournamentID}`, {
-  method: 'POST',
+const updateTournament = (tournamentID:Number, body: UpdateTournamentRequestBody) => fetch(`${baseURL}/tournaments/${tournamentID}`, {
+  method: 'PUT',
   headers: {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify(body),
 }).then((resp) => handleErrors(resp));
 
-const getUsersCreatedTournaments = (userID:number, status:number) => fetch(`${baseURL}/user/${userID}/tournaments?status=${status}`)
+const getUsersCreatedTournaments = (userID:number, status:number) => fetch(`${baseURL}/tournaments?status=${status}&createdBy=${userID}`)
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
     id: item.tournamentID,

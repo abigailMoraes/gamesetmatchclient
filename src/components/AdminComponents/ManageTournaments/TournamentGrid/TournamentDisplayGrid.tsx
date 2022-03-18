@@ -7,7 +7,11 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/styles';
-import { Tournament } from '../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../BrowseTournaments/TournamentsService';
+import GridCardOpenForRegistration from './GridCardOpenForRegistration';
+import GridCardOngoing from './GridCardOngoing';
+import GridCardManageSchedule from './GridCardManageSchedule';
+import { GridCardTypes } from '../ManageTournamentsEnums';
 
 export interface TournamentRow {
   id: Number,
@@ -19,10 +23,6 @@ export interface TournamentRow {
   allTournamentDetails: Tournament
 }
 
-export interface GridCardComponentProps {
-  tournament?:Tournament
-}
-
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
@@ -32,11 +32,15 @@ function CustomToolbar() {
 }
 
 interface TournamentDisplayGridProps {
-  gridTitle:string;
-  tournaments: TournamentRow[];
-  GridCardComponent:any ;
+  formTournament:Tournament | undefined,
+  setFormTournament:(arg0:Tournament | undefined) => void,
+  gridTitle:string,
+  tournaments: TournamentRow[],
+  gridCardComponentName:GridCardTypes,
 }
-export default function TournamentDisplayGrid({ gridTitle, tournaments, GridCardComponent }: TournamentDisplayGridProps) {
+export default function TournamentDisplayGrid({
+  formTournament, setFormTournament, gridTitle, tournaments, gridCardComponentName,
+}: TournamentDisplayGridProps) {
   const mainTheme = useTheme() as Theme;
 
   const theme = createTheme(mainTheme, {
@@ -108,20 +112,52 @@ export default function TournamentDisplayGrid({ gridTitle, tournaments, GridCard
       flex: 1,
       sortable: false,
       disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams<any>) => <GridCardComponent tournament={params.value} />,
+      renderCell: (params: GridRenderCellParams<any>) => {
+        switch (gridCardComponentName) {
+          case GridCardTypes.OpenForRegistration:
+            return (
+              <GridCardOpenForRegistration
+                tournament={params.value}
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+              />
+            );
+          case GridCardTypes.ManageSchedule:
+            return (
+              <GridCardManageSchedule
+                tournament={params.value}
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+              />
+            );
+          default:
+            return (
+              <GridCardOngoing
+                tournament={params.value}
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+              />
+            );
+        }
+      },
     },
   ];
 
   return (
     <ThemeProvider theme={theme}>
-      <DataGrid
-        components={{ Toolbar: CustomToolbar }}
-        isRowSelectable={() => false}
-        autoHeight
-        rows={tournaments}
-        columns={columns}
-        rowHeight={200}
-      />
+      <div style={{ height: '100vh', width: '100%' }}>
+        <div style={{ display: 'flex', height: '100%' }}>
+          <div style={{ flexGrow: 1 }}>
+            <DataGrid
+              components={{ Toolbar: CustomToolbar }}
+              isRowSelectable={() => false}
+              rows={tournaments}
+              columns={columns}
+              rowHeight={200}
+            />
+          </div>
+        </div>
+      </div>
     </ThemeProvider>
   );
 }

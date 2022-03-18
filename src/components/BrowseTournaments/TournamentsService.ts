@@ -16,6 +16,8 @@ export interface Tournament {
   matchDuration: number,
   numberOfMatches: number,
   roundDuration: number,
+  status:number,
+  adminHostsTournament:number,
   registered:boolean,
 }
 

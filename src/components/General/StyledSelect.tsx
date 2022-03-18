@@ -1,4 +1,5 @@
 /* eslint-disable react/require-default-props */
+import { FormControl } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -24,18 +25,20 @@ function StyledSelect({
 }:StyledSelectProps) {
   return (
     <Grid item xs={width}>
-      <InputLabel id={id}>{label}</InputLabel>
-      <Select
-        labelId={id}
-        id={`simple-select-${id}`}
-        value={value}
-        label={label}
-        onChange={onChange}
-        fullWidth
-        required={required}
-      >
-        {selectOptions.map((item:SelectProps) => <MenuItem key={item.value} value={item.value}>{item.text}</MenuItem>)}
-      </Select>
+      <FormControl fullWidth>
+        <InputLabel id={id}>{label}</InputLabel>
+        <Select
+          labelId={id}
+          id={`simple-select-${id}`}
+          value={value}
+          label={label}
+          onChange={onChange}
+          fullWidth
+          required={required}
+        >
+          {selectOptions.map((item:SelectProps) => <MenuItem key={item.value} value={item.value}>{item.text}</MenuItem>)}
+        </Select>
+      </FormControl>
     </Grid>
   );
 }
