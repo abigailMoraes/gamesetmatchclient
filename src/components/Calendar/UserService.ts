@@ -10,13 +10,11 @@ function setUserDetails(item: User) {
 
   };
 }
-const getAll = () => fetch(`${process.env.REACT_APP_API_DOMAIN}/user/all`)
-  .then((response) => (response.json())).then((data) => data.map((item: User) => setUserDetails(item)));
 
 const getMatchParticipants = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/participants/match/${id}`)
   .then((response) => (response.json())).then((data) => data.map((item:User) => setUserDetails(item)));
 
 const UserService = {
-  getAll, getMatchParticipants,
+   getMatchParticipants,
 };
 export default UserService;
