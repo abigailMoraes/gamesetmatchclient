@@ -3,7 +3,7 @@
 Create a `.env` file in the root directory of this project 
 Fil out the following enviroment variables:
 ```
-REACT_APP_API_DOMAIN=
+REACT_APP_API_DOMAIN=<your local api hostname>
 
 REACT_APP_FIREBASE_APIKEY=
 REACT_APP_FIREBASE_AUTHDOMAIN=
