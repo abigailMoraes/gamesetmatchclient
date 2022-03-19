@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,7 +8,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import React from 'react';
 import { useTheme } from '@emotion/react';
 import { Theme } from '@mui/material/styles';
 import styled from '@emotion/styled';
@@ -21,7 +22,8 @@ interface StatusModalProps{
 
 const StyledDialog = styled(Dialog)`
 .MuiDialog-paper{
-  align-items:center
+  align-items:center;
+  padding:20px;
 }
 `;
 

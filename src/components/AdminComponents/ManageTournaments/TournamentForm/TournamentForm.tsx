@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import {
   Button,
   CircularProgress,
@@ -6,24 +7,31 @@ import {
 import Dialog from '@mui/material/Dialog';
 import React from 'react';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
 import moment from 'moment';
-import { Tournament } from '../../BrowseTournaments/TournamentsService';
-import StyledButton from '../../General/StyledButton';
-import StyledDatePicker from '../../General/StyledDatePicker';
-import StyledInputField from '../../General/StyledInputField';
-import StyledSelect from '../../General/StyledSelect';
-import ManageTournamentService from './ManageTournamentService';
-import StatusModal from '../../General/StatusModal';
+import { useAtomValue } from 'jotai';
+import { Tournament } from '../../../BrowseTournaments/TournamentsService';
+import StyledButton from '../../../General/StyledButton';
+import StyledDatePicker from '../../../General/StyledDatePicker';
+import StyledInputField from '../../../General/StyledInputField';
+import StyledSelect from '../../../General/StyledSelect';
+import ManageTournamentService from '../ManageTournamentService';
+import StatusModal from '../../../General/StatusModal';
+import { userIDAtom } from '../../../../atoms/userAtom';
+import { validationSchemaCreate, validationSchemaEdit } from './TournamentFormValidationSchemes';
+import {
+  FormatType, MatchingType, SeriesType, TabNames,
+} from '../ManageTournamentsEnums';
 
 interface TournamentFormProps {
   open:boolean,
-  // eslint-disable-next-line react/require-default-props
   tournament?: Tournament,
-  setOpen: (arg0: boolean) => void;
+  setTournament?: (arg0:Tournament) => void,
+  setOpen: (arg0: boolean) => void,
+  updateGrid?:(arg0:boolean) => void,
+  currentTab?:number
 }
-
-const initialState = {
+// TODO disable and enable fields based on tournament status
+const tournamentTemplate = {
   name: '',
   description: '',
   startDate: new Date(),
@@ -39,7 +47,6 @@ const initialState = {
 
 const startDateMinDaysAfterRegistration = 1;
 const startDateErrorMessage = `Start date must be ${startDateMinDaysAfterRegistration} day after registration period closes`;
-const maxCharactersReached = (numCharacters:number) => `Maximum of ${numCharacters} characters allowed.`;
 
 const isStartDateAfterRegistration = (startDate:Date | null, registration:Date):boolean => {
   if (!startDate) {
@@ -51,54 +58,38 @@ const isStartDateAfterRegistration = (startDate:Date | null, registration:Date):
   return duration.asDays() >= startDateMinDaysAfterRegistration;
 };
 
-function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFormProps) {
+function TournamentForm({
+  open, setOpen, tournament = undefined, setTournament, updateGrid, currentTab,
+}: TournamentFormProps) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [responseOpen, setResponseOpen] = React.useState(false);
-  const minDate = new Date();
-  minDate.setDate(minDate.getDate() - 1);
-
-  const validationSchema = yup.object({
-    name: yup
-      .string()
-      .required('Name is required')
-      .max(128, maxCharactersReached(128)),
-    description: yup
-      .string()
-      .max(150, maxCharactersReached(150)),
-    location: yup
-      .string()
-      .max(60, maxCharactersReached(60)),
-    prize: yup
-      .string()
-      .max(60, maxCharactersReached(60)),
-    matchDuration: yup
-      .number()
-      .min(1, 'Must be greater than 0')
-      .required('Match Duration is required'),
-    numberOfMatches: yup
-      .number()
-      .min(1, 'Must be greater than 0')
-      .required('Number of matches is required'),
-    startDate: yup
-      .date()
-      .min(new Date()),
-    closeRegistrationDate: yup
-      .date()
-      .min(
-        minDate,
-        'Registration close date cannot be in the past',
-      ),
-  });
-
+  const [formValidation, setFormValidation] = React.useState(tournament ? validationSchemaEdit : validationSchemaCreate);
+  const userID = useAtomValue(userIDAtom);
   const formik = useFormik({
-    initialValues: initialState,
-    validationSchema,
+    initialValues: tournament || tournamentTemplate,
+    validationSchema: formValidation,
     onSubmit: (values) => {
       setLoading(true);
       if (tournament) {
-        ManageTournamentService.updateTournament(1, values).then(() => {
+        ManageTournamentService.updateTournament(tournament.tournamentID, values).then(() => {
           setLoading(false);
+          if (setTournament) {
+            const updatedTournament = { ...tournament };
+            updatedTournament.name = values.name;
+            updatedTournament.description = values.description;
+            updatedTournament.startDate = values.startDate;
+            updatedTournament.location = values.location;
+            updatedTournament.prize = values.prize;
+            updatedTournament.format = values.format;
+            updatedTournament.type = values.type;
+            updatedTournament.closeRegistrationDate = values.closeRegistrationDate;
+            updatedTournament.matchDuration = values.matchDuration;
+            updatedTournament.numberOfMatches = values.numberOfMatches;
+
+            setTournament(updatedTournament);
+          }
+
           setResponseOpen(true);
         })
           .catch(() => {
@@ -108,11 +99,13 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
           });
       } else {
         const request = values;
-        // TODO get value from atom
-        request.adminHostsTournament = 0;
-        ManageTournamentService.createTournament(values).then(() => {
+        request.adminHostsTournament = userID;
+        ManageTournamentService.createTournament(request).then(() => {
           setLoading(false);
           setResponseOpen(true);
+          if (updateGrid && tournament === undefined) {
+            updateGrid(currentTab === TabNames.OpenForRegistration);
+          }
         })
           .catch(() => {
             setLoading(false);
@@ -124,18 +117,27 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
   });
 
   const handleClose = () => {
-    setOpen(!open);
     formik.resetForm();
+    setOpen(!open);
   };
 
   const handleSuccessDialogClose = () => {
     setResponseOpen(false);
+    if (updateGrid && currentTab && tournament === undefined) {
+      updateGrid(currentTab === 0);
+    }
     handleClose();
   };
 
   const handleErrorDialogClose = () => {
     setResponseOpen(false);
   };
+
+  React.useEffect(() => {
+    formik.setErrors({});
+    formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
+    setFormValidation(tournament ? validationSchemaEdit : validationSchemaCreate);
+  }, [tournament]);
 
   return (
     <Dialog
@@ -146,14 +148,14 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
           {`${tournament ? 'Edit' : 'Create'} your tournament`}
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={1.5} my={0.5}>
+          <Grid container spacing={1.5} my={0.5} display="flex">
             <StyledInputField
               id="name"
               label="Name"
               value={formik.values.name}
               onChange={formik.handleChange}
-              error={Boolean(formik.errors.name)}
-              helperText={formik.errors.name}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name ? formik.errors.name : ''}
               required
             />
             <StyledInputField
@@ -192,31 +194,28 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
               helperText={formik.touched.matchDuration ? formik.errors.matchDuration : ''}
               endAdornment="minutes"
             />
-            <StyledInputField
+            <StyledSelect
               id="numberOfMatches"
-              label="Best of"
+              label="Series Type"
+              selectOptions={SeriesType.map((text, index) => ({ value: index, text }))}
               value={formik.values.numberOfMatches}
-              onChange={formik.handleChange}
+              onChange={formik.handleChange('numberOfMatches')}
               width={6}
-              type="number"
-              error={formik.touched.numberOfMatches && Boolean(formik.errors.numberOfMatches)}
-              helperText={formik.touched.numberOfMatches ? formik.errors.numberOfMatches : ''}
-              required
             />
             <StyledSelect
               id="format"
               label="Format"
-              selectOptions={[{ value: 0, text: 'Single-elimination' }, { value: 2, text: 'Double-Elimination' }, { value: 1, text: 'Round-Robin' }]}
+              selectOptions={FormatType.map((text, index) => ({ value: index, text }))}
               value={formik.values.format}
-              onChange={formik.handleChange}
+              onChange={formik.handleChange('format')}
               width={6}
             />
             <StyledSelect
               id="type"
               label="Match participants"
-              selectOptions={[{ value: 0, text: 'Randomly' }, { value: 1, text: 'By Skill' }]}
+              selectOptions={MatchingType.map((text, index) => ({ value: index, text }))}
               value={formik.values.type}
-              onChange={formik.handleChange}
+              onChange={formik.handleChange('type')}
               width={6}
             />
             <StyledDatePicker
@@ -266,7 +265,8 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
         <StatusModal
           open={responseOpen}
           handleDialogClose={handleErrorDialogClose}
-          dialogText="There was an error with creating the tournament, please try again later or contact your administrator."
+          dialogText={`There was an error with ${tournament ? 'updating' : 'creating'} 
+          the tournament, please try again later or contact your administrator.`}
           dialogTitle="Error"
           isError={error}
         />
@@ -274,8 +274,8 @@ function TournamentForm({ open, setOpen, tournament = undefined }: TournamentFor
         <StatusModal
           open={responseOpen}
           handleDialogClose={handleSuccessDialogClose}
-          dialogText="You have successfully created a new tournament. It is now open for registration.
-          After registration closes, a tournament schedule will be proposed for you to verify."
+          dialogText={tournament ? 'Update was successful' : `You have successfully created a new tournament. 
+          It is now open for registration. After registration closes, a tournament schedule will be proposed for you to verify.`}
           dialogTitle="Success!"
           isError={error}
         />

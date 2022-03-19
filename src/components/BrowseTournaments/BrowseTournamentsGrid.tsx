@@ -119,18 +119,22 @@ export default function BrowseTournamentsGrid() {
         setRows(data);
       });
   }, [loading]);
-
   return (
     <ThemeProvider theme={theme}>
       {loading ? <CircularProgress /> : (
-        <DataGrid
-          components={{ Toolbar: CustomToolbar }}
-          isRowSelectable={() => false}
-          autoHeight
-          rows={rowData}
-          columns={columns}
-          rowHeight={200}
-        />
+        <div style={{ height: '100vh', width: '100%' }}>
+          <div style={{ display: 'flex', height: '100%' }}>
+            <div style={{ flexGrow: 1 }}>
+              <DataGrid
+                components={{ Toolbar: CustomToolbar }}
+                isRowSelectable={() => false}
+                rows={rowData}
+                columns={columns}
+                rowHeight={200}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </ThemeProvider>
   );

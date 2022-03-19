@@ -17,25 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import navigation from '../Navigation/navigation.json';
 import { Tournament } from './TournamentsService';
 import ViewRegistrants from './ViewRegistrants';
-
-interface IDetail {
-  label:String,
-  value:any
-}
-
-function Detail({ label, value }:IDetail) {
-  return (
-    <div style={{ display: 'inline-flex' }}>
-      <Typography variant="body1">
-        {label}
-        :
-      </Typography>
-      <Typography variant="body1" style={{ paddingLeft: '5px' }}>
-        {value}
-      </Typography>
-    </div>
-  );
-}
+import DialogDetail from '../General/DialogDetail';
 
 function RegistrationButton({ registered, handleClick }:any) {
   return (
@@ -95,6 +77,7 @@ function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
+        fullWidth
       >
         <DialogContent style={{ backgroundColor: theme.palette.primary.main }}>
           <Typography variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
@@ -104,10 +87,10 @@ function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
             {tournament.description}
           </Typography>
           <Container style={{ display: 'flex', flexDirection: 'column' }}>
-            <Detail label="Location" value={tournament.location} />
-            <Detail label="Format" value={tournament.format} />
-            <Detail label="Start Date" value={new Date(tournament.startDate).toLocaleDateString('en-US')} />
-            <Detail label="Register by" value={new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')} />
+            <DialogDetail label="Location" value={tournament.location} />
+            <DialogDetail label="Format" value={tournament.format} />
+            <DialogDetail label="Start Date" value={new Date(tournament.startDate).toLocaleDateString('en-US')} />
+            <DialogDetail label="Register by" value={new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')} />
           </Container>
           <ViewRegistrants tournamentID={tournament.tournamentID} />
         </DialogContent>
