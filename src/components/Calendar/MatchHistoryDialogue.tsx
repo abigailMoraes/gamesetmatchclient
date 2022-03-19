@@ -95,9 +95,9 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={handleClickClose}>Cancel</Button>
-          {match.results === 'TBD' && match.attendance === 'No'
+          {match.results === 'Pending' && match.attendance === 'No'
             ? <Button color="secondary" onClick={handleConfirmAttendance}>Confirm Attendance</Button> : null}
-          {match.results === 'TBD' && match.attendance === 'Yes'
+          {match.results === 'Pending' && match.attendance === 'Yes'
             ? <Button color="secondary" onClick={handleDropOut}>Drop Out</Button> : null}
         </DialogActions>
       </Dialog>
