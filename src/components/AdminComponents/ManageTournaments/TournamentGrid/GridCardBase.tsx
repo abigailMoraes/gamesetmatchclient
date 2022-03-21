@@ -116,7 +116,7 @@ function GridCardManageTournamentBase({
         </Grid>
       </Grid>
 
-      <TournamentDetailsDialog open={open} handleClose={handleClose} tournament={tournament} fullScreen={fullScreen} />
+      <TournamentDetailsDialog open={open} handleClose={handleClose} tournament={currentTournament} fullScreen={fullScreen} />
       <TournamentForm tournament={formTournament} setTournament={setCurrentTournament} open={openEdit} setOpen={setOpenEdit} />
     </Paper>
   );
