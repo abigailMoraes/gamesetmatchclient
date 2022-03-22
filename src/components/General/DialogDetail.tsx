@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
@@ -8,7 +9,7 @@ interface IDetail {
 
 function DialogDetail({ label, value }:IDetail) {
   return (
-    <div style={{ display: 'inline-flex' }}>
+    <Box style={{ display: 'inline-flex' }}>
       <Typography variant="body1">
         {label}
         :
@@ -16,7 +17,7 @@ function DialogDetail({ label, value }:IDetail) {
       <Typography variant="body1" style={{ paddingLeft: '5px' }}>
         {value}
       </Typography>
-    </div>
+    </Box>
   );
 }
 

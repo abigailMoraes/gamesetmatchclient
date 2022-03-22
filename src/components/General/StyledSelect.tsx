@@ -18,10 +18,11 @@ interface StyledSelectProps {
   value:any
   width?:number,
   required?:boolean
+  disabled?:boolean
 }
 
 function StyledSelect({
-  id, label, onChange, selectOptions, value, width = 12, required = false,
+  id, label, onChange, selectOptions, value, width = 12, required = false, disabled,
 }:StyledSelectProps) {
   return (
     <Grid item xs={width}>
@@ -41,6 +42,7 @@ function StyledSelect({
         }}
         variant="outlined"
         required={required}
+        disabled={disabled}
       >
         {selectOptions.map((option) => (
           <MenuItem key={option.value} value={option.value}>
