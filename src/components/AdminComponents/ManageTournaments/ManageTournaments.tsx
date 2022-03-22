@@ -14,7 +14,7 @@ import TournamentDisplayGrid, { TournamentRow } from './TournamentGrid/Tournamen
 import { loginDataAtom } from '../../../atoms/userAtom';
 import { GridCardTypes, TabNames, TournamentStatus } from './ManageTournamentsEnums';
 import ManageTournamentService from './ManageTournamentService';
-import { Tournament } from '../../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../interfaces/TournamentInterface';
 
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props

@@ -12,9 +12,10 @@ import StyledPaper from '../General/StyledPaper';
 import BackButton from '../General/BackButton';
 import StyledButton from '../General/StyledButton';
 import AvailabilitySelector, { Availability, setUpDateRange } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
-import TournamentService, { RegisterForTournamentBody, Tournament } from './TournamentsService';
+import TournamentService, { RegisterForTournamentBody } from './TournamentsService';
 import StatusModal from '../General/StatusModal';
 import { userIDAtom } from '../../atoms/userAtom';
+import { Tournament } from '../../interfaces/TournamentInterface';
 
 interface RegisterTournamentState {
   tournament:Tournament;

@@ -1,4 +1,4 @@
-import { Tournament } from '../../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../interfaces/TournamentInterface';
 import handleErrors from '../../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;

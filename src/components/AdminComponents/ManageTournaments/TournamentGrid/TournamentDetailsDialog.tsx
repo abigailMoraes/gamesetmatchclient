@@ -9,10 +9,10 @@ import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/styles';
 
-import { Tournament } from '../../../BrowseTournaments/TournamentsService';
 import ViewRegistrants from '../../../BrowseTournaments/ViewRegistrants';
 import DialogDetail from '../../../General/DialogDetail';
 import { FormatType, MatchingType, SeriesType } from '../ManageTournamentsEnums';
+import { Tournament } from '../../../../interfaces/TournamentInterface';
 
 interface TournamentDetailsDialogProps {
   tournament:Tournament,

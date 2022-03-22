@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tournament } from '../../../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../../interfaces/TournamentInterface';
 import GridCardBase from './GridCardBase';
 
 interface GridCardOngoingProps {
