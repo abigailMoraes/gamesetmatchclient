@@ -131,6 +131,7 @@ function TournamentForm({
       || (formik.values.closeRegistrationDate !== tournament.closeRegistrationDate)
       || (formik.values.matchDuration !== tournament.matchDuration)
       || (formik.values.numberOfMatches !== tournament.numberOfMatches));
+      if (!fieldsChanged) formik.setErrors({});
       return;
     }
 
@@ -146,7 +147,7 @@ function TournamentForm({
     || (formik.values.numberOfMatches !== tournamentTemplate.numberOfMatches)) {
       setFieldsChanged(true); return;
     }
-
+    formik.setErrors({});
     setFieldsChanged(false);
   };
 
@@ -154,6 +155,8 @@ function TournamentForm({
   const [tournamentOver, setTournamentOver] = React.useState(true);
 
   const handleClose = () => {
+    formik.resetForm();
+    formik.setErrors({});
     setOpen(!open);
   };
 
@@ -170,22 +173,15 @@ function TournamentForm({
   };
 
   React.useMemo(() => {
-    formik.setErrors({});
     formik.resetForm();
+    setEnabledByStatus(tournament ? tournament.status > TournamentStatus.ClosedRegistration : false);
+    setTournamentOver(tournament ? tournament.status === TournamentStatus.TournamentOver : false);
     formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
     setFormValidation(tournament ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());
-  }, [open]);
-
-  React.useMemo(() => {
-    // formik.setErrors({});
-    // formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
-    setFormValidation(tournament ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());
-  }, [tournament]);
+  }, [open, tournament]);
 
   React.useEffect(() => {
     checkFieldsChanged();
-    setEnabledByStatus(tournament ? tournament.status > TournamentStatus.ClosedRegistration : false);
-    setTournamentOver(tournament ? tournament.status === TournamentStatus.TournamentOver : false);
   });
 
   return (
@@ -197,7 +193,7 @@ function TournamentForm({
           {`${tournament ? 'Edit' : 'Create'} your tournament`}
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={1.5} my={0.5} display="flex">
+          <Grid container spacing={1.5} mt={0.1} display="flex">
             <StyledInputField
               id="name"
               label="Name"
@@ -316,10 +312,10 @@ function TournamentForm({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <StyledButton buttonText="Cancel" handleClick={handleClose} />
+          <StyledButton buttonText="Cancel" handleClick={handleClose} size="large" />
           <Tooltip title={fieldsChanged ? '' : tournament ? 'No changes to save.' : 'Please fill out the form'}>
             <span>
-              <Button type="submit" size="small" color="secondary" disabled={!fieldsChanged}>{`${tournament ? 'Save' : 'Add'}`}</Button>
+              <Button type="submit" size="large" color="secondary" disabled={!fieldsChanged}>{`${tournament ? 'Save' : 'Add'}`}</Button>
             </span>
           </Tooltip>
         </DialogActions>

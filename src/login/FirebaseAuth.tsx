@@ -6,8 +6,14 @@ import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import { useNavigate } from 'react-router-dom';
-import { loginDataAtomPersistence } from '../atoms/userAtom';
 import 'firebase/compat/auth';
+import Divider from '@mui/material/Divider';
+import {
+  Container, Grid, Theme, Typography, useMediaQuery, useTheme,
+} from '@mui/material';
+
+import { loginDataAtomPersistence } from '../atoms/userAtom';
+import LogoLoginPage from '../components/Logo/LogoLoginPage';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
 
@@ -23,60 +29,11 @@ const config = {
 };
 firebase.initializeApp(config);
 
-export const PageContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  background-color: #252525;
-`;
-
-export const SpaceContainer = styled.div`
-  flex: 1;
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  flex：direction: row;
-  flex: 6;
-`;
-
-const SubContentContainer = styled.div`
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  border-right-width： 10px;
-`;
-
-export const BigText = styled.h1`
-  font-size: 3rem;
-`;
-
-const MediumText = styled.h1`
-  font-size: 1.5rem;
-`;
-
-const SmallText = styled.h1`  
-  font-size: 0.95rem;
-`;
-
-const CustomButton = styled.button`
-  width: 70%;
-  height: 42px;
-  background: #e5e5e5;
-  border-radius: 8px;
-`;
-
-const GoogleLogo = styled.img`
-  max-height: 70%;
-  max-width: 70%;
-`;
-
 function FirebaseAuth() {
+  const theme = useTheme() as Theme;
   const navigate = useNavigate();
   const [loginData, setLoginData] = useAtom(loginDataAtomPersistence);
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
 
   // Configure FirebaseUI.
   const uiConfig = {
@@ -112,31 +69,34 @@ function FirebaseAuth() {
   };
 
   return (
-    <PageContainer>
-      <SpaceContainer />
-      <ContentContainer>
-        <SubContentContainer
-          className="border-r"
-          style={{ borderColor: '#ACA9A9' }}
-        >
-          <img
-            alt="logo"
-            className="w-3/6"
-            // eslint-disable-next-line global-require
-            src={require('../image/Logo.png')}
-          />
-        </SubContentContainer>
-        <SubContentContainer>
-          <div className="flex flex-col h-1/2 justify-around items-center">
-            <BigText className="text-white"> Welcome back</BigText>
-            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-          </div>
-        </SubContentContainer>
-      </ContentContainer>
-      <SpaceContainer className="flex items-center justify-center">
-        <SmallText className="text-white"> Zoomers 2022 </SmallText>
-      </SpaceContainer>
-    </PageContainer>
+    <Grid
+      direction={`${matches ? 'row' : 'column'}`}
+      justifyContent="space-evenly"
+      alignItems="center"
+      container
+      style={{ minHeight: '100vh' }}
+    >
+      <Grid item>
+        <Container>
+          <LogoLoginPage width="200" height="175" />
+        </Container>
+      </Grid>
+      {matches && (
+      <Divider
+        orientation="vertical"
+        variant="middle"
+        flexItem
+        textAlign="center"
+        style={{ borderColor: '#CCC', marginTop: '15vh', marginBottom: '15vh' }}
+      />
+      )}
+      <Grid item>
+        <Container>
+          <Typography variant="h2">Welcome back</Typography>
+          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+        </Container>
+      </Grid>
+    </Grid>
   );
 }
 

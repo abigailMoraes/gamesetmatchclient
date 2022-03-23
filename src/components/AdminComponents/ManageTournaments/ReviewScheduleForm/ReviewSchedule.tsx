@@ -138,8 +138,8 @@ function ReviewSchedule({
           />
         </DialogContent>
         <DialogActions>
-          <StyledButton buttonText="Cancel" handleClick={handleClose} />
-          <StyledButton buttonText="Publish" handleClick={confirmPublish} />
+          <StyledButton buttonText="Cancel" handleClick={handleClose} size="large" />
+          <StyledButton buttonText="Publish" handleClick={confirmPublish} size="large" />
         </DialogActions>
       </Dialog>
       <StatusModal
