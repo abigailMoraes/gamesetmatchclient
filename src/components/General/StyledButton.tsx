@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 interface IStyledButton {
   buttonText:string;
   handleClick:React.MouseEventHandler<HTMLButtonElement> | undefined;
-  [x:string]: any;
+  [defaultButtonProps:string]: any;
 }
 
 function StyledButton({ buttonText, handleClick, ...props }:IStyledButton) {
