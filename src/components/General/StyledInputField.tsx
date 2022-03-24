@@ -13,12 +13,13 @@ interface StyledInputFieldProps {
   type?:any
   required?:boolean
   endAdornment?:string,
-  helperText?:string
-  error?:boolean
+  helperText?:string,
+  error?:boolean,
+  disabled?:boolean,
 }
 
 function StyledInputField({
-  id, label, value, onChange, width = 12, type, required = false, endAdornment, error, helperText,
+  id, label, value, onChange, width = 12, type, required = false, endAdornment, error, helperText, disabled,
 }:StyledInputFieldProps) {
   return (
     <Grid item xs={width}>
@@ -32,6 +33,7 @@ function StyledInputField({
         type={type}
         required={required}
         error={error}
+        disabled={disabled}
         helperText={helperText}
         InputProps={{
           endAdornment: <InputAdornment position="end">{endAdornment}</InputAdornment>,

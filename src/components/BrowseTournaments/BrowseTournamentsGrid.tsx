@@ -11,8 +11,9 @@ import { useTheme } from '@mui/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useAtomValue } from 'jotai';
 import BrowseTournamentCard from './BrowseTournamentCard';
-import TournamentService, { Tournament } from './TournamentsService';
+import TournamentService from './TournamentsService';
 import { userIDAtom } from '../../atoms/userAtom';
+import { Tournament } from '../../interfaces/TournamentInterface';
 
 export interface TournamentRow {
   id: Number,

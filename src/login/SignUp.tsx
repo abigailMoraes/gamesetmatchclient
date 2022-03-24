@@ -5,7 +5,23 @@ import {
   Field, Form, Formik, FormikHelpers,
 } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { PageContainer, SpaceContainer, BigText } from './FirebaseAuth';
+
+export const PageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #252525;
+`;
+
+export const SpaceContainer = styled.div`
+  flex: 1;
+`;
+
+export const BigText = styled.h1`
+  font-size: 3rem;
+`;
 
 const ContentContainer = styled.div`
   display: flex;

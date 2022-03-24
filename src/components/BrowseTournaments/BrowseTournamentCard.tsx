@@ -15,9 +15,9 @@ import { Theme, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import navigation from '../Navigation/navigation.json';
-import { Tournament } from './TournamentsService';
 import ViewRegistrants from './ViewRegistrants';
 import DialogDetail from '../General/DialogDetail';
+import { Tournament } from '../../interfaces/TournamentInterface';
 
 function RegistrationButton({ registered, handleClick }:any) {
   return (

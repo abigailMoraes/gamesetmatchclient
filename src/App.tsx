@@ -1,5 +1,13 @@
 import React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  CssBaseline,
+} from '@mui/material';
+import {
+  createTheme,
+  responsiveFontSizes,
+} from '@mui/material/styles';
 import {
   Navigate,
   Route, Routes, useLocation,
@@ -18,7 +26,7 @@ import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
 import { loginDataAtom } from './atoms/userAtom';
 
-const theme = createTheme({
+const theme = responsiveFontSizes(createTheme({
   palette: {
     primary: {
       main: '#2F3241',
@@ -34,7 +42,7 @@ const theme = createTheme({
       paper: '#27293C',
     },
     text: {
-      primary: '#FFF',
+      primary: '#CCCCCC',
       secondary: '#D27C2C',
       disabled: '#967654',
     },
@@ -61,7 +69,7 @@ const theme = createTheme({
       fontFamily: 'Abel',
     },
   },
-});
+}));
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   // let auth = useAuth();
@@ -80,22 +88,25 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<FirebaseAuth />} />
-          <Route path="/" element={<RequireAuth><NavigationSideBar /></RequireAuth>}>
-            <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />
-            <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />
-            <Route path={navigation.registerTournament} element={<RequireAuth><RegisterTournament /></RequireAuth>} />
-            <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistory /></RequireAuth>} />
-            <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournaments /></RequireAuth>} />
-            <Route path={navigation.manageUsers} element={<RequireAuth><ManageUsers /></RequireAuth>} />
-            <Route path={navigation.settings} element={<RequireAuth><Settings /></RequireAuth>} />
-          </Route>
-        </Routes>
-      </div>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<FirebaseAuth />} />
+            <Route path="/" element={<RequireAuth><NavigationSideBar /></RequireAuth>}>
+              <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />
+              <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />
+              <Route path={navigation.registerTournament} element={<RequireAuth><RegisterTournament /></RequireAuth>} />
+              <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistory /></RequireAuth>} />
+              <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournaments /></RequireAuth>} />
+              <Route path={navigation.manageUsers} element={<RequireAuth><ManageUsers /></RequireAuth>} />
+              <Route path={navigation.settings} element={<RequireAuth><Settings /></RequireAuth>} />
+            </Route>
+          </Routes>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }
 export default App;

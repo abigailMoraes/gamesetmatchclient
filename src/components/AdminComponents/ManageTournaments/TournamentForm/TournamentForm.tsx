@@ -1,15 +1,16 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/require-default-props */
 import {
   Button,
   CircularProgress,
-  DialogActions, DialogContent, DialogTitle, Grid,
+  DialogActions, DialogContent, DialogTitle, Grid, Tooltip,
 } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import React from 'react';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { useAtomValue } from 'jotai';
-import { Tournament } from '../../../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../../interfaces/TournamentInterface';
 import StyledButton from '../../../General/StyledButton';
 import StyledDatePicker from '../../../General/StyledDatePicker';
 import StyledInputField from '../../../General/StyledInputField';
@@ -17,10 +18,10 @@ import StyledSelect from '../../../General/StyledSelect';
 import ManageTournamentService from '../ManageTournamentService';
 import StatusModal from '../../../General/StatusModal';
 import { userIDAtom } from '../../../../atoms/userAtom';
-import { validationSchemaCreate, validationSchemaEdit } from './TournamentFormValidationSchemes';
 import {
-  FormatType, MatchingType, SeriesType, TabNames,
+  FormatType, MatchingType, SeriesType, TabNames, TournamentStatus,
 } from '../ManageTournamentsEnums';
+import ValidationSchemes from './TournamentFormValidationSchemes';
 
 interface TournamentFormProps {
   open:boolean,
@@ -45,8 +46,7 @@ const tournamentTemplate = {
   adminHostsTournament: 0,
 };
 
-const startDateMinDaysAfterRegistration = 1;
-const startDateErrorMessage = `Start date must be ${startDateMinDaysAfterRegistration} day after registration period closes`;
+const startDateErrorMessage = `Start date must be ${ValidationSchemes.startDateMinDaysAfterRegistration} day after registration period closes`;
 
 const isStartDateAfterRegistration = (startDate:Date | null, registration:Date):boolean => {
   if (!startDate) {
@@ -55,7 +55,7 @@ const isStartDateAfterRegistration = (startDate:Date | null, registration:Date):
   const startDateMoment = moment(startDate);
   const registrationDateMoment = moment(registration);
   const duration = moment.duration(startDateMoment.diff(registrationDateMoment));
-  return duration.asDays() >= startDateMinDaysAfterRegistration;
+  return duration.asDays() >= ValidationSchemes.startDateMinDaysAfterRegistration;
 };
 
 function TournamentForm({
@@ -64,8 +64,10 @@ function TournamentForm({
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [responseOpen, setResponseOpen] = React.useState(false);
-  const [formValidation, setFormValidation] = React.useState(tournament ? validationSchemaEdit : validationSchemaCreate);
+  const [formValidation, setFormValidation] = React.useState(tournament
+    ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());
   const userID = useAtomValue(userIDAtom);
+
   const formik = useFormik({
     initialValues: tournament || tournamentTemplate,
     validationSchema: formValidation,
@@ -116,8 +118,45 @@ function TournamentForm({
     },
   });
 
+  const [fieldsChanged, setFieldsChanged] = React.useState(false);
+  const checkFieldsChanged = () => {
+    if (tournament) {
+      setFieldsChanged((formik.values.name !== tournament.name)
+      || (formik.values.description !== tournament.description)
+      || (formik.values.startDate !== tournament.startDate)
+      || (formik.values.location !== tournament.location)
+      || (formik.values.prize !== tournament.prize)
+      || (formik.values.format !== tournament.format)
+      || (formik.values.type !== tournament.type)
+      || (formik.values.closeRegistrationDate !== tournament.closeRegistrationDate)
+      || (formik.values.matchDuration !== tournament.matchDuration)
+      || (formik.values.numberOfMatches !== tournament.numberOfMatches));
+      if (!fieldsChanged) formik.setErrors({});
+      return;
+    }
+
+    if ((formik.values.name !== tournamentTemplate.name)
+    || (formik.values.description !== tournamentTemplate.description)
+    || (formik.values.startDate !== tournamentTemplate.startDate)
+    || (formik.values.location !== tournamentTemplate.location)
+    || (formik.values.prize !== tournamentTemplate.prize)
+    || (formik.values.format !== tournamentTemplate.format)
+    || (formik.values.type !== tournamentTemplate.type)
+    || (formik.values.closeRegistrationDate !== tournamentTemplate.closeRegistrationDate)
+    || (formik.values.matchDuration !== tournamentTemplate.matchDuration)
+    || (formik.values.numberOfMatches !== tournamentTemplate.numberOfMatches)) {
+      setFieldsChanged(true); return;
+    }
+    formik.setErrors({});
+    setFieldsChanged(false);
+  };
+
+  const [enabledByStatus, setEnabledByStatus] = React.useState(true);
+  const [tournamentOver, setTournamentOver] = React.useState(true);
+
   const handleClose = () => {
     formik.resetForm();
+    formik.setErrors({});
     setOpen(!open);
   };
 
@@ -133,11 +172,17 @@ function TournamentForm({
     setResponseOpen(false);
   };
 
-  React.useEffect(() => {
-    formik.setErrors({});
+  React.useMemo(() => {
+    formik.resetForm();
+    setEnabledByStatus(tournament ? tournament.status > TournamentStatus.ClosedRegistration : false);
+    setTournamentOver(tournament ? tournament.status === TournamentStatus.TournamentOver : false);
     formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
-    setFormValidation(tournament ? validationSchemaEdit : validationSchemaCreate);
-  }, [tournament]);
+    setFormValidation(tournament ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());
+  }, [open, tournament]);
+
+  React.useEffect(() => {
+    checkFieldsChanged();
+  });
 
   return (
     <Dialog
@@ -148,7 +193,7 @@ function TournamentForm({
           {`${tournament ? 'Edit' : 'Create'} your tournament`}
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={1.5} my={0.5} display="flex">
+          <Grid container spacing={1.5} mt={0.1} display="flex">
             <StyledInputField
               id="name"
               label="Name"
@@ -157,6 +202,7 @@ function TournamentForm({
               error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name ? formik.errors.name : ''}
               required
+              disabled={tournamentOver}
             />
             <StyledInputField
               id="description"
@@ -165,6 +211,7 @@ function TournamentForm({
               onChange={formik.handleChange}
               error={Boolean(formik.errors.description)}
               helperText={formik.errors.description}
+              disabled={tournamentOver}
             />
             <StyledInputField
               id="location"
@@ -173,6 +220,7 @@ function TournamentForm({
               onChange={formik.handleChange}
               error={Boolean(formik.errors.location)}
               helperText={formik.errors.location}
+              disabled={tournamentOver}
             />
             <StyledInputField
               id="prize"
@@ -181,6 +229,7 @@ function TournamentForm({
               onChange={formik.handleChange}
               error={Boolean(formik.errors.prize)}
               helperText={formik.errors.prize}
+              disabled={tournamentOver}
             />
             <StyledInputField
               id="matchDuration"
@@ -193,6 +242,7 @@ function TournamentForm({
               error={formik.touched.matchDuration && Boolean(formik.errors.matchDuration)}
               helperText={formik.touched.matchDuration ? formik.errors.matchDuration : ''}
               endAdornment="minutes"
+              disabled={tournamentOver}
             />
             <StyledSelect
               id="numberOfMatches"
@@ -201,6 +251,7 @@ function TournamentForm({
               value={formik.values.numberOfMatches}
               onChange={formik.handleChange('numberOfMatches')}
               width={6}
+              disabled={enabledByStatus}
             />
             <StyledSelect
               id="format"
@@ -208,6 +259,7 @@ function TournamentForm({
               selectOptions={FormatType.map((text, index) => ({ value: index, text }))}
               value={formik.values.format}
               onChange={formik.handleChange('format')}
+              disabled={enabledByStatus}
               width={6}
             />
             <StyledSelect
@@ -216,11 +268,13 @@ function TournamentForm({
               selectOptions={MatchingType.map((text, index) => ({ value: index, text }))}
               value={formik.values.type}
               onChange={formik.handleChange('type')}
+              disabled={enabledByStatus}
               width={6}
             />
             <StyledDatePicker
               label="Close Registration Date"
               value={formik.values.closeRegistrationDate}
+              disabled={enabledByStatus}
               onChange={(newValue) => {
                 formik.setFieldTouched('closeRegistrationDate');
                 formik.setFieldValue(
@@ -228,7 +282,7 @@ function TournamentForm({
                   newValue,
                 );
               }}
-              error={formik.touched.closeRegistrationDate && Boolean(formik.errors.closeRegistrationDate)}
+              error={Boolean(formik.errors.closeRegistrationDate)}
               helperText={
                   (formik.touched.closeRegistrationDate && formik.errors.closeRegistrationDate)
                     ? 'Registration close date cannot be in the past' : ''
@@ -237,6 +291,7 @@ function TournamentForm({
             <StyledDatePicker
               label="Start Date"
               value={formik.values.startDate}
+              disabled={enabledByStatus}
               onChange={(newValue) => {
                 formik.setFieldTouched('startDate');
                 formik.setFieldValue(
@@ -244,6 +299,7 @@ function TournamentForm({
                   newValue,
                 );
                 if (!isStartDateAfterRegistration(newValue, formik.values.closeRegistrationDate)) {
+                  console.log('test');
                   formik.setFieldError('startDate', startDateErrorMessage);
                 }
               }}
@@ -256,8 +312,12 @@ function TournamentForm({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <StyledButton buttonText="Cancel" handleClick={handleClose} />
-          <Button type="submit" size="small" color="secondary">{`${tournament ? 'Save' : 'Add'}`}</Button>
+          <StyledButton buttonText="Cancel" handleClick={handleClose} size="large" />
+          <Tooltip title={fieldsChanged ? '' : tournament ? 'No changes to save.' : 'Please fill out the form'}>
+            <span>
+              <Button type="submit" size="large" color="secondary" disabled={!fieldsChanged}>{`${tournament ? 'Save' : 'Add'}`}</Button>
+            </span>
+          </Tooltip>
         </DialogActions>
       </form>
       {loading && <CircularProgress />}

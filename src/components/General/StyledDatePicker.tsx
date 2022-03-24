@@ -12,15 +12,17 @@ interface StyledDatePickerProps {
   value:Date,
   onChange:(arg0:Date | null) => void,
   error?:boolean,
+  disabled?:boolean,
   helperText?:any
 }
 function StyledDatePicker({
-  label, value, onChange, error, helperText,
+  label, value, onChange, error, helperText, disabled,
 }:StyledDatePickerProps) {
   return (
     <Grid item xs={6}>
       <LocalizationProvider dateAdapter={DateAdapter}>
         <DatePicker
+          disabled={disabled}
           label={label}
           value={value}
           onChange={onChange}

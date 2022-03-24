@@ -8,11 +8,11 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/styles';
 import Grid from '@mui/material/Grid';
-import { Tournament } from '../../../BrowseTournaments/TournamentsService';
 import GridCardOpenForRegistration from './GridCardOpenForRegistration';
 import GridCardOngoing from './GridCardOngoing';
-import GridCardManageSchedule from './GridCardManageSchedule';
 import { GridCardTypes } from '../ManageTournamentsEnums';
+import { Tournament } from '../../../../interfaces/TournamentInterface';
+import GridCardManageSchedule from './GridCardManageSchedule';
 
 export interface TournamentRow {
   id: Number,

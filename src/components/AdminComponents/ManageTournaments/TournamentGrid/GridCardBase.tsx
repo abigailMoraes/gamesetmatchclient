@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Grid, Paper, Theme } from '@mui/material';
-import { Tournament } from '../../../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../../interfaces/TournamentInterface';
 import TournamentDetailsDialog from './TournamentDetailsDialog';
 import TournamentForm from '../TournamentForm/TournamentForm';
 
@@ -116,7 +116,7 @@ function GridCardManageTournamentBase({
         </Grid>
       </Grid>
 
-      <TournamentDetailsDialog open={open} handleClose={handleClose} tournament={tournament} fullScreen={fullScreen} />
+      <TournamentDetailsDialog open={open} handleClose={handleClose} tournament={currentTournament} fullScreen={fullScreen} />
       <TournamentForm tournament={formTournament} setTournament={setCurrentTournament} open={openEdit} setOpen={setOpenEdit} />
     </Paper>
   );

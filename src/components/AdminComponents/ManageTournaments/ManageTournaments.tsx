@@ -8,13 +8,13 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useAtomValue } from 'jotai';
-import Button from '@mui/material/Button';
 import TournamentForm from './TournamentForm/TournamentForm';
 import TournamentDisplayGrid, { TournamentRow } from './TournamentGrid/TournamentDisplayGrid';
 import { loginDataAtom } from '../../../atoms/userAtom';
 import { GridCardTypes, TabNames, TournamentStatus } from './ManageTournamentsEnums';
 import ManageTournamentService from './ManageTournamentService';
-import { Tournament } from '../../BrowseTournaments/TournamentsService';
+import { Tournament } from '../../../interfaces/TournamentInterface';
+import StyledButton from '../../General/StyledButton';
 
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props
@@ -94,7 +94,7 @@ function ManageTournaments() {
             <Typography variant="h5">Manage your tournaments</Typography>
           </Grid>
           <Grid item px={4}>
-            <Button variant="contained" size="medium" color="secondary" onClick={openTournamentForm}>+ Create Tournament</Button>
+            <StyledButton buttonText="+ Create Tournament" handleClick={openTournamentForm} variant="contained" />
           </Grid>
           <Grid item sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
