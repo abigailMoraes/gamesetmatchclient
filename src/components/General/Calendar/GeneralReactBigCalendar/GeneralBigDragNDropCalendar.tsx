@@ -15,7 +15,7 @@ interface GeneralBigCalendarProps {
   defaultView?:View | undefined,
   onMatchSelect:(e:any) => void;
   onMatchDrop:(argo0:any) => void;
-  onMatchResize:(arg0:any) => void;
+  onMatchResize?:(arg0:any) => void;
   height?:number;
 }
 
@@ -44,6 +44,7 @@ function GeneralBigDragNDropCalendar({
 GeneralBigDragNDropCalendar.defaultProps = {
   defaultDate: new Date(),
   defaultView: 'month',
+  onMatchResize: undefined,
   height: 500,
 };
 

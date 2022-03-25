@@ -4,12 +4,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import React from 'react';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
-import { Match } from '../../../../interfaces/MatchInterface';
+import { initMatch, Match } from '../../../../interfaces/MatchInterface';
 import GeneralBigDragNDropCalendar from '../../../General/Calendar/GeneralReactBigCalendar/GeneralBigDragNDropCalendar';
 import StatusModal from '../../../General/StatusModal';
 import StyledButton from '../../../General/StyledButton';
 import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
 import { getFirstMatch, getLastMatch, matchToEvent } from '../../../General/Calendar/GeneralReactBigCalendar/MatchEventHelpers';
+import MatchDetails from '../../../General/Matches/MatchDetails';
 
 // events can't be moved to before today
 interface ReviewScheduleProps {
@@ -31,16 +32,16 @@ function ReviewSchedule({
   const [lastMatch, setLastMatch] = React.useState(new Date());
   const [firstMatch, setFirstMatch] = React.useState(new Date());
   const [events, setEvents] = React.useState<ReactBigCalendarEvent[]>([]);
-  const onMatchSelect = (e:Event) => {
-    console.log(e);
+  const [selectedMatch, setSelectedMatch] = React.useState<Match>(initMatch);
+  const [openMatchDetails, setOpenMatchDetails] = React.useState(false);
+  const onEventSelect = (event:any) => {
+    const match = matches.find((m) => m.matchID === event.id);
+    if (match) {
+      setSelectedMatch(match);
+      setOpenMatchDetails(true);
+    }
   };
-  //   const onMatchDrop = () => {
-  //     // get update
-  //     setMatches(matches);
-  //   };
-  //   const onMatchResize = () => {
-  //     setMatches(matches);
-  //   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -50,10 +51,10 @@ function ReviewSchedule({
   };
 
   const confirmPublish = () => {
-
+    console.log(matches);
   };
 
-  const moveEvent = React.useCallback(
+  const changeEventDetails = React.useCallback(
     ({
       event, start, end,
     }) => {
@@ -78,17 +79,6 @@ function ReviewSchedule({
         ];
         setEvents(updatedEvent);
       }
-    },
-    [events],
-  );
-
-  const resizeEvent = React.useCallback(
-    ({ event, start, end }) => {
-      setEvents((prev: any) => {
-        const existing = prev.find((ev:ReactBigCalendarEvent) => ev.id === event.id) ?? {};
-        const filtered = prev.filter((ev:ReactBigCalendarEvent) => ev.id !== event.id);
-        return [...filtered, { ...existing, start, end }];
-      });
     },
     [events],
   );
@@ -131,9 +121,9 @@ function ReviewSchedule({
           <GeneralBigDragNDropCalendar
             events={events}
             defaultDate={firstMatch}
-            onMatchSelect={onMatchSelect}
-            onMatchDrop={moveEvent}
-            onMatchResize={resizeEvent}
+            onMatchSelect={onEventSelect}
+            onMatchDrop={changeEventDetails}
+            onMatchResize={changeEventDetails}
             height={500}
           />
         </DialogContent>
@@ -149,6 +139,7 @@ function ReviewSchedule({
         dialogText="The schedule has been published and e-mails have been sent to the participants."
         isError={false}
       />
+      <MatchDetails open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} participants={[]} />
     </>
   );
 }

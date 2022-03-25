@@ -10,3 +10,16 @@ export interface Match {
   location: String,
   description: String,
 }
+
+export const initMatch = {
+  results: '',
+  attendance: '',
+  matchID: -1,
+  startTime: new Date(),
+  endTime: new Date(),
+  duration: -1,
+  type: '',
+  name: '',
+  location: '',
+  description: '',
+};
