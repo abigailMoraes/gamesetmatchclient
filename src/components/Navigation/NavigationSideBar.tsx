@@ -30,6 +30,7 @@ import MenuItem from './MenuItem';
 import LogoIconNameSideBySide from '../Logo/LogoIconNameSideBySide';
 import navigation from './navigation.json';
 import { emptyUser, loginDataAtomPersistence } from '../../atoms/userAtom';
+import DisplayUser from '../Profile/DisplayUser';
 
 const drawerWidth = 240;
 
@@ -138,6 +139,7 @@ function NavigationSideBar() {
           >
             <MenuIcon />
           </IconButton>
+          <DisplayUser />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
