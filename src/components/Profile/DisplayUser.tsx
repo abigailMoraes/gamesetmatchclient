@@ -12,7 +12,7 @@ export default function DisplayUser() {
     }}
     >
       <Avatar sx={{ marginRight: '10px' }} src={loginData.picture} />
-      <Typography className="text-7xl">{loginData.name}</Typography>
+      <Typography>{loginData.name}</Typography>
     </Box>
   );
 }
