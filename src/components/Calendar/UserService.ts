@@ -15,6 +15,6 @@ const getMatchParticipants = (id: number) => fetch(`${process.env.REACT_APP_API_
   .then((response) => (response.json())).then((data) => data.map((item:User) => setUserDetails(item)));
 
 const UserService = {
-   getMatchParticipants,
+  getMatchParticipants,
 };
 export default UserService;

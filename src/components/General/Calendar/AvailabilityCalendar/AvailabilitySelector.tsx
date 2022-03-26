@@ -1,90 +1,113 @@
-import moment from 'moment';
 import React from 'react';
-import * as dates from 'date-arithmetic';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Pagination from '@mui/material/Pagination';
-import Grid from '@mui/material/Grid';
-import { Theme } from '@mui/material/styles';
-import { useTheme } from '@emotion/react';
-import Day, { DayFirstColumn } from './Day';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import { Calendar, Views } from 'react-big-calendar';
+import { useAtomValue } from 'jotai';
+import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
+import { localizerAtom } from '../../../../atoms/localizerAtom';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+
+const DragAndDropCalendar = withDragAndDrop(Calendar as any);
 
 interface AvailabilitySelectorProps {
-  availabilities:Availability[],
-  setAvailabilities:(arg0:Availability[]) => void;
+  availabilities: ReactBigCalendarEvent[],
+  setAvailabilities:(arg0:ReactBigCalendarEvent[]) => void,
 }
 
 export type Availability = {
-  date:Date;
-  slots:boolean[]
+  day:number;
+  slots:string
 };
-const daysPerView = 5;
-const roundMinutesToDays = (roundDuration:number) => {
-  const duration = moment.duration(roundDuration, 'minutes');
-  return duration.asDays();
-};
-
-export function setUpDateRange(startDate:Date, roundDuration:number):Availability[] {
-  let days = roundMinutesToDays(roundDuration);
-  const range:Availability[] = [];
-  let i = 0;
-  while (i < days) {
-    const currDate = dates.add(startDate, i, 'day');
-    const dayOfWeek = currDate.getDay();
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-      days += 1;
-    }
-
-    range.push({
-      date: currDate,
-      slots: Array(24).fill(false),
-    });
-    i += 1;
-  }
-  return range;
-}
 
 function AvailabilitySelector({ availabilities, setAvailabilities }:AvailabilitySelectorProps) {
-  const theme = useTheme() as Theme;
+  const localizer = useAtomValue(localizerAtom);
 
-  const startOfRange = (page:number) => (page - 1) * daysPerView;
-  const endOfRange = (page:number) => page * daysPerView;
+  const handleSelectSlot = React.useCallback(
+    ({ start, end }) => {
+      // round up the time slots
+      const eventID = availabilities.length;
+      const availability: ReactBigCalendarEvent = {
+        title: 'Available',
+        start,
+        end,
+        allDay: false,
+        id: eventID + 1,
+      };
+      const updatedAvailabilites = [...availabilities, availability];
+      setAvailabilities(updatedAvailabilites);
+      // update availabilities
+    },
+    [availabilities],
+  );
 
-  const [page, setPage] = React.useState(1);
-  const [visibleDays, setVisibleDays] = React.useState(availabilities.slice(startOfRange(page), endOfRange(page)));
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    setVisibleDays(availabilities.slice(startOfRange(value), endOfRange(value)));
-  };
+  const handleSelectEvent = React.useCallback(
+    (event:any) => {
+      const existingAvail = availabilities.find((ev:ReactBigCalendarEvent) => ev.id === event.id);
+      if (existingAvail) {
+        const filteredAvailabilities = availabilities.filter((ev:ReactBigCalendarEvent) => ev.id !== event.id);
+        setAvailabilities(filteredAvailabilities);
+      }
+    },
+    [availabilities],
+  );
 
-  const count = Math.ceil(availabilities.length / daysPerView);
-  // TODO: make the pagination responsive
-  // TODO: drag selection?
+  const changeEventDetails = React.useCallback(
+    ({
+      event, start, end,
+    }) => {
+      const existingAvail = availabilities.find((ev:ReactBigCalendarEvent) => ev.id === event.id);
+      const filteredAvailabilities = availabilities.filter((ev:ReactBigCalendarEvent) => ev.id !== event.id);
+      if (existingAvail) {
+        const updatedAvails:ReactBigCalendarEvent[] = [...filteredAvailabilities,
+          {
+            ...existingAvail, start, end,
+          },
+        ];
+        setAvailabilities(updatedAvails);
+      }
+    },
+    [availabilities],
+  );
+
+  const { defaultDate, formats } = React.useMemo(
+    () => ({
+      defaultDate: new Date(),
+      formats: {
+        dayFormat: (date:any) => date.toLocaleString('default', { weekday: 'long' }),
+      },
+    }),
+    [],
+  );
+
   return (
-    <Paper>
-      <Typography variant="h6" style={{ padding: '10px' }}>
-        Provide your availability
+    <Paper style={{ padding: '10px' }}>
+      <Typography variant="h6">
+        Provide your general availability for a week.
       </Typography>
-      <Typography variant="body2" style={{ paddingLeft: '10px' }}>
-        *Drag selection is not implemented*
+      <Typography variant="body1">
+        To delete, click on the availability you provided.
       </Typography>
-      <Grid container justifyContent="center" spacing={2} pt={3}>
-        <Grid container justifyContent="center">
-          <DayFirstColumn theme={theme} />
-          {visibleDays.map((availability, index) => (
-            <Day
-              date={availability.date}
-              slots={availability.slots}
-              setSlots={(slots:boolean[]) => {
-                const updatedAvailabilites = [...availabilities];
-                updatedAvailabilites[index].slots = slots;
-                setAvailabilities(updatedAvailabilites);
-              }}
-            />
-          ))}
-        </Grid>
-        <Pagination count={count} page={page} onChange={handleChange} />
-      </Grid>
+      <Typography>
+        This will be used to help schedule your matches, but there is no guarantee we will schedule only in your provided availability.
+      </Typography>
+      <div style={{ height: 600 }}>
+        <DragAndDropCalendar
+          defaultDate={defaultDate}
+          defaultView={Views.WEEK}
+          events={availabilities}
+          localizer={localizer}
+          onSelectEvent={handleSelectEvent}
+          onSelectSlot={handleSelectSlot}
+          onEventDrop={changeEventDetails}
+          onEventResize={changeEventDetails}
+          selectable
+          toolbar={false}
+          formats={formats}
+          min={new Date(0, 0, 0, 9, 0, 0)}
+          max={new Date(0, 0, 0, 22, 0, 0)}
+        />
+      </div>
     </Paper>
   );
 }
