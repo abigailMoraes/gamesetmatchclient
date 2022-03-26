@@ -4,11 +4,14 @@ export interface Match {
   matchID: number,
   startTime: Date,
   endTime: Date,
-  duration: number,
-  roundNumber: number,
+  roundID: number,
   name: String,
   location: String,
   description: String,
+  playerOneID:number,
+  playerTwoID:number,
+  playerOneName:string,
+  playerTwoName:string,
 }
 
 export const initMatch = {
@@ -17,9 +20,12 @@ export const initMatch = {
   matchID: -1,
   startTime: new Date(),
   endTime: new Date(),
-  duration: -1,
-  roundNumber: 1,
+  roundID: 1,
   name: '',
   location: '',
   description: '',
+  playerOneID: -1,
+  playerTwoID: -1,
+  playerOneName: '',
+  playerTwoName: '',
 };

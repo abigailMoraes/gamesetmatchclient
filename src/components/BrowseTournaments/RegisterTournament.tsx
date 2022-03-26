@@ -17,8 +17,9 @@ import AvailabilitySelector, { Availability } from '../General/Calendar/Availabi
 import TournamentService, { RegisterForTournamentBody } from './TournamentsService';
 import StatusModal from '../General/StatusModal';
 import { userIDAtom } from '../../atoms/userAtom';
-import { Tournament } from '../../interfaces/TournamentInterface';
+import { SkillLevels, Tournament } from '../../interfaces/TournamentInterface';
 import { ReactBigCalendarEvent } from '../../interfaces/EventInterface';
+import StyledSelect from '../General/StyledSelect';
 
 interface RegisterTournamentState {
   tournament:Tournament;
@@ -66,6 +67,7 @@ function RegisterTournament() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [skillLevel, setSkillLevel] = useState(-1);
   const userID = useAtomValue(userIDAtom);
 
   const submitRegistration = () => {
@@ -74,6 +76,7 @@ function RegisterTournament() {
     const availabilityDTO:Availability[] = transformToAvailabilityString(availabilities);
     const registration:RegisterForTournamentBody = {
       userID,
+      skillLevel,
       availabilities: availabilityDTO,
     };
     TournamentService.registerForTournament(tournament.tournamentID, registration)
@@ -120,6 +123,21 @@ function RegisterTournament() {
               <Typography variant="body1">
                 {`Start Date:  ${tournament.startDate}`}
               </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Please select your skill level: </Typography>
+              <StyledSelect
+                id="skill"
+                label="Skill Level"
+                selectOptions={SkillLevels.map((text:string, index:number) => ({ value: index, text }))}
+                value={skillLevel}
+                onChange={(e) => setSkillLevel(e.target.value)}
+                width={6}
+              />
             </CardContent>
           </Card>
         </Grid>

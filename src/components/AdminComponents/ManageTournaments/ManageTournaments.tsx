@@ -73,7 +73,6 @@ function ManageTournaments() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
   const openTournamentForm = () => {
     setFormTournament(undefined);
     setOpen(!open);

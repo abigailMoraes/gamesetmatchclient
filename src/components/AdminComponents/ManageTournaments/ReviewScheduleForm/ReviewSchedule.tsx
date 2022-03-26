@@ -1,4 +1,6 @@
-import { DialogContent, DialogTitle, Typography } from '@mui/material';
+import {
+  Backdrop, CircularProgress, DialogContent, DialogTitle, Typography,
+} from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 
 import DialogActions from '@mui/material/DialogActions';
@@ -11,6 +13,7 @@ import StyledButton from '../../../General/StyledButton';
 import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
 import { getFirstMatch, getLastMatch, matchToEvent } from '../../../General/Calendar/GeneralReactBigCalendar/MatchEventHelpers';
 import MatchDetails from '../../../General/Matches/MatchDetails';
+import ManageTournamentService from '../ManageTournamentService';
 
 // events can't be moved to before today
 interface ReviewScheduleProps {
@@ -21,9 +24,10 @@ interface ReviewScheduleProps {
   tournament: Tournament
 }
 
-// can drag or update via clicking
-
-// change event colour based oon match status
+// TODO change event colour based oon match status
+const formatDateForDisplay = (date:Date) => date.toLocaleString('default', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+});
 
 function ReviewSchedule({
   open, setOpen, matches, setMatches, tournament,
@@ -34,6 +38,9 @@ function ReviewSchedule({
   const [events, setEvents] = React.useState<ReactBigCalendarEvent[]>([]);
   const [selectedMatch, setSelectedMatch] = React.useState<Match>(initMatch);
   const [openMatchDetails, setOpenMatchDetails] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [getConfirmation, setGetConfirmation] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const onEventSelect = (event:any) => {
     const match = matches.find((m) => m.matchID === event.id);
     if (match) {
@@ -51,9 +58,28 @@ function ReviewSchedule({
   };
 
   const confirmPublish = () => {
-    console.log(matches);
+    setGetConfirmation(true);
   };
 
+  const publishMatches = () => {
+    setLoading(true);
+    setGetConfirmation(false);
+    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, tournament.currentRound, matches)
+      .then(() => ManageTournamentService.publishSchedule(matches))
+      .then(() => {
+        setLoading(false);
+        setStatusModal(true);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+        setStatusModal(true);
+      });
+  };
+
+  const onConfirm = () => {
+    publishMatches();
+  };
   const changeEventDetails = React.useCallback(
     ({
       event, start, end,
@@ -112,11 +138,11 @@ function ReviewSchedule({
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="body1">
-            {`Round duration:${firstMatch} - ${lastMatch}`}
+            {`Round duration: ${formatDateForDisplay(firstMatch)} - ${formatDateForDisplay(lastMatch)}`}
           </Typography>
           <Typography variant="body1">
-            Drag and drop to move matches around.
-            Matches in red indicate that the scheduler could not find a time that satisfied both player&apos;s availabilities.
+            Drag and drop to move matches around until you are satisfied with the schedule.
+            {/* Matches in red indicate that the scheduler could not find a time that satisfied both player&apos;s availabilities. */}
           </Typography>
           <GeneralBigDragNDropCalendar
             events={events}
@@ -135,11 +161,30 @@ function ReviewSchedule({
       <StatusModal
         open={openStatusModal}
         handleDialogClose={closeStatusDialog}
-        dialogTitle="Sucess!"
-        dialogText="The schedule has been published and e-mails have been sent to the participants."
-        isError={false}
+        dialogTitle={error ? 'Error' : 'Sucess!'}
+        dialogText={error ? 'There was an error publishing the schedule. Please try again or contact support.'
+          : 'The schedule has been published and e-mails have been sent to the participants.'}
+        isError={error}
       />
-      <MatchDetails open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} participants={[]} />
+      <Dialog open={getConfirmation}>
+        <DialogTitle>
+          <Typography variant="h6">Please confirm you are ready to publish</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">Once you publish a schedule you cannot make changes to it.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <StyledButton buttonText="Cancel" handleClick={() => setGetConfirmation(false)} size="large" />
+          <StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />
+        </DialogActions>
+      </Dialog>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <MatchDetails open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} />
     </>
   );
 }

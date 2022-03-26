@@ -22,6 +22,8 @@ interface GridCardManageTournamentBaseProps{
   setFormTournament:(arg0:Tournament | undefined) => void,
   buttonName?:string,
   onButtonClick?:() => void,
+  buttonName2?:string,
+  onButtonClick2?:() => void,
   enableEdit:boolean,
   enableDelete:boolean
 }
@@ -36,7 +38,9 @@ const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
   }
 };
 function GridCardManageTournamentBase({
-  tournament, buttonName = '', onButtonClick, enableEdit, enableDelete, formTournament,
+  tournament, buttonName = '', onButtonClick,
+  buttonName2 = '', onButtonClick2,
+  enableEdit, enableDelete, formTournament,
   setFormTournament,
 }:GridCardManageTournamentBaseProps) {
   const theme = useTheme() as Theme;
@@ -110,9 +114,14 @@ function GridCardManageTournamentBase({
               </IconButton>
             </span>
           </Tooltip>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {buttonName && <Button size="small" color="secondary" onClick={onButtonClick}>{buttonName}</Button>}
-          </Box>
+          <Grid sx={{ display: 'flex', flexDirection: 'column' }} spacing={4}>
+            <Grid item>
+              {buttonName && <Button size="small" color="secondary" onClick={onButtonClick}>{buttonName}</Button>}
+            </Grid>
+            <Grid item>
+              {buttonName2 && <Button size="small" color="secondary" onClick={onButtonClick2}>{buttonName2}</Button>}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
 

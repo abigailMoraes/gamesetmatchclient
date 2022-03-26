@@ -15,4 +15,7 @@ export interface Tournament {
   status:number,
   adminHostsTournament:number,
   registered:boolean,
+  currentRound:number,
 }
+
+export const SkillLevels = ['Beginner', 'Intermediate', 'Advanced'];

@@ -1,10 +1,12 @@
 import React from 'react';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import { Match } from '../../../../interfaces/MatchInterface';
-import MatchService from '../../../Calendar/MatchService';
 import StatusModal from '../../../General/StatusModal';
 import ReviewSchedule from '../ReviewScheduleForm/ReviewSchedule';
 import GridCardBase from './GridCardBase';
+import ManageTournamentService from '../ManageTournamentService';
 
 interface GridCardManageScheduleProps {
   tournament:Tournament
@@ -12,62 +14,40 @@ interface GridCardManageScheduleProps {
   setFormTournament:(arg0:Tournament | undefined) => void,
 }
 
-const mockMatches:Match[] = [{
-  results: 'win',
-  attendance: 'No',
-  matchID: 1,
-  startTime: new Date('2022-02-20 11:00:00'),
-  endTime: new Date('2022-02-20 11:30:00'),
-  duration: 30,
-  roundNumber: 3,
-  name: 'Mariokart Madness',
-  location: 'West Atrium room 203',
-  description: 'Come join us for some krazy karting! (Individual)',
-}, {
-  results: 'loss',
-  attendance: 'No',
-  matchID: 4,
-  startTime: new Date('2022-03-05 12:00:00'),
-  endTime: new Date('2022-03-05 12:30:00'),
-  duration: 30,
-  roundNumber: 2,
-  name: 'Mariokart Madness',
-  location: 'West Atrium room 203',
-  description: 'Come join us for some krazy karting! (Individual)',
-}, {
-  results: 'TBD',
-  attendance: 'Yes',
-  matchID: 6,
-  startTime: new Date('2022-03-05 13:30:00'),
-  endTime: new Date('2022-03-05 14:00:00'),
-  duration: 30,
-  roundNumber: 1,
-  name: 'Mariokart Madness',
-  location: 'West Atrium room 203',
-  description: 'Come join us for some krazy karting! (Individual)',
-}];
-
 function GridCardManageSchedule({ tournament, formTournament, setFormTournament }:GridCardManageScheduleProps) {
   const [open, setOpen] = React.useState(false);
   const [errorModal, setErrorModal] = React.useState(false);
   // TODO enable delete if its the first round only
   const [matches, setMatches] = React.useState<Match[]>([]);
-
+  const [loading, setLoading] = React.useState(false);
+  const [openStatus, setOpenStatus] = React.useState(false);
+  const [createError, setCreateError] = React.useState(false);
   const openPublishSchedule = () => {
-    setMatches(mockMatches);
-    setOpen(true);
-    MatchService.getAll(tournament.tournamentID).then((data) => {
+    ManageTournamentService.getMatchesNeedingScheduling(tournament.currentRound).then((data) => {
       setMatches(data);
       setOpen(true);
     }).catch(() => {
-      // setErrorModal(true);
-      setMatches(mockMatches);
-      setOpen(true);
+      setErrorModal(true);
+    });
+  };
+
+  const createSchedule = () => {
+    setLoading(true);
+    ManageTournamentService.createSchedule(tournament.tournamentID).then(() => {
+      setLoading(false);
+      setOpenStatus(true);
+    }).catch(() => {
+      setLoading(false);
+      setCreateError(true);
+      setOpenStatus(true);
     });
   };
 
   const handleDialogClose = () => {
+    setOpenStatus(false);
+
     setErrorModal(false);
+    setCreateError(false);
   };
 
   return (
@@ -76,8 +56,10 @@ function GridCardManageSchedule({ tournament, formTournament, setFormTournament 
         tournament={tournament}
         formTournament={formTournament}
         setFormTournament={setFormTournament}
-        buttonName="Publish Schedule"
-        onButtonClick={openPublishSchedule}
+        buttonName="Create Schedule"
+        onButtonClick={createSchedule}
+        buttonName2="Publish Schedule"
+        onButtonClick2={openPublishSchedule}
         enableDelete={false}
         enableEdit
       />
@@ -95,6 +77,20 @@ function GridCardManageSchedule({ tournament, formTournament, setFormTournament 
         dialogTitle="Error"
         isError
       />
+      <StatusModal
+        open={openStatus}
+        handleDialogClose={handleDialogClose}
+        dialogText={createError ? 'There was an error with creating the schedule.Please try again later or contact support.'
+          : "Schedule was sucessfully created, click 'Publish Schedule' to view"}
+        dialogTitle={createError ? 'Error' : 'Success'}
+        isError={createError}
+      />
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme:any) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }
