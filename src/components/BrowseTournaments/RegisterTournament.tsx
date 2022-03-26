@@ -97,7 +97,6 @@ function RegisterTournament() {
 
   React.useMemo(() => {
     setCanSubmit(availabilities.length !== 0);
-    console.log(canSubmit);
   }, [availabilities]);
 
   return (
@@ -110,11 +109,13 @@ function RegisterTournament() {
               <Typography variant="h6">
                 {`Registration for:  ${tournament.name}`}
               </Typography>
+              {tournament.location.length > 0 && (
               <Typography variant="body1">
                 {`Location:  ${tournament.location}`}
               </Typography>
+              )}
               <Typography variant="body1">
-                {`Match Duration:  ${tournament.matchDuration}`}
+                {`Match Duration:  ${tournament.matchDuration} minutes`}
               </Typography>
               <Typography variant="body1">
                 {`Start Date:  ${tournament.startDate}`}
