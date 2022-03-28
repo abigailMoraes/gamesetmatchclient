@@ -11,6 +11,7 @@ export enum GridCardTypes {
   ManageSchedule,
   Ongoing,
   OpenForRegistration,
+  Over,
 }
 
 export enum TournamentStatus {

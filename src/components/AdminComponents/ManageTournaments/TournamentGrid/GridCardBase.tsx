@@ -18,6 +18,7 @@ import TournamentForm from '../TournamentForm/TournamentForm';
 import StatusModal from '../../../General/StatusModal';
 import LoadingOverlay from '../../../General/LoadingOverlay';
 import ManageTournamentService from '../ManageTournamentService';
+import { TournamentStatus } from '../ManageTournamentsEnums';
 
 interface GridCardManageTournamentBaseProps{
   tournament:Tournament,
@@ -38,10 +39,10 @@ interface GridCardManageTournamentBaseProps{
 const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
   if (enabled) return 'Delete';
   switch (status) {
-    case 1:
-      return 'Unable to delete a tournament in progress';
+    case TournamentStatus.TournamentOver:
+      return 'Deleting a  finished tournament is not permitted';
     default:
-      return 'Delete endpoint is still TODO';
+      return 'Unable to delete a tournament in progress';
   }
 };
 function GridCardManageTournamentBase({
@@ -126,7 +127,7 @@ function GridCardManageTournamentBase({
             display: 'flex', alignItems: 'center', pl: 1, pb: 1,
           }}
         >
-          <Tooltip title={deleteTournamentTooltip(enableDelete, currentTournament.status)}>
+          <Tooltip title={deleteTournamentTooltip(enableDelete, currentTournament.status)} placement="top-start">
             <span>
               <IconButton color="secondary" aria-label="delete" disabled={!enableDelete} onClick={deleteTournament}>
                 <DeleteIcon />

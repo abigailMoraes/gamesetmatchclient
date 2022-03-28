@@ -155,7 +155,7 @@ function ManageTournaments() {
                 gridTitle=""
                 tournamentRows={tournamentRows}
                 setTournamentRows={setTournamentRows}
-                gridCardComponentName={GridCardTypes.Ongoing}
+                gridCardComponentName={GridCardTypes.Over}
               />
             </TabPanel>
           </Grid>

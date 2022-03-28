@@ -13,6 +13,7 @@ import GridCardOngoing from './GridCardOngoing';
 import { GridCardTypes, TournamentRow } from '../ManageTournamentsEnums';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import GridCardManageSchedule from './GridCardManageSchedule';
+import GridCardTournamentOver from './GridCardTournamentOver';
 
 function CustomToolbar() {
   return (
@@ -126,9 +127,17 @@ export default function TournamentDisplayGrid({
                 setFormTournament={setFormTournament}
               />
             );
-          default:
+          case GridCardTypes.Ongoing:
             return (
               <GridCardOngoing
+                tournament={params.value}
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+              />
+            );
+          default:
+            return (
+              <GridCardTournamentOver
                 tournament={params.value}
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
