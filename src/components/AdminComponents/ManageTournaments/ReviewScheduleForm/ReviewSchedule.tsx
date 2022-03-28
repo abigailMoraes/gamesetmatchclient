@@ -145,17 +145,29 @@ function ReviewSchedule({
       >
         <DialogTitle>
           <Typography variant="h5">
-            {`Reviewing schedule for "${tournament.name}""`}
+            {`Reviewing schedule for: ${tournament.name}`}
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="body1">
+            {`Round #: ${tournament.currentRound}`}
+          </Typography>
+          <Typography variant="body1">
             {`Round duration: ${DateHelpers.formatDateForDisplay(firstMatch)} - ${DateHelpers.formatDateForDisplay(lastMatch)}`}
           </Typography>
           <Typography variant="body1">
-            Drag and drop to move matches around until you are satisfied with the schedule.
-            {/* Matches in red indicate that the scheduler could not find a time that satisfied both player&apos;s availabilities. */}
+            {`# Matches scheduled: ${matches.length}`}
           </Typography>
+          <Typography variant="body1">
+            { enableEdit ? 'Drag and drop to move matches around until you are satisfied with the schedule.'
+              : 'Select a match to update results and participants attendance'}
+          </Typography>
+          {enableEdit && (
+          <Typography variant="body2">
+            Matches in red indicate that the scheduler could not find a time that satisfied both player&apos;s availabilities.
+            Green indicates a good match.
+          </Typography>
+          )}
           <GeneralBigDragNDropCalendar
             events={events}
             defaultDate={firstMatch}
@@ -168,7 +180,7 @@ function ReviewSchedule({
         </DialogContent>
         <DialogActions>
           <StyledButton buttonText="Cancel" handleClick={handleClose} size="large" />
-          <StyledButton buttonText="Publish" handleClick={confirmPublish} size="large" />
+          { enableEdit && (<StyledButton buttonText="Publish" handleClick={confirmPublish} size="large" />)}
         </DialogActions>
       </Dialog>
       <StatusModal
@@ -188,7 +200,7 @@ function ReviewSchedule({
         </DialogContent>
         <DialogActions>
           <StyledButton buttonText="Cancel" handleClick={() => setGetConfirmation(false)} size="large" />
-          { enableEdit && (<StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />)}
+          <StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />
         </DialogActions>
       </Dialog>
       <Backdrop
