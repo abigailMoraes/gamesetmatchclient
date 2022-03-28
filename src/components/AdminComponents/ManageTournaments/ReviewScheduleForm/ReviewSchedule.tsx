@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import {
   Backdrop, CircularProgress, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
@@ -6,41 +7,44 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import React from 'react';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
-import { initMatch, Match } from '../../../../interfaces/MatchInterface';
-import GeneralBigDragNDropCalendar from '../../../General/Calendar/GeneralReactBigCalendar/GeneralBigDragNDropCalendar';
-import StatusModal from '../../../General/StatusModal';
-import StyledButton from '../../../General/StyledButton';
+import { initMatch, Match, MatchForAdmin } from '../../../../interfaces/MatchInterface';
 import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
 import { getFirstMatch, getLastMatch, matchToEvent } from '../../../General/Calendar/GeneralReactBigCalendar/MatchEventHelpers';
-import MatchDetails from '../../../General/Matches/MatchDetails';
 import ManageTournamentService from '../ManageTournamentService';
+import StyledButton from '../../../General/StyledButton';
+import GeneralBigDragNDropCalendar from '../../../General/Calendar/GeneralReactBigCalendar/GeneralBigDragNDropCalendar';
+import DateHelpers from '../../../General/Calendar/DateHelpers';
+import MatchDetails from '../../../General/Matches/MatchDetails';
+import StatusModal from '../../../General/StatusModal';
+import { TournamentRow } from '../ManageTournamentsEnums';
 
 // events can't be moved to before today
 interface ReviewScheduleProps {
   open:boolean,
   setOpen:(arg0:boolean) => void;
-  matches:Match[],
-  setMatches:(arg0:Match[]) => void,
-  tournament: Tournament
+  matches:MatchForAdmin[],
+  setMatches:(arg0:MatchForAdmin[]) => void,
+  tournament: Tournament,
+  enableEdit:boolean,
+  setPublished?:(arg0:boolean) => void,
+  tournamentRows?:TournamentRow[],
+  setTournamentRows?:(arg0:TournamentRow[]) => void,
 }
 
 // TODO change event colour based oon match status
-const formatDateForDisplay = (date:Date) => date.toLocaleString('default', {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-});
-
 function ReviewSchedule({
-  open, setOpen, matches, setMatches, tournament,
+  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows,
 }:ReviewScheduleProps) {
   const [openStatusModal, setStatusModal] = React.useState(false);
   const [lastMatch, setLastMatch] = React.useState(new Date());
   const [firstMatch, setFirstMatch] = React.useState(new Date());
   const [events, setEvents] = React.useState<ReactBigCalendarEvent[]>([]);
-  const [selectedMatch, setSelectedMatch] = React.useState<Match>(initMatch);
+  const [selectedMatch, setSelectedMatch] = React.useState<MatchForAdmin>(initMatch);
   const [openMatchDetails, setOpenMatchDetails] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [getConfirmation, setGetConfirmation] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
   const onEventSelect = (event:any) => {
     const match = matches.find((m) => m.matchID === event.id);
     if (match) {
@@ -55,6 +59,13 @@ function ReviewSchedule({
 
   const closeStatusDialog = () => {
     setStatusModal(false);
+    if (!error) {
+      setOpen(false);
+      if (setTournamentRows && tournamentRows) {
+        const updatedTournaments = tournamentRows.filter((t:TournamentRow) => t.id !== tournament.tournamentID);
+        setTournamentRows(updatedTournaments);
+      }
+    }
   };
 
   const confirmPublish = () => {
@@ -65,10 +76,11 @@ function ReviewSchedule({
     setLoading(true);
     setGetConfirmation(false);
     ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, tournament.currentRound, matches)
-      .then(() => ManageTournamentService.publishSchedule(matches))
+      // .then(() => ManageTournamentService.publishSchedule(matches))
       .then(() => {
         setLoading(false);
         setStatusModal(true);
+        if (setPublished) { setPublished(true); }
       })
       .catch(() => {
         setError(true);
@@ -89,7 +101,7 @@ function ReviewSchedule({
       if (existingMatches) {
         existingMatches.startTime = start;
         existingMatches.endTime = end;
-        const updated:Match[] = [...filteredMatches,
+        const updated:MatchForAdmin[] = [...filteredMatches,
           { ...existingMatches },
         ];
         setMatches(updated);
@@ -138,7 +150,7 @@ function ReviewSchedule({
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="body1">
-            {`Round duration: ${formatDateForDisplay(firstMatch)} - ${formatDateForDisplay(lastMatch)}`}
+            {`Round duration: ${DateHelpers.formatDateForDisplay(firstMatch)} - ${DateHelpers.formatDateForDisplay(lastMatch)}`}
           </Typography>
           <Typography variant="body1">
             Drag and drop to move matches around until you are satisfied with the schedule.
@@ -151,6 +163,7 @@ function ReviewSchedule({
             onMatchDrop={changeEventDetails}
             onMatchResize={changeEventDetails}
             height={500}
+            enableEdit={enableEdit}
           />
         </DialogContent>
         <DialogActions>
@@ -163,7 +176,7 @@ function ReviewSchedule({
         handleDialogClose={closeStatusDialog}
         dialogTitle={error ? 'Error' : 'Sucess!'}
         dialogText={error ? 'There was an error publishing the schedule. Please try again or contact support.'
-          : 'The schedule has been published and e-mails have been sent to the participants.'}
+          : 'The schedule has been published.'}
         isError={error}
       />
       <Dialog open={getConfirmation}>
@@ -175,7 +188,7 @@ function ReviewSchedule({
         </DialogContent>
         <DialogActions>
           <StyledButton buttonText="Cancel" handleClick={() => setGetConfirmation(false)} size="large" />
-          <StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />
+          { enableEdit && (<StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />)}
         </DialogActions>
       </Dialog>
       <Backdrop
@@ -184,7 +197,7 @@ function ReviewSchedule({
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <MatchDetails open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} />
+      <MatchDetails isEditable={enableEdit} open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} />
     </>
   );
 }

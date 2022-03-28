@@ -15,6 +15,9 @@ import { Grid, Paper, Theme } from '@mui/material';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import TournamentDetailsDialog from './TournamentDetailsDialog';
 import TournamentForm from '../TournamentForm/TournamentForm';
+import StatusModal from '../../../General/StatusModal';
+import LoadingOverlay from '../../../General/LoadingOverlay';
+import ManageTournamentService from '../ManageTournamentService';
 
 interface GridCardManageTournamentBaseProps{
   tournament:Tournament,
@@ -25,7 +28,11 @@ interface GridCardManageTournamentBaseProps{
   buttonName2?:string,
   onButtonClick2?:() => void,
   enableEdit:boolean,
-  enableDelete:boolean
+  enableDelete:boolean,
+  disabeledButton1?:boolean,
+  disabeledButton2?:boolean,
+  tooltip1?:string,
+  tooltip2?:string,
 }
 
 const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
@@ -34,7 +41,7 @@ const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
     case 1:
       return 'Unable to delete a tournament in progress';
     default:
-      return 'Delete';
+      return 'Delete endpoint is still TODO';
   }
 };
 function GridCardManageTournamentBase({
@@ -42,6 +49,10 @@ function GridCardManageTournamentBase({
   buttonName2 = '', onButtonClick2,
   enableEdit, enableDelete, formTournament,
   setFormTournament,
+  disabeledButton1,
+  disabeledButton2,
+  tooltip1 = '',
+  tooltip2 = '',
 }:GridCardManageTournamentBaseProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -50,6 +61,15 @@ function GridCardManageTournamentBase({
   // TODO
   // const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
   // const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [statusModalOpen, setStatusModalOpen] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleDialogClose = () => {
+    setStatusModalOpen(false);
+    setLoading(false);
+    setError(false);
+  };
 
   const [currentTournament, setCurrentTournament] = React.useState(tournament);
   const openDetails = () => {
@@ -61,7 +81,13 @@ function GridCardManageTournamentBase({
   };
 
   const deleteTournament = () => {
-    // setOpenConfirmDelete(true);
+    ManageTournamentService.deleteTournament(currentTournament.tournamentID).then(() => {
+      setStatusModalOpen(true);
+    }).catch(() => {
+      setLoading(false);
+      setError(true);
+      setStatusModalOpen(true);
+    });
   };
 
   const editTournament = () => {
@@ -116,10 +142,18 @@ function GridCardManageTournamentBase({
           </Tooltip>
           <Grid sx={{ display: 'flex', flexDirection: 'column' }} spacing={4}>
             <Grid item>
-              {buttonName && <Button size="small" color="secondary" onClick={onButtonClick}>{buttonName}</Button>}
+              <Tooltip title={disabeledButton1 ? tooltip1 : ''}>
+                <span>
+                  {buttonName && <Button size="small" color="secondary" disabled={disabeledButton1} onClick={onButtonClick}>{buttonName}</Button>}
+                </span>
+              </Tooltip>
             </Grid>
             <Grid item>
-              {buttonName2 && <Button size="small" color="secondary" onClick={onButtonClick2}>{buttonName2}</Button>}
+              <Tooltip title={disabeledButton2 ? tooltip2 : ''}>
+                <span>
+                  {buttonName2 && <Button size="small" color="secondary" disabled={disabeledButton2} onClick={onButtonClick2}>{buttonName2}</Button>}
+                </span>
+              </Tooltip>
             </Grid>
           </Grid>
         </Grid>
@@ -127,6 +161,15 @@ function GridCardManageTournamentBase({
 
       <TournamentDetailsDialog open={open} handleClose={handleClose} tournament={currentTournament} fullScreen={fullScreen} />
       <TournamentForm tournament={formTournament} setTournament={setCurrentTournament} open={openEdit} setOpen={setOpenEdit} />
+      <StatusModal
+        open={statusModalOpen}
+        handleDialogClose={handleDialogClose}
+        dialogText={error ? 'There was an error deleting the tournament.Please try again later or contact support.'
+          : 'Tournament was deleted.'}
+        dialogTitle={error ? 'Error' : 'Success'}
+        isError={error}
+      />
+      <LoadingOverlay isOpen={loading} />
     </Paper>
   );
 }

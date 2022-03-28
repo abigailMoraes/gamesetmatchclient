@@ -42,8 +42,8 @@ function TournamentDetailsDialog({
         <Container style={{ display: 'flex', flexDirection: 'column' }}>
           <DialogDetail label="Location" value={tournament.location} />
           <DialogDetail label="Format" value={FormatType[tournament.format]} />
-          <DialogDetail label="Match By" value={MatchingType[tournament.type]} />
-          <DialogDetail label="Series Type" value={SeriesType[tournament.numberOfMatches]} />
+          <DialogDetail label="Match By" value={MatchingType[tournament.matchBySkill]} />
+          <DialogDetail label="Series Type" value={SeriesType[tournament.series]} />
           <DialogDetail label="Start Date" value={new Date(tournament.startDate).toLocaleDateString('en-US')} />
           <DialogDetail label="Register by" value={new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')} />
         </Container>

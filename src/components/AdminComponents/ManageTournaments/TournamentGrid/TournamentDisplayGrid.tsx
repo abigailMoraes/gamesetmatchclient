@@ -10,19 +10,9 @@ import { useTheme } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import GridCardOpenForRegistration from './GridCardOpenForRegistration';
 import GridCardOngoing from './GridCardOngoing';
-import { GridCardTypes } from '../ManageTournamentsEnums';
+import { GridCardTypes, TournamentRow } from '../ManageTournamentsEnums';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import GridCardManageSchedule from './GridCardManageSchedule';
-
-export interface TournamentRow {
-  id: Number,
-  name: String,
-  description: String,
-  location: String,
-  startDate: Date,
-  closeRegistrationDate: Date,
-  allTournamentDetails: Tournament
-}
 
 function CustomToolbar() {
   return (
@@ -36,11 +26,12 @@ interface TournamentDisplayGridProps {
   formTournament:Tournament | undefined,
   setFormTournament:(arg0:Tournament | undefined) => void,
   gridTitle:string,
-  tournaments: TournamentRow[],
+  tournamentRows: TournamentRow[],
+  setTournamentRows: (arg0:TournamentRow[]) => void,
   gridCardComponentName:GridCardTypes,
 }
 export default function TournamentDisplayGrid({
-  formTournament, setFormTournament, gridTitle, tournaments, gridCardComponentName,
+  formTournament, setFormTournament, gridTitle, tournamentRows, setTournamentRows, gridCardComponentName,
 }: TournamentDisplayGridProps) {
   const mainTheme = useTheme() as Theme;
 
@@ -119,6 +110,8 @@ export default function TournamentDisplayGrid({
             return (
               <GridCardOpenForRegistration
                 tournament={params.value}
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
               />
@@ -127,6 +120,8 @@ export default function TournamentDisplayGrid({
             return (
               <GridCardManageSchedule
                 tournament={params.value}
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
               />
@@ -153,7 +148,7 @@ export default function TournamentDisplayGrid({
               <DataGrid
                 components={{ Toolbar: CustomToolbar }}
                 isRowSelectable={() => false}
-                rows={tournaments}
+                rows={tournamentRows}
                 columns={columns}
                 rowHeight={200}
               />

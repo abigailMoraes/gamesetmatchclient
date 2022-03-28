@@ -18,6 +18,7 @@ import navigation from '../Navigation/navigation.json';
 import ViewRegistrants from './ViewRegistrants';
 import DialogDetail from '../General/DialogDetail';
 import { Tournament } from '../../interfaces/TournamentInterface';
+import { FormatType, SeriesType } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 
 function RegistrationButton({ registered, handleClick }:any) {
   return (
@@ -87,8 +88,9 @@ function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
             {tournament.description}
           </Typography>
           <Container style={{ display: 'flex', flexDirection: 'column' }}>
-            <DialogDetail label="Location" value={tournament.location} />
-            <DialogDetail label="Format" value={tournament.format} />
+            <DialogDetail label="Location" value={tournament.location.length > 0 ? tournament.location.length : 'TBD'} />
+            <DialogDetail label="Format" value={FormatType[tournament.format]} />
+            <DialogDetail label="Series Type" value={SeriesType[tournament.series]} />
             <DialogDetail label="Start Date" value={new Date(tournament.startDate).toLocaleDateString('en-US')} />
             <DialogDetail label="Register by" value={new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')} />
           </Container>

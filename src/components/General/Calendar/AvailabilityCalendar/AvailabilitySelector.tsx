@@ -16,8 +16,8 @@ interface AvailabilitySelectorProps {
 }
 
 export type Availability = {
-  day:number;
-  slots:string
+  dayOfWeek:number;
+  availabilityString:string
 };
 
 function AvailabilitySelector({ availabilities, setAvailabilities }:AvailabilitySelectorProps) {
@@ -105,7 +105,7 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
           toolbar={false}
           formats={formats}
           min={new Date(0, 0, 0, 9, 0, 0)}
-          max={new Date(0, 0, 0, 22, 0, 0)}
+          max={new Date(0, 0, 0, 21, 0, 0)}
         />
       </div>
     </Paper>

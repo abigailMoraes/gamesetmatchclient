@@ -20,6 +20,7 @@ import { userIDAtom } from '../../atoms/userAtom';
 import { SkillLevels, Tournament } from '../../interfaces/TournamentInterface';
 import { ReactBigCalendarEvent } from '../../interfaces/EventInterface';
 import StyledSelect from '../General/StyledSelect';
+import DateHelpers from '../General/Calendar/DateHelpers';
 
 interface RegisterTournamentState {
   tournament:Tournament;
@@ -40,7 +41,6 @@ const transformToAvailabilityString = (availabilites:ReactBigCalendarEvent[]):Av
 
       // 9 is start of day
       const index = (sHour - 9) * 2 + (sMin === 0 ? 0 : 1);
-
       // eslint-disable-next-line no-plusplus
       for (let j = index; j < index + duration; j++) {
         availArr[j] = 1;
@@ -49,8 +49,8 @@ const transformToAvailabilityString = (availabilites:ReactBigCalendarEvent[]):Av
 
     const availString = availArr.toString().replaceAll(',', '');
     availStringObj.push({
-      day: i,
-      slots: availString,
+      dayOfWeek: i,
+      availabilityString: availString,
     });
   }
   return availStringObj;
@@ -67,12 +67,12 @@ function RegisterTournament() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [skillLevel, setSkillLevel] = useState(-1);
+  const [skillLevel, setSkillLevel] = useState(0);
   const userID = useAtomValue(userIDAtom);
 
   const submitRegistration = () => {
     setLoading(true);
-
+    setError(false);
     const availabilityDTO:Availability[] = transformToAvailabilityString(availabilities);
     const registration:RegisterForTournamentBody = {
       userID,
@@ -121,7 +121,7 @@ function RegisterTournament() {
                 {`Match Duration:  ${tournament.matchDuration} minutes`}
               </Typography>
               <Typography variant="body1">
-                {`Start Date:  ${tournament.startDate}`}
+                {`Start Date:  ${DateHelpers.formatDateForDisplay(tournament.startDate)}`}
               </Typography>
             </CardContent>
           </Card>

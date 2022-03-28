@@ -1,5 +1,5 @@
 export interface Match {
-  results: String,
+  results: number,
   attendance: String,
   matchID: number,
   startTime: Date,

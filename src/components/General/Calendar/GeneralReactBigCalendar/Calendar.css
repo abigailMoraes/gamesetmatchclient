@@ -32,8 +32,6 @@
     }
 }
 
-
-
 .rbc-day-bg{
     background: #27293c;
 }
@@ -51,11 +49,6 @@
     font-size:1rem;
 }
 
-.rbc-event-content {
-    font-size: x-small;
-}
-
-
 
 .rbc-toolbar button{
     color: #cb742e;
@@ -70,17 +63,31 @@
     background-color: #cb742e;
 }
 
-.rbc-today {
-
-    background-color: #535465;
-}
-
 .rbc-event{
     padding: 1px;
     font-family: "Maven Pro", sans-serif;
     font-size: 1rem;
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: x-small;
 }
+
+.rbc-today {
+    background-color: #535465;
+}
+
 
 .rbc-current-time-indicator{
     background-color: #cb742e;
+}
+
+.availabilityIssue, .availabilityIssue.rbc-event.rbc-selected {
+    background-color: rgb(123, 36, 36);
+}
+
+.validMatch, .validMatch.rbc-event.rbc-selected {
+    background-color: rgb(36, 91, 58);
 }

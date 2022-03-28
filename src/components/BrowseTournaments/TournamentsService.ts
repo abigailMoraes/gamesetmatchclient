@@ -4,7 +4,7 @@ import handleErrors from '../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
-const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}`)
+const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&status=0`)
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
     id: item.tournamentID,
