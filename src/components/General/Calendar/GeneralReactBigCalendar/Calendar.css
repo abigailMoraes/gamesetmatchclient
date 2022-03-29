@@ -49,7 +49,7 @@
 }
 
 .rbc-calendar {
-    min-height: 600px;
+    min-height: 100%;
     color: #e6e6e6;
     font-family: "Maven Pro",sans-serif;
     background-color:#2f3241 ;
@@ -81,41 +81,8 @@
     padding: 1px;
     font-family: "Maven Pro", sans-serif;
     font-size: 1rem;
-    display: flex;
-    flex-direction:row;
-    flex-wrap: wrap;
-}
-.rbc-event-content{
-    float: left;
-    padding: 1px;
 }
 
 .rbc-current-time-indicator{
     background-color: #cb742e;
 }
-
-.modal, .overlay{
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-}
-
-.overlay{
-}
-
-.modal-content{
-    position: absolute;
-    top:40%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    line-height:1.4;
-    padding: 14px 28px;
-    max-width:600px;
-    min-width:300px;
-}
-
-

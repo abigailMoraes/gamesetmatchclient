@@ -2,22 +2,27 @@ import React from 'react';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import GridCardBase from './GridCardBase';
 
-interface GridCardOngoingProps {
+interface GridCardTournamentOverProps {
   tournament:Tournament
   formTournament:Tournament | undefined,
   setFormTournament:(arg0:Tournament | undefined) => void,
 }
 
-function GridCardOngoing({ tournament, formTournament, setFormTournament }:GridCardOngoingProps) {
+function GridCardTournamentOver({ tournament, formTournament, setFormTournament }:GridCardTournamentOverProps) {
+  const openMatchHistory = () => {
+
+  };
   return (
     <GridCardBase
       tournament={tournament}
       formTournament={formTournament}
       setFormTournament={setFormTournament}
+      buttonName="View Match History"
+      onButtonClick={openMatchHistory}
       enableDelete={false}
-      enableEdit
+      enableEdit={false}
     />
   );
 }
 
-export default GridCardOngoing;
+export default GridCardTournamentOver;

@@ -1,25 +1,7 @@
+import { Tournament } from '../../interfaces/TournamentInterface';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
-
-export interface Tournament {
-  tournamentID: number,
-  name: string,
-  description: string,
-  startDate: Date,
-  location: string,
-  maxParticipants: number,
-  prize: string,
-  format: number,
-  type: number,
-  closeRegistrationDate: Date,
-  matchDuration: number,
-  numberOfMatches: number,
-  roundDuration: number,
-  status:number,
-  adminHostsTournament:number,
-  registered:boolean,
-}
 
 const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}`)
   .then((response) => response.json())

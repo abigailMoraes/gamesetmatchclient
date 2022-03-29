@@ -8,16 +8,16 @@ import { createTheme, Theme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useTheme } from '@mui/styles';
 import { useAtomValue } from 'jotai';
-import MatchHistoryCard, { Match } from './MatchHistoryCard';
-import MatchService from './MatchService';
+import MatchHistoryCard from './MatchHistoryCard';
 import { userIDAtom } from '../../atoms/userAtom';
+import MatchService from './MatchService';
+import { Match } from './MatchInterface';
 
 export interface MatchHistoryRow {
-  id: Number,
-  result: Number,
+  id: number,
   startTime: Date,
   endTime: Date,
-  duration: Number,
+  duration: number,
   type: String,
   name: String,
   location: String,
@@ -31,11 +31,6 @@ const columns: GridColDef[] = [
     headerName: 'ID',
     hide: true,
     sortable: false,
-  },
-  {
-    field: 'result',
-    headerName: 'Result',
-    hide: true,
   },
   {
     field: 'startTime',
