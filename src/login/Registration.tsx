@@ -8,9 +8,21 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { loginDataAtom } from '../atoms/userAtom';
-import { PageContainer, SpaceContainer } from './FirebaseAuth';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
+
+const PageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #252525;
+`;
+
+const SpaceContainer = styled.div`
+  flex: 1;
+`;
 
 const ContentContainer = styled.div`
   display: flex;

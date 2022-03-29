@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import styled from '@emotion/styled';
 import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import { useNavigate } from 'react-router-dom';
-import { loginDataAtomPersistence } from '../atoms/userAtom';
-
 import 'firebase/compat/auth';
 import Divider from '@mui/material/Divider';
 import {
   Container, Grid, Theme, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
-
 import { loginDataAtomPersistence } from '../atoms/userAtom';
 import LogoLoginPage from '../components/Logo/LogoLoginPage';
 
