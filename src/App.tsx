@@ -17,6 +17,7 @@ import ManageTournaments from './components/AdminComponents/ManageTournaments/Ma
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
 import { loginDataAtom } from './atoms/userAtom';
+import Registration from './login/Registration';
 
 const theme = createTheme({
   palette: {
@@ -84,6 +85,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<FirebaseAuth />} />
+          <Route path="/registration" element={<Registration />} />
           <Route path="/" element={<RequireAuth><NavigationSideBar /></RequireAuth>}>
             <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />
             <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />

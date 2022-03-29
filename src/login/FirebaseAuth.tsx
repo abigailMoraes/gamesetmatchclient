@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import { useNavigate } from 'react-router-dom';
-import { loginDataAtomPersistence } from '../atoms/userAtom';
+import { emptyUser, loginDataAtomPersistence } from '../atoms/userAtom';
 import 'firebase/compat/auth';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
@@ -96,13 +96,29 @@ function FirebaseAuth() {
           .then((idToken) => fetch(`${baseURL}/verifyIdToken`, {
             method: 'POST',
             body: idToken,
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }))
-          .then((res) => res.json())
-          .then((data) => {
-            setLoginData(data);
-            navigate('/dashboard');
-          })
-          .catch((err) => console.log(err));
+          .then((res) => {
+            if (res.status === 400) {
+              res.json().then((data) => {
+                setLoginData({
+                  email: data.email,
+                  firebaseId: '',
+                  id: -1,
+                  isAdmin: -1,
+                  name: '',
+                });
+                navigate('/registration');
+              });
+            } else {
+              res.json().then((data) => {
+                setLoginData(data);
+                navigate('/dashboard');
+              });
+            }
+          });
         return false;
       },
       signInFailure(error: any) {
