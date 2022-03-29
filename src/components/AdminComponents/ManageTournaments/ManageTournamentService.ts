@@ -16,7 +16,7 @@ const saveUpdatedSchedule = (tournamentID:number, roundID: number, matches: Matc
 
 }).then((resp) => handleErrors(resp));
 
-const publishSchedule = (matches:Match[]) => fetch(`${baseTournamentsURL}/publish
+const publishSchedule = (matches:Match[]) => fetch(`${baseURL}/publish
 `, {
   method: 'POST',
   headers: {

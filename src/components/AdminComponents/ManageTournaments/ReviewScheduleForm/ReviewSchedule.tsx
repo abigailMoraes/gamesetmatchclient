@@ -76,10 +76,11 @@ function ReviewSchedule({
     setLoading(true);
     setGetConfirmation(false);
     ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, tournament.currentRound, matches)
-      // .then(() => ManageTournamentService.publishSchedule(matches))
+      .then(() => ManageTournamentService.publishSchedule(matches))
       .then(() => {
         setLoading(false);
         setStatusModal(true);
+        setError(false);
         if (setPublished) { setPublished(true); }
       })
       .catch(() => {
@@ -144,12 +145,12 @@ function ReviewSchedule({
         }}
       >
         <DialogTitle>
-          <Typography variant="h5">
+          <Typography component="span" variant="h5">
             {`Reviewing schedule for: ${tournament.name}`}
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
-          <Typography variant="body1">
+          <Typography component="span" variant="body1">
             {`Round #: ${tournament.currentRound}`}
           </Typography>
           <Typography variant="body1">
@@ -179,7 +180,7 @@ function ReviewSchedule({
           />
         </DialogContent>
         <DialogActions>
-          <StyledButton buttonText="Cancel" handleClick={handleClose} size="large" />
+          <StyledButton buttonText={enableEdit ? 'Cancel' : 'Close'} handleClick={handleClose} size="large" />
           { enableEdit && (<StyledButton buttonText="Publish" handleClick={confirmPublish} size="large" />)}
         </DialogActions>
       </Dialog>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Typography from '@mui/material/Typography';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import { MatchForAdmin } from '../../../../interfaces/MatchInterface';
 import StatusModal from '../../../General/StatusModal';
@@ -6,7 +7,7 @@ import ReviewSchedule from '../ReviewScheduleForm/ReviewSchedule';
 import GridCardBase from './GridCardBase';
 import ManageTournamentService from '../ManageTournamentService';
 import LoadingOverlay from '../../../General/LoadingOverlay';
-import { TournamentRow } from '../ManageTournamentsEnums';
+import { TournamentRow, TournamentStatus } from '../ManageTournamentsEnums';
 
 interface GridCardManageScheduleProps {
   tournament:Tournament,
@@ -15,6 +16,20 @@ interface GridCardManageScheduleProps {
   formTournament:Tournament | undefined,
   setFormTournament:(arg0:Tournament | undefined) => void,
 }
+
+interface GridCardDetailsProps {
+  tournament:Tournament
+}
+function GridCardDetails({ tournament }:GridCardDetailsProps) {
+  return (
+    <Typography variant="body2">
+      {`Round #: ${tournament.currentRound}`}
+    </Typography>
+  );
+}
+
+const canDelete = (tournament:Tournament) => (tournament.status === TournamentStatus.ReadyToPublishSchedule && tournament.currentRound === 0)
+|| tournament.status === TournamentStatus.RegistrationClosed;
 
 function GridCardManageSchedule({
   tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
@@ -26,8 +41,10 @@ function GridCardManageSchedule({
   const [loading, setLoading] = React.useState(false);
   const [openStatus, setOpenStatus] = React.useState(false);
   const [createError, setCreateError] = React.useState(false);
-  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === 1);
-  const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === 2 || tournament.status === 4);
+  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.RegistrationClosed);
+  const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
+    || tournament.status === TournamentStatus.ReadyToPublishSchedule);
+  const [enableDelete] = React.useState(canDelete(tournament));
 
   const tooltip1 = "A schedule has already been created. Press 'Publish Schedule' to view.";
   const tooltip2 = 'Please create a schedule first.';
@@ -74,12 +91,13 @@ function GridCardManageSchedule({
         onButtonClick={createSchedule}
         buttonName2="Publish Schedule"
         onButtonClick2={openPublishSchedule}
-        enableDelete={false}
+        enableDelete={enableDelete}
         enableEdit
         disabeledButton1={scheduleCreated}
         tooltip1={tooltip1}
         disabeledButton2={schedulePublished}
         tooltip2={tooltip2}
+        gridCardDetails={<GridCardDetails tournament={tournament} />}
       />
       <ReviewSchedule
         open={open}

@@ -57,7 +57,7 @@ function BrowseTournamentCard({ tournament }:BrowseTournamentCardProps) {
   return (
     <Card style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
       <CardContent style={{ textAlign: 'left' }}>
-        <Typography variant="h5">
+        <Typography component="span" variant="h5">
           {tournament.name}
         </Typography>
         <Typography sx={{ mb: 1.5 }}>

@@ -1,3 +1,6 @@
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 // import { Theme, useTheme } from '@mui/material';
 import CalendarCard from '../Calendar/CalendarCard';
@@ -7,18 +10,24 @@ import './Dashboard.css';
 
 // TODO: pull hard coded styling to a theme
 function Dashboard() {
-  // const theme = useTheme() as Theme;
   return (
-    <div style={{ display: 'inline-flex', width: '100%' }}>
-      <div style={{
-        width: '75%', padding: '1px', fontFamily: 'Maven Pro',
-      }}
+    <Paper>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          px: 2, py: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
+        }}
       >
-        <h2 style={{ fontSize: '1.5rem', fontFamily: 'Abel', color: '#e6e6e6' }}>Upcoming Tournaments</h2>
-        <CalendarCard />
-      </div>
-      <div style={{ width: '25%', padding: '5px' }}><MatchHistoryGrid /></div>
-    </div>
+        <Grid item>
+          <Typography variant="h5"> Your upcoming matches</Typography>
+          <CalendarCard />
+        </Grid>
+        <Grid item>
+          <MatchHistoryGrid />
+        </Grid>
+      </Grid>
+    </Paper>
   );
 }
 

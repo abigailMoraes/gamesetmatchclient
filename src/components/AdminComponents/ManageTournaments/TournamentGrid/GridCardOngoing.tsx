@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import React from 'react';
 import { MatchForAdmin } from '../../../../interfaces/MatchInterface';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
@@ -13,11 +14,23 @@ interface GridCardOngoingProps {
   setFormTournament:(arg0:Tournament | undefined) => void,
 }
 
+interface GridCardDetailsProps {
+  tournament:Tournament,
+}
+function GridCardDetails({ tournament }:GridCardDetailsProps) {
+  return (
+    <Typography variant="body2">
+      {`Round #  ${tournament.currentRound}`}
+    </Typography>
+  );
+}
+
 function GridCardOngoing({ tournament, formTournament, setFormTournament }:GridCardOngoingProps) {
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [errorModal, setErrorModal] = React.useState(false);
+  // const [matchesResultPending, setMatchesresultPending] = React.useState(0);
   const openSchedule = () => {
     setLoading(true);
     ManageTournamentService.getLatestRoundID(tournament.tournamentID)
@@ -47,6 +60,7 @@ function GridCardOngoing({ tournament, formTournament, setFormTournament }:GridC
         onButtonClick={openSchedule}
         enableDelete={false}
         enableEdit
+        gridCardDetails={<GridCardDetails tournament={tournament} />}
       />
       <ReviewSchedule
         open={open}

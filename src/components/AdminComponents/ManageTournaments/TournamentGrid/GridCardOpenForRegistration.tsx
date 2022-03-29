@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import LoadingOverlay from '../../../General/LoadingOverlay';
@@ -13,6 +14,23 @@ interface GridCardOpenForRegistrationProps {
   formTournament:Tournament | undefined,
   setFormTournament:(arg0:Tournament | undefined) => void,
 }
+
+interface GridCardDetailsProps {
+  tournament:Tournament
+}
+function GridCardDetails({ tournament }:GridCardDetailsProps) {
+  return (
+    <>
+      <Typography variant="body2">
+        {`Start Date: ${new Date(tournament.startDate).toLocaleDateString('en-US')}`}
+      </Typography>
+      <Typography variant="body2">
+        {`Registration Closing Date: ${new Date(tournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
+      </Typography>
+    </>
+  );
+}
+
 function GridCardOpenForRegistration({
   tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
 }:GridCardOpenForRegistrationProps) {
@@ -48,8 +66,9 @@ function GridCardOpenForRegistration({
         setFormTournament={setFormTournament}
         buttonName="Close Registration"
         onButtonClick={closeRegistration}
-        enableDelete={false}
+        enableDelete
         enableEdit
+        gridCardDetails={<GridCardDetails tournament={tournament} />}
       />
       <StatusModal
         open={statusModalOpen}

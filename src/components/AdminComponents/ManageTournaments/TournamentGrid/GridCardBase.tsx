@@ -34,6 +34,7 @@ interface GridCardManageTournamentBaseProps{
   disabeledButton2?:boolean,
   tooltip1?:string,
   tooltip2?:string,
+  gridCardDetails?: React.ReactNode,
 }
 
 const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
@@ -54,6 +55,7 @@ function GridCardManageTournamentBase({
   disabeledButton2,
   tooltip1 = '',
   tooltip2 = '',
+  gridCardDetails,
 }:GridCardManageTournamentBaseProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -111,12 +113,7 @@ function GridCardManageTournamentBase({
           <Typography sx={{ mb: 1.5 }}>
             {currentTournament.description}
           </Typography>
-          <Typography variant="body2">
-            {`Start Date: ${new Date(currentTournament.startDate).toLocaleDateString('en-US')}`}
-          </Typography>
-          <Typography variant="body2">
-            {`Registration Closing Date: ${new Date(currentTournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
-          </Typography>
+          {gridCardDetails}
           <Box sx={{ mt: 1 }}>
             <Button size="small" color="secondary" onClick={openDetails}>Details</Button>
           </Box>
