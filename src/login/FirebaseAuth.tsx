@@ -58,13 +58,7 @@ function FirebaseAuth() {
           .then((res) => {
             if (res.status === 400) {
               res.json().then((data) => {
-                setLoginData({
-                  email: data.email,
-                  firebaseId: '',
-                  id: -1,
-                  isAdmin: -1,
-                  name: '',
-                });
+                setLoginData(data);
                 navigate('/registration');
               });
             } else {
