@@ -1,12 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import { atom } from 'jotai';
-import { User } from '../interfaces/User';
+import { User } from '../interfaces/UserInterface';
 
 export const emptyUser:User = {
   email: '',
   firebaseId: '',
   id: -1,
-  isAdmin: -1,
+  role: -1,
   name: '',
 };
 

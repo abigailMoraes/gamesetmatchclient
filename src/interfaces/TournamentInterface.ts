@@ -7,7 +7,7 @@ export interface Tournament {
   maxParticipants: number,
   prize: string,
   format: number,
-  matchBySkill: number,
+  matchBy: number,
   closeRegistrationDate: Date,
   matchDuration: number,
   series: number,

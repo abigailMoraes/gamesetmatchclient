@@ -39,7 +39,7 @@ const tournamentTemplate = {
   location: '',
   prize: '',
   format: 0,
-  matchBySkill: 0,
+  matchBy: 0,
   closeRegistrationDate: new Date(),
   matchDuration: 1,
   series: 0,
@@ -84,7 +84,7 @@ function TournamentForm({
             updatedTournament.location = values.location;
             updatedTournament.prize = values.prize;
             updatedTournament.format = values.format;
-            updatedTournament.matchBySkill = values.matchBySkill;
+            updatedTournament.matchBy = values.matchBy;
             updatedTournament.closeRegistrationDate = values.closeRegistrationDate;
             updatedTournament.matchDuration = values.matchDuration;
             updatedTournament.series = values.series;
@@ -127,7 +127,7 @@ function TournamentForm({
       || (formik.values.location !== tournament.location)
       || (formik.values.prize !== tournament.prize)
       || (formik.values.format !== tournament.format)
-      || (formik.values.matchBySkill !== tournament.matchBySkill)
+      || (formik.values.matchBy !== tournament.matchBy)
       || (formik.values.closeRegistrationDate !== tournament.closeRegistrationDate)
       || (formik.values.matchDuration !== tournament.matchDuration)
       || (formik.values.series !== tournament.series));
@@ -141,7 +141,7 @@ function TournamentForm({
     || (formik.values.location !== tournamentTemplate.location)
     || (formik.values.prize !== tournamentTemplate.prize)
     || (formik.values.format !== tournamentTemplate.format)
-    || (formik.values.matchBySkill !== tournamentTemplate.matchBySkill)
+    || (formik.values.matchBy !== tournamentTemplate.matchBy)
     || (formik.values.closeRegistrationDate !== tournamentTemplate.closeRegistrationDate)
     || (formik.values.matchDuration !== tournamentTemplate.matchDuration)
     || (formik.values.series !== tournamentTemplate.series)) {
@@ -263,10 +263,10 @@ function TournamentForm({
               width={6}
             />
             <StyledSelect
-              id="matchBySkill"
+              id="matchBy"
               label="Match participants"
               selectOptions={MatchingType.map((text, index) => ({ value: index, text }))}
-              value={formik.values.matchBySkill}
+              value={formik.values.matchBy}
               onChange={formik.handleChange('type')}
               disabled={enabledByStatus}
               width={6}

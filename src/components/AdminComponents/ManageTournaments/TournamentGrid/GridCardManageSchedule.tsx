@@ -39,7 +39,7 @@ function GridCardManageSchedule({
   // TODO enable delete if its the first round only
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const [openStatus, setOpenStatus] = React.useState(false);
+  const [openStatusModal, setOpenStatusModal] = React.useState(false);
   const [createError, setCreateError] = React.useState(false);
   const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.RegistrationClosed);
   const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
@@ -64,18 +64,18 @@ function GridCardManageSchedule({
     setLoading(true);
     ManageTournamentService.createSchedule(tournament.tournamentID).then(() => {
       setLoading(false);
-      setOpenStatus(true);
+      setOpenStatusModal(true);
       setScheduleCreated(true);
       setSchedulePublished(false);
     }).catch(() => {
       setLoading(false);
       setCreateError(true);
-      setOpenStatus(true);
+      setOpenStatusModal(true);
     });
   };
 
   const handleDialogClose = () => {
-    setOpenStatus(false);
+    setOpenStatusModal(false);
 
     setErrorModal(false);
     setCreateError(false);
@@ -118,10 +118,10 @@ function GridCardManageSchedule({
         isError
       />
       <StatusModal
-        open={openStatus}
+        open={openStatusModal}
         handleDialogClose={handleDialogClose}
         dialogText={createError ? 'There was an error with creating the schedule.Please try again later or contact support.'
-          : "Schedule was sucessfully created, click 'Publish Schedule' to view"}
+          : "Schedule was successfully created, click 'Publish Schedule' to view"}
         dialogTitle={createError ? 'Error' : 'Success'}
         isError={createError}
       />

@@ -1,6 +1,6 @@
 /* eslint-disable react/require-default-props */
 import {
-  Backdrop, CircularProgress, DialogContent, DialogTitle, Typography,
+  DialogContent, DialogTitle, Typography,
 } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 
@@ -17,6 +17,7 @@ import DateHelpers from '../../../General/Calendar/DateHelpers';
 import MatchDetails from '../../../General/Matches/MatchDetails';
 import StatusModal from '../../../General/StatusModal';
 import { TournamentRow } from '../ManageTournamentsEnums';
+import LoadingOverlay from '../../../General/LoadingOverlay';
 
 // events can't be moved to before today
 interface ReviewScheduleProps {
@@ -187,7 +188,7 @@ function ReviewSchedule({
       <StatusModal
         open={openStatusModal}
         handleDialogClose={closeStatusDialog}
-        dialogTitle={error ? 'Error' : 'Sucess!'}
+        dialogTitle={error ? 'Error' : 'Success!'}
         dialogText={error ? 'There was an error publishing the schedule. Please try again or contact support.'
           : 'The schedule has been published.'}
         isError={error}
@@ -204,12 +205,7 @@ function ReviewSchedule({
           <StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />
         </DialogActions>
       </Dialog>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <LoadingOverlay isOpen={loading} />
       <MatchDetails isEditable={enableEdit} open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} />
     </>
   );
