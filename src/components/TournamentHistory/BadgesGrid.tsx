@@ -10,9 +10,10 @@ import {
 import { useAtomValue } from 'jotai';
 import CardHeader from '@mui/material/CardHeader';
 import { userIDAtom } from '../../atoms/userAtom';
-import TournamentService, { Tournament } from '../BrowseTournaments/TournamentsService';
+import TournamentService from '../BrowseTournaments/TournamentsService';
 import { Match } from '../Calendar/MatchInterface';
 import MatchService from '../Calendar/MatchService';
+import { Tournament } from '../../interfaces/TournamentInterface';
 
 function BadgesGrid() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
