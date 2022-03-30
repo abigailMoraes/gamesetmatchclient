@@ -67,7 +67,7 @@ function CalendarCard() {
         endAccessor="end"
         resourceAccessor="resource"
         views={['month', 'week', 'day', 'agenda']}
-        style={{ height: 500, margin: '50px' }}
+        style={{ height: '80vh' }}
         onSelectEvent={(e) => { handleSelectedEvent(e); }}
         popup
       />

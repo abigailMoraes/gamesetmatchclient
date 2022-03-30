@@ -7,12 +7,14 @@ export interface Tournament {
   maxParticipants: number,
   prize: string,
   format: number,
-  type: number,
+  matchBy: number,
   closeRegistrationDate: Date,
   matchDuration: number,
-  numberOfMatches: number,
-  roundDuration: number,
+  series: number,
   status:number,
   adminHostsTournament:number,
   registered:boolean,
+  currentRound:number,
 }
+
+export const SkillLevels = ['Beginner', 'Intermediate', 'Advanced'];

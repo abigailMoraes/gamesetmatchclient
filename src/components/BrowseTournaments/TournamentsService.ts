@@ -1,9 +1,10 @@
 import { Tournament } from '../../interfaces/TournamentInterface';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
+import handleErrors from '../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
-const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}`)
+const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&status=0`)
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
     id: item.tournamentID,
@@ -18,7 +19,7 @@ const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}`)
 export interface RegisterForTournamentBody {
   userID: number,
   availabilities: Availability[]
-  skillLevel?: string;
+  skillLevel?: number;
 }
 
 const registerForTournament = (tournamentID: Number, body: RegisterForTournamentBody) => fetch(`${baseURL}/${tournamentID}/register`, {
@@ -27,7 +28,7 @@ const registerForTournament = (tournamentID: Number, body: RegisterForTournament
     'Content-Type': 'application/json',
   },
   body: JSON.stringify(body),
-});
+}).then((resp) => handleErrors(resp));
 
 export interface Registrant {
   userID: Number,

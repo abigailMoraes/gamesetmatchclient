@@ -5,7 +5,6 @@ import { loginDataAtom } from '../../atoms/userAtom';
 
 export default function DisplayUser() {
   const loginData = useAtomValue(loginDataAtom);
-
   return (
     <Box sx={{
       display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 1,

@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import { useAtomValue } from 'jotai';
 import { userIDAtom } from '../../atoms/userAtom';
 import MatchService from './MatchService';
+import { getMatchResult } from '../../interfaces/MatchInterface';
 
 export interface User {
   userID: number,
@@ -66,6 +67,10 @@ function MatchHistoryCard(props: any) {
     setUpdateOpen(true);
   };
 
+  const handleCloseUpdateResults = () => {
+    setUpdateOpen(false);
+  };
+
   const handleUpdateMatchResults = () => {
     MatchService.updateMatchResults(userID, match.matchID, result).then(() => {
       match.results = result;
@@ -95,12 +100,12 @@ function MatchHistoryCard(props: any) {
           )}`}
         </Typography>
         <Typography variant="body2">
-          {`Result: ${match.results}`}
+          {`Result: ${getMatchResult(match.results)}`}
         </Typography>
       </CardContent>
       <CardActions>
         <Button size="small" color="secondary" onClick={handleClickOpen}>Details</Button>
-        {match.results === 'TBD' && match.attendance === 'Yes'
+        {+match.results === -1 && match.attendance === 'Yes'
           ? <Button size="small" color="secondary" onClick={handleOpenUpdate}>Update Results</Button> : null}
       </CardActions>
       <Dialog
@@ -140,7 +145,7 @@ function MatchHistoryCard(props: any) {
                 { hour: '2-digit', minute: '2-digit' },
               )}
             />
-            <Detail label="Result" value={match.results} />
+            <Detail label="Result" value={getMatchResult(match.results)} />
           </Container>
         </DialogContent>
         <DialogActions>
@@ -151,9 +156,10 @@ function MatchHistoryCard(props: any) {
         fullScreen={fullScreen}
         onClose={handleClose}
         open={updateOpen}
-        style={{ color: theme.palette.primary.main }}
+        style={{ color: theme.palette.primary.main, minHeight: '30vh', minWidth: '30vh' }}
       >
         <DialogContent>
+          <Typography sx={{ pb: 2 }}>Upate the results:</Typography>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Result</InputLabel>
             <Select
@@ -161,16 +167,16 @@ function MatchHistoryCard(props: any) {
               id="demo-simple-select"
               value={result}
               onChange={handleResultChange}
-              label="Result"
             >
-              <MenuItem value="Win">Win</MenuItem>
-              <MenuItem value="Loss">Loss</MenuItem>
-              <MenuItem value="Draw">Draw</MenuItem>
+              <MenuItem value={1}>Win</MenuItem>
+              <MenuItem value={2}>Loss</MenuItem>
+              <MenuItem value={0}>Draw</MenuItem>
+              <MenuItem value={-1}>Pending</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button color="secondary" onClick={handleClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleCloseUpdateResults}>Cancel</Button>
           <Button color="secondary" onClick={handleUpdateMatchResults}>Update</Button>
         </DialogActions>
       </Dialog>

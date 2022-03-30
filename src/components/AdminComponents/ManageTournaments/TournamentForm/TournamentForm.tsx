@@ -39,10 +39,10 @@ const tournamentTemplate = {
   location: '',
   prize: '',
   format: 0,
-  type: 0,
+  matchBy: 0,
   closeRegistrationDate: new Date(),
   matchDuration: 1,
-  numberOfMatches: 0,
+  series: 0,
   adminHostsTournament: 0,
 };
 
@@ -84,10 +84,10 @@ function TournamentForm({
             updatedTournament.location = values.location;
             updatedTournament.prize = values.prize;
             updatedTournament.format = values.format;
-            updatedTournament.type = values.type;
+            updatedTournament.matchBy = values.matchBy;
             updatedTournament.closeRegistrationDate = values.closeRegistrationDate;
             updatedTournament.matchDuration = values.matchDuration;
-            updatedTournament.numberOfMatches = values.numberOfMatches;
+            updatedTournament.series = values.series;
 
             setTournament(updatedTournament);
           }
@@ -127,10 +127,10 @@ function TournamentForm({
       || (formik.values.location !== tournament.location)
       || (formik.values.prize !== tournament.prize)
       || (formik.values.format !== tournament.format)
-      || (formik.values.type !== tournament.type)
+      || (formik.values.matchBy !== tournament.matchBy)
       || (formik.values.closeRegistrationDate !== tournament.closeRegistrationDate)
       || (formik.values.matchDuration !== tournament.matchDuration)
-      || (formik.values.numberOfMatches !== tournament.numberOfMatches));
+      || (formik.values.series !== tournament.series));
       if (!fieldsChanged) formik.setErrors({});
       return;
     }
@@ -141,10 +141,10 @@ function TournamentForm({
     || (formik.values.location !== tournamentTemplate.location)
     || (formik.values.prize !== tournamentTemplate.prize)
     || (formik.values.format !== tournamentTemplate.format)
-    || (formik.values.type !== tournamentTemplate.type)
+    || (formik.values.matchBy !== tournamentTemplate.matchBy)
     || (formik.values.closeRegistrationDate !== tournamentTemplate.closeRegistrationDate)
     || (formik.values.matchDuration !== tournamentTemplate.matchDuration)
-    || (formik.values.numberOfMatches !== tournamentTemplate.numberOfMatches)) {
+    || (formik.values.series !== tournamentTemplate.series)) {
       setFieldsChanged(true); return;
     }
     formik.setErrors({});
@@ -174,7 +174,7 @@ function TournamentForm({
 
   React.useMemo(() => {
     formik.resetForm();
-    setEnabledByStatus(tournament ? tournament.status > TournamentStatus.ClosedRegistration : false);
+    setEnabledByStatus(tournament ? tournament.status > TournamentStatus.RegistrationClosed : false);
     setTournamentOver(tournament ? tournament.status === TournamentStatus.TournamentOver : false);
     formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
     setFormValidation(tournament ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());
@@ -245,10 +245,10 @@ function TournamentForm({
               disabled={tournamentOver}
             />
             <StyledSelect
-              id="numberOfMatches"
+              id="series"
               label="Series Type"
               selectOptions={SeriesType.map((text, index) => ({ value: index, text }))}
-              value={formik.values.numberOfMatches}
+              value={formik.values.series}
               onChange={formik.handleChange('numberOfMatches')}
               width={6}
               disabled={enabledByStatus}
@@ -263,10 +263,10 @@ function TournamentForm({
               width={6}
             />
             <StyledSelect
-              id="type"
+              id="matchBy"
               label="Match participants"
               selectOptions={MatchingType.map((text, index) => ({ value: index, text }))}
-              value={formik.values.type}
+              value={formik.values.matchBy}
               onChange={formik.handleChange('type')}
               disabled={enabledByStatus}
               width={6}
@@ -299,7 +299,6 @@ function TournamentForm({
                   newValue,
                 );
                 if (!isStartDateAfterRegistration(newValue, formik.values.closeRegistrationDate)) {
-                  console.log('test');
                   formik.setFieldError('startDate', startDateErrorMessage);
                 }
               }}

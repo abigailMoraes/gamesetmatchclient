@@ -15,6 +15,10 @@ import { Grid, Paper, Theme } from '@mui/material';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import TournamentDetailsDialog from './TournamentDetailsDialog';
 import TournamentForm from '../TournamentForm/TournamentForm';
+import StatusModal from '../../../General/StatusModal';
+import LoadingOverlay from '../../../General/LoadingOverlay';
+import ManageTournamentService from '../ManageTournamentService';
+import { TournamentStatus } from '../ManageTournamentsEnums';
 
 interface GridCardManageTournamentBaseProps{
   tournament:Tournament,
@@ -22,22 +26,36 @@ interface GridCardManageTournamentBaseProps{
   setFormTournament:(arg0:Tournament | undefined) => void,
   buttonName?:string,
   onButtonClick?:() => void,
+  buttonName2?:string,
+  onButtonClick2?:() => void,
   enableEdit:boolean,
-  enableDelete:boolean
+  enableDelete:boolean,
+  disabledButton1?:boolean,
+  disabledButton2?:boolean,
+  tooltip1?:string,
+  tooltip2?:string,
+  gridCardDetails?: React.ReactNode,
 }
 
 const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
   if (enabled) return 'Delete';
   switch (status) {
-    case 1:
-      return 'Unable to delete a tournament in progress';
+    case TournamentStatus.TournamentOver:
+      return 'Deleting a finished tournament is not permitted';
     default:
-      return 'Delete';
+      return 'Unable to delete a tournament in progress';
   }
 };
 function GridCardManageTournamentBase({
-  tournament, buttonName = '', onButtonClick, enableEdit, enableDelete, formTournament,
+  tournament, buttonName = '', onButtonClick,
+  buttonName2 = '', onButtonClick2,
+  enableEdit, enableDelete, formTournament,
   setFormTournament,
+  disabledButton1,
+  disabledButton2,
+  tooltip1 = '',
+  tooltip2 = '',
+  gridCardDetails,
 }:GridCardManageTournamentBaseProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -46,6 +64,15 @@ function GridCardManageTournamentBase({
   // TODO
   // const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
   // const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [statusModalOpen, setStatusModalOpen] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleDialogClose = () => {
+    setStatusModalOpen(false);
+    setLoading(false);
+    setError(false);
+  };
 
   const [currentTournament, setCurrentTournament] = React.useState(tournament);
   const openDetails = () => {
@@ -57,7 +84,13 @@ function GridCardManageTournamentBase({
   };
 
   const deleteTournament = () => {
-    // setOpenConfirmDelete(true);
+    ManageTournamentService.deleteTournament(currentTournament.tournamentID).then(() => {
+      setStatusModalOpen(true);
+    }).catch(() => {
+      setLoading(false);
+      setError(true);
+      setStatusModalOpen(true);
+    });
   };
 
   const editTournament = () => {
@@ -80,12 +113,7 @@ function GridCardManageTournamentBase({
           <Typography sx={{ mb: 1.5 }}>
             {currentTournament.description}
           </Typography>
-          <Typography variant="body2">
-            {`Start Date: ${new Date(currentTournament.startDate).toLocaleDateString('en-US')}`}
-          </Typography>
-          <Typography variant="body2">
-            {`Registration Closing Date: ${new Date(currentTournament.closeRegistrationDate).toLocaleDateString('en-US')}`}
-          </Typography>
+          {gridCardDetails}
           <Box sx={{ mt: 1 }}>
             <Button size="small" color="secondary" onClick={openDetails}>Details</Button>
           </Box>
@@ -96,7 +124,7 @@ function GridCardManageTournamentBase({
             display: 'flex', alignItems: 'center', pl: 1, pb: 1,
           }}
         >
-          <Tooltip title={deleteTournamentTooltip(enableDelete, currentTournament.status)}>
+          <Tooltip title={deleteTournamentTooltip(enableDelete, currentTournament.status)} placement="top-start">
             <span>
               <IconButton color="secondary" aria-label="delete" disabled={!enableDelete} onClick={deleteTournament}>
                 <DeleteIcon />
@@ -110,14 +138,36 @@ function GridCardManageTournamentBase({
               </IconButton>
             </span>
           </Tooltip>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {buttonName && <Button size="small" color="secondary" onClick={onButtonClick}>{buttonName}</Button>}
-          </Box>
+          <Grid sx={{ display: 'flex', flexDirection: 'column' }} spacing={4}>
+            <Grid item>
+              <Tooltip title={disabledButton1 ? tooltip1 : ''}>
+                <span>
+                  {buttonName && <Button size="small" color="secondary" disabled={disabledButton1} onClick={onButtonClick}>{buttonName}</Button>}
+                </span>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title={disabledButton2 ? tooltip2 : ''}>
+                <span>
+                  {buttonName2 && <Button size="small" color="secondary" disabled={disabledButton2} onClick={onButtonClick2}>{buttonName2}</Button>}
+                </span>
+              </Tooltip>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
 
       <TournamentDetailsDialog open={open} handleClose={handleClose} tournament={currentTournament} fullScreen={fullScreen} />
       <TournamentForm tournament={formTournament} setTournament={setCurrentTournament} open={openEdit} setOpen={setOpenEdit} />
+      <StatusModal
+        open={statusModalOpen}
+        handleDialogClose={handleDialogClose}
+        dialogText={error ? 'There was an error deleting the tournament.Please try again later or contact support.'
+          : 'Tournament was deleted.'}
+        dialogTitle={error ? 'Error' : 'Success'}
+        isError={error}
+      />
+      <LoadingOverlay isOpen={loading} />
     </Paper>
   );
 }
