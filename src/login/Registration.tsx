@@ -21,24 +21,6 @@ const PageContainer = styled.div`
   background-color: #252525;
 `;
 
-// const SpaceContainer = styled.div`
-//   flex: 1;
-// `;
-
-// const ContentContainer = styled.div`
-//   display: flex;
-//   flex：direction: row;
-//   justify-content: center;
-//   flex: 6;
-// `;
-
-// const FormContainer = styled.div`
-//   height: 100%;
-//   width: 35%;
-//   display: flex;
-//   flex-direction: column;
-// `;
-
 const CustomForm = styled(Form)`
   display: flex;
   flex: 1;
@@ -81,7 +63,7 @@ function Registration() {
   const [isSubmit, setDisplay] = useState(false);
   const [alert, setDisplayMessage] = useState(<div />);
   const userData = useAtomValue(loginDataAtom);
-  let message : string = '';
+  let message : string = 'Field is empty';
 
   return (
     <PageContainer>
@@ -115,6 +97,9 @@ function Registration() {
                   </Alert>,
                 );
               } else {
+                if (response.status !== 400) {
+                  message = 'Field is empty';
+                }
                 setDisplayMessage(
                   <Alert severity="error" sx={{ maxWidth: '30%', alignSelf: 'center' }}>
                     {message}
@@ -131,6 +116,7 @@ function Registration() {
             <CustomField
               id="code"
               name="code"
+              placeholder="  GAMESETMATCH"
             />
           </ColumnContainer>
           <ConfirmButton className="mt-4" type="submit">Confirm</ConfirmButton>
