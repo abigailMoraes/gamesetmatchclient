@@ -25,7 +25,7 @@ interface MatchDetailsProps {
 
 const getResults = (match:MatchForAdmin) => {
   const result = match.participants[0]?.results;
-  if (result === -1) return -1;
+
   switch (result) {
     case 0:
       return 0;
