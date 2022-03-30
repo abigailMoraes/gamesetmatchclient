@@ -25,6 +25,7 @@ import ManageTournaments from './components/AdminComponents/ManageTournaments/Ma
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
 import { loginDataAtom } from './atoms/userAtom';
+import TournamentHistoryCard from './components/TournamentHistory/TournamentHistoryCard';
 
 const theme = responsiveFontSizes(createTheme({
   palette: {
@@ -98,7 +99,7 @@ function App() {
               <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />
               <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />
               <Route path={navigation.registerTournament} element={<RequireAuth><RegisterTournament /></RequireAuth>} />
-              <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistory /></RequireAuth>} />
+              <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistoryCard /></RequireAuth>} />
               <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournaments /></RequireAuth>} />
               <Route path={navigation.manageUsers} element={<RequireAuth><ManageUsers /></RequireAuth>} />
               <Route path={navigation.settings} element={<RequireAuth><Settings /></RequireAuth>} />
