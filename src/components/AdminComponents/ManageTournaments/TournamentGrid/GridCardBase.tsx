@@ -41,7 +41,7 @@ const deleteTournamentTooltip = (enabled:boolean, status:number):string => {
   if (enabled) return 'Delete';
   switch (status) {
     case TournamentStatus.TournamentOver:
-      return 'Deleting a  finished tournament is not permitted';
+      return 'Deleting a finished tournament is not permitted';
     default:
       return 'Unable to delete a tournament in progress';
   }
