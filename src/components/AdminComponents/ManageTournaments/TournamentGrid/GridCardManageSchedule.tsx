@@ -93,9 +93,9 @@ function GridCardManageSchedule({
         onButtonClick2={openPublishSchedule}
         enableDelete={enableDelete}
         enableEdit
-        disabeledButton1={scheduleCreated}
+        disabledButton1={scheduleCreated}
         tooltip1={tooltip1}
-        disabeledButton2={schedulePublished}
+        disabledButton2={schedulePublished}
         tooltip2={tooltip2}
         gridCardDetails={<GridCardDetails tournament={tournament} />}
       />

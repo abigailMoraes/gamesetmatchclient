@@ -30,8 +30,8 @@ interface GridCardManageTournamentBaseProps{
   onButtonClick2?:() => void,
   enableEdit:boolean,
   enableDelete:boolean,
-  disabeledButton1?:boolean,
-  disabeledButton2?:boolean,
+  disabledButton1?:boolean,
+  disabledButton2?:boolean,
   tooltip1?:string,
   tooltip2?:string,
   gridCardDetails?: React.ReactNode,
@@ -51,8 +51,8 @@ function GridCardManageTournamentBase({
   buttonName2 = '', onButtonClick2,
   enableEdit, enableDelete, formTournament,
   setFormTournament,
-  disabeledButton1,
-  disabeledButton2,
+  disabledButton1,
+  disabledButton2,
   tooltip1 = '',
   tooltip2 = '',
   gridCardDetails,
@@ -140,16 +140,16 @@ function GridCardManageTournamentBase({
           </Tooltip>
           <Grid sx={{ display: 'flex', flexDirection: 'column' }} spacing={4}>
             <Grid item>
-              <Tooltip title={disabeledButton1 ? tooltip1 : ''}>
+              <Tooltip title={disabledButton1 ? tooltip1 : ''}>
                 <span>
-                  {buttonName && <Button size="small" color="secondary" disabled={disabeledButton1} onClick={onButtonClick}>{buttonName}</Button>}
+                  {buttonName && <Button size="small" color="secondary" disabled={disabledButton1} onClick={onButtonClick}>{buttonName}</Button>}
                 </span>
               </Tooltip>
             </Grid>
             <Grid item>
-              <Tooltip title={disabeledButton2 ? tooltip2 : ''}>
+              <Tooltip title={disabledButton2 ? tooltip2 : ''}>
                 <span>
-                  {buttonName2 && <Button size="small" color="secondary" disabled={disabeledButton2} onClick={onButtonClick2}>{buttonName2}</Button>}
+                  {buttonName2 && <Button size="small" color="secondary" disabled={disabledButton2} onClick={onButtonClick2}>{buttonName2}</Button>}
                 </span>
               </Tooltip>
             </Grid>
