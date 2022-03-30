@@ -1,24 +1,8 @@
 
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
-
+import { Tournament } from '../../interfaces/TournamentInterface';
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
-export interface Tournament {
-  tournamentID: number,
-  name: string,
-  description: string,
-  startDate: Date,
-  location: string,
-  maxParticipants: number,
-  prize: string,
-  format: number,
-  type: number,
-  closeRegistrationDate: Date,
-  matchDuration: number,
-  numberOfMatches: number,
-  roundDuration: number,
-  registered:boolean,
-}
 
 export interface CompletedTournament{
   tournamentID: number,
