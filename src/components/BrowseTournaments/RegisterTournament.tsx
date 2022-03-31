@@ -20,7 +20,6 @@ import { userIDAtom } from '../../atoms/userAtom';
 import { SkillLevels, Tournament } from '../../interfaces/TournamentInterface';
 import { ReactBigCalendarEvent } from '../../interfaces/EventInterface';
 import StyledSelect from '../General/StyledSelect';
-import DateHelpers from '../General/Calendar/DateHelpers';
 
 interface RegisterTournamentState {
   tournament:Tournament;
@@ -121,7 +120,7 @@ function RegisterTournament() {
                 {`Match Duration:  ${tournament.matchDuration} minutes`}
               </Typography>
               <Typography variant="body1">
-                {`Start Date:  ${DateHelpers.formatDateForDisplay(tournament.startDate)}`}
+                {`Start Date:  ${moment(tournament.startDate).format('YYYY-MM-DD')}`}
               </Typography>
             </CardContent>
           </Card>
