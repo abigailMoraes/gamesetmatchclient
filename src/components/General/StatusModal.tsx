@@ -44,7 +44,7 @@ function StatusModal({
         {dialogTitle}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText style={{ color: theme.palette.text.primary }} id="alert-dialog-description">
+        <DialogContentText style={{ color: theme.palette.text.primary, textAlign: 'center' }} id="alert-dialog-description">
           {dialogText}
         </DialogContentText>
       </DialogContent>
