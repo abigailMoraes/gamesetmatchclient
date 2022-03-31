@@ -11,6 +11,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { useTheme } from '@emotion/react';
 import { Theme } from '@mui/material/styles';
 import styled from '@emotion/styled';
+import Typography from '@mui/material/Typography';
 
 interface StatusModalProps{
   open:boolean,
@@ -44,8 +45,13 @@ function StatusModal({
         {dialogTitle}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText style={{ color: theme.palette.text.primary, textAlign: 'center' }} id="alert-dialog-description">
-          {dialogText}
+        <DialogContentText style={{ color: theme.palette.text.primary, textAlign: 'center', display: 'block' }} id="alert-dialog-description">
+          <Typography
+            variant="body1"
+            style={{ whiteSpace: 'pre-line' }}
+          >
+            {dialogText}
+          </Typography>
         </DialogContentText>
       </DialogContent>
       <DialogActions>

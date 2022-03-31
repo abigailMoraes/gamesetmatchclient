@@ -52,12 +52,15 @@ function MatchDetails({
 
   const [resultUpdate, setResultUpdate] = React.useState(false);
   const [resultUpdateError, setResultUpdateError] = React.useState(false);
+  const [resultUpdateText, setResultUpdateText] = React.useState('');
 
   const [p1AttendanceUpdate, setP1AttendanceUdpate] = React.useState(false);
   const [p1AttendanceUpdateError, setP1AttendanceUdpateError] = React.useState(false);
+  const [p1AttendanceText, setP1AttendanceText] = React.useState('');
 
   const [p2AttendanceUpdate, setP2AttendanceUdpate] = React.useState(false);
   const [p2AttendanceUpdateError, setP2AttendanceUdpateError] = React.useState(false);
+  const [p2AttendanceText, setP2AttendanceText] = React.useState('');
 
   const [openStatusModal, setOpenStatusModal] = React.useState(false);
   const [statusModalText, setStatusModalText] = React.useState('');
@@ -67,12 +70,18 @@ function MatchDetails({
     setOpen(false);
   };
 
-  // TODO use enums
   const handleUpdate = () => {
-    // updateWinner
-
     setStatusModalText('');
+    setResultUpdateError(false);
     setUpdateMatchError(false);
+    setP2AttendanceUdpate(false);
+    setP2AttendanceUdpateError(false);
+    setP1AttendanceUdpate(false);
+    setP1AttendanceUdpateError(false);
+    setResultUpdate(false);
+    setResultUpdateText('');
+    setP1AttendanceText('');
+    setP2AttendanceText('');
     if (winner !== getResults(match)) {
       let res:number;
 
@@ -87,16 +96,14 @@ function MatchDetails({
           setResultUpdate(true);
           const updatedMatch = match;
           updatedMatch.participants[0].results = res;
-          setResultUpdateError(false);
           setMatch(updatedMatch);
+          setResultUpdateText('Result successfully updated.');
         })
-        .catch(() => {
+        .catch((err:Error) => {
           setResultUpdateError(true);
           setResultUpdate(true);
+          setResultUpdateText(err.message);
         });
-
-      const updatedText = resultUpdateError ? 'Error saving results' : 'Result successfully updated!';
-      setStatusModalText(statusModalText.concat('\n', updatedText));
     }
 
     if (playerOneAttendance !== AttendanceType.indexOf(match.participants[0]?.attendance)) {
@@ -105,16 +112,14 @@ function MatchDetails({
           setP1AttendanceUdpate(true);
           const updatedMatch = match;
           updatedMatch.participants[0].attendance = AttendanceType[playerOneAttendance];
-          setP1AttendanceUdpateError(false);
           setMatch(updatedMatch);
+          setP1AttendanceText(`${match.participants[0]?.name} attendance successfully saved`);
         })
-        .catch(() => {
+        .catch((err: Error) => {
           setP1AttendanceUdpateError(true);
           setP1AttendanceUdpate(true);
+          setP1AttendanceText(err.message);
         });
-      const updatedText = p1AttendanceUpdateError ? `Error saving results ${match.participants[0]?.name}`
-        : `${match.participants[0]?.name} attendance successfully saved`;
-      setStatusModalText(statusModalText.concat('\n', updatedText));
     }
 
     if (playerTwoAttendance !== AttendanceType.indexOf(match.participants[1]?.attendance)) {
@@ -123,23 +128,21 @@ function MatchDetails({
           setP2AttendanceUdpate(true);
           const updatedMatch = match;
           updatedMatch.participants[1].attendance = AttendanceType[playerTwoAttendance];
-          setP2AttendanceUdpateError(true);
           setMatch(updatedMatch);
+          setP2AttendanceText(`${match.participants[1]?.name} attendance successfully saved`);
         })
-        .catch(() => {
+        .catch((err:Error) => {
           setP2AttendanceUdpateError(true);
           setP2AttendanceUdpate(true);
+          setP2AttendanceText(err.message);
         });
-
-      const updatedText = p2AttendanceUpdateError ? `Error saving results ${match.participants[1]?.name}`
-        : `${match.participants[1]?.name} attendance successfully saved `;
-      setStatusModalText(statusModalText.concat('\n', updatedText));
     }
   };
 
   React.useMemo(() => {
     setOpenStatusModal(resultUpdate || p1AttendanceUpdate || p2AttendanceUpdate);
     setUpdateMatchError(resultUpdateError || p1AttendanceUpdateError || p2AttendanceUpdateError);
+    setStatusModalText(`${resultUpdateText}\n${p1AttendanceText}\n${p2AttendanceText}`);
   }, [(p2AttendanceUpdate || p1AttendanceUpdate || resultUpdate)]);
 
   React.useEffect(() => {
@@ -162,7 +165,7 @@ function MatchDetails({
           style={{ color: theme.palette.primary.main, minHeight: '50vh', minWidth: '80vw' }}
         >
           <DialogContent>
-            <Typography variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
+            <Typography component="span" variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
               {match.name}
             </Typography>
             <Container style={{ display: 'flex', flexDirection: 'column' }}>
