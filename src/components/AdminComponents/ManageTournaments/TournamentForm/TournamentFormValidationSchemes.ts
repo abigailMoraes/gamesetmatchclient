@@ -27,6 +27,10 @@ const create = () => {
       .number()
       .min(1, 'Must be greater than 0')
       .required('Match Duration is required'),
+    minParticipants: yup
+      .number()
+      .min(2, 'Must be greater than 1')
+      .required('Minimum number of players is required'),
     startDate: yup
       .date()
       .min(new Date()),
@@ -81,6 +85,10 @@ const editInProgress = yup.object({
     .number()
     .min(1, 'Must be greater than 0')
     .required('Match Duration is required'),
+  minParticipants: yup
+    .number()
+    .min(2, 'Must be greater than 1')
+    .required('Minimum number of players is required'),
 });
 
 const getEditScheme = (status:number) => {

@@ -5,8 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { useTheme } from '@mui/styles';
 import {
-  Alert,
-  DialogActions, Grid, Snackbar, Theme, useMediaQuery,
+  DialogActions, Grid, Theme, useMediaQuery,
 } from '@mui/material';
 import Container from '@mui/material/Container';
 import { AttendanceType, MatchForAdmin } from '../../../interfaces/MatchInterface';
@@ -14,6 +13,7 @@ import { AttendanceType, MatchForAdmin } from '../../../interfaces/MatchInterfac
 import StyledButton from '../StyledButton';
 import StyledSelect from '../StyledSelect';
 import MatchService from '../../Calendar/MatchService';
+import StatusModal from '../StatusModal';
 
 interface MatchDetailsProps {
   match:MatchForAdmin,
@@ -58,6 +58,10 @@ function MatchDetails({
 
   const [p2AttendanceUpdate, setP2AttendanceUdpate] = React.useState(false);
   const [p2AttendanceUpdateError, setP2AttendanceUdpateError] = React.useState(false);
+
+  const [openStatusModal, setOpenStatusModal] = React.useState(false);
+  const [statusModalText, setStatusModalText] = React.useState('');
+  const [updateMatchError, setUpdateMatchError] = React.useState(false);
   //   const userID:number = useAtomValue(userIDAtom);
   const handleClickClose = () => {
     setOpen(false);
@@ -66,6 +70,9 @@ function MatchDetails({
   // TODO use enums
   const handleUpdate = () => {
     // updateWinner
+
+    setStatusModalText('');
+    setUpdateMatchError(false);
     if (winner !== getResults(match)) {
       let res:number;
 
@@ -87,6 +94,9 @@ function MatchDetails({
           setResultUpdateError(true);
           setResultUpdate(true);
         });
+
+      const updatedText = resultUpdateError ? 'Error saving results' : 'Result successfully updated!';
+      setStatusModalText(statusModalText.concat('\n', updatedText));
     }
 
     if (playerOneAttendance !== AttendanceType.indexOf(match.participants[0]?.attendance)) {
@@ -102,6 +112,9 @@ function MatchDetails({
           setP1AttendanceUdpateError(true);
           setP1AttendanceUdpate(true);
         });
+      const updatedText = p1AttendanceUpdateError ? `Error saving results ${match.participants[0]?.name}`
+        : `${match.participants[0]?.name} attendance successfully saved`;
+      setStatusModalText(statusModalText.concat('\n', updatedText));
     }
 
     if (playerTwoAttendance !== AttendanceType.indexOf(match.participants[1]?.attendance)) {
@@ -117,11 +130,17 @@ function MatchDetails({
           setP2AttendanceUdpateError(true);
           setP2AttendanceUdpate(true);
         });
-    }
-    // if winner was updated
 
-    // snackbar for each request.
+      const updatedText = p2AttendanceUpdateError ? `Error saving results ${match.participants[1]?.name}`
+        : `${match.participants[1]?.name} attendance successfully saved `;
+      setStatusModalText(statusModalText.concat('\n', updatedText));
+    }
   };
+
+  React.useMemo(() => {
+    setOpenStatusModal(resultUpdate || p1AttendanceUpdate || p2AttendanceUpdate);
+    setUpdateMatchError(resultUpdateError || p1AttendanceUpdateError || p2AttendanceUpdateError);
+  }, [(p2AttendanceUpdate || p1AttendanceUpdate || resultUpdate)]);
 
   React.useEffect(() => {
     setWinner(getResults(match));
@@ -195,36 +214,13 @@ function MatchDetails({
             {!isEditable && <StyledButton buttonText="Update" handleClick={handleUpdate} />}
           </DialogActions>
         </Dialog>
-
-        <Snackbar open={resultUpdate} autoHideDuration={6000} onClose={(() => setResultUpdate(!resultUpdate))}>
-          <Alert
-            onClose={(() => setResultUpdate(!resultUpdate))}
-            severity={resultUpdateError ? 'error' : 'success'}
-            sx={{ width: '100%' }}
-          >
-            {resultUpdateError ? 'Error saving results' : 'Result successfully updated!' }
-          </Alert>
-        </Snackbar>
-        <Snackbar open={p1AttendanceUpdate} autoHideDuration={6000} onClose={(() => setP1AttendanceUdpate(!p1AttendanceUpdate))}>
-          <Alert
-            onClose={(() => setP1AttendanceUdpate(!p1AttendanceUpdate))}
-            severity={p1AttendanceUpdateError ? 'error' : 'success'}
-            sx={{ width: '100%' }}
-          >
-            {p1AttendanceUpdateError ? `Error saving results ${match.participants[0]?.name}`
-              : `${match.participants[0]?.name} attendance successfully saved` }
-          </Alert>
-        </Snackbar>
-        <Snackbar open={p2AttendanceUpdate} autoHideDuration={6000} onClose={(() => setP2AttendanceUdpate(!p2AttendanceUpdate))}>
-          <Alert
-            onClose={(() => setP2AttendanceUdpate(!p2AttendanceUpdate))}
-            severity={p2AttendanceUpdateError ? 'error' : 'success'}
-            sx={{ width: '100%' }}
-          >
-            {p2AttendanceUpdateError ? `Error saving results ${match.participants[1]?.name}`
-              : `${match.participants[1]?.name} attendance successfully saved` }
-          </Alert>
-        </Snackbar>
+        <StatusModal
+          open={openStatusModal}
+          handleDialogClose={(() => setOpenStatusModal(false))}
+          dialogTitle={`Updates were ${updateMatchError ? 'not' : ''} successful`}
+          dialogText={statusModalText}
+          isError={updateMatchError}
+        />
       </>
     )
   );

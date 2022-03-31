@@ -34,7 +34,7 @@ export interface Registrant {
   userID: Number,
   name: String,
   email: String,
-  skillLevel: String,
+  skillLevel: number,
 }
 
 const getRegistrants = (tournamentID:Number) => fetch(`${baseURL}/${tournamentID}/registrants`)

@@ -44,9 +44,10 @@ const tournamentTemplate = {
   matchDuration: 1,
   series: 0,
   adminHostsTournament: 0,
+  minParticipants: 2,
 };
 
-const startDateErrorMessage = `Start date must be ${ValidationSchemes.startDateMinDaysAfterRegistration} day after registration period closes`;
+const startDateErrorMessage = `Start date must be ${ValidationSchemes.startDateMinDaysAfterRegistration} days after registration period closes`;
 
 const isStartDateAfterRegistration = (startDate:Date | null, registration:Date):boolean => {
   if (!startDate) {
@@ -88,7 +89,7 @@ function TournamentForm({
             updatedTournament.closeRegistrationDate = values.closeRegistrationDate;
             updatedTournament.matchDuration = values.matchDuration;
             updatedTournament.series = values.series;
-
+            updatedTournament.minParticipants = values.minParticipants;
             setTournament(updatedTournament);
           }
 
@@ -130,6 +131,7 @@ function TournamentForm({
       || (formik.values.matchBy !== tournament.matchBy)
       || (formik.values.closeRegistrationDate !== tournament.closeRegistrationDate)
       || (formik.values.matchDuration !== tournament.matchDuration)
+      || (formik.values.minParticipants !== tournament.minParticipants)
       || (formik.values.series !== tournament.series));
       if (!fieldsChanged) formik.setErrors({});
       return;
@@ -144,6 +146,7 @@ function TournamentForm({
     || (formik.values.matchBy !== tournamentTemplate.matchBy)
     || (formik.values.closeRegistrationDate !== tournamentTemplate.closeRegistrationDate)
     || (formik.values.matchDuration !== tournamentTemplate.matchDuration)
+    || (formik.values.minParticipants !== tournamentTemplate.minParticipants)
     || (formik.values.series !== tournamentTemplate.series)) {
       setFieldsChanged(true); return;
     }
@@ -244,12 +247,24 @@ function TournamentForm({
               endAdornment="minutes"
               disabled={tournamentOver}
             />
+            <StyledInputField
+              id="minParticipants"
+              label="Minumum Players"
+              value={formik.values.minParticipants}
+              onChange={formik.handleChange}
+              width={6}
+              type="number"
+              required
+              error={formik.touched.minParticipants && Boolean(formik.errors.minParticipants)}
+              helperText={formik.touched.minParticipants ? formik.errors.minParticipants : ''}
+              disabled={tournamentOver}
+            />
             <StyledSelect
               id="series"
               label="Series Type"
               selectOptions={SeriesType.map((text, index) => ({ value: index, text }))}
               value={formik.values.series}
-              onChange={formik.handleChange('numberOfMatches')}
+              onChange={formik.handleChange('series')}
               width={6}
               disabled={enabledByStatus}
             />
@@ -267,7 +282,7 @@ function TournamentForm({
               label="Match participants"
               selectOptions={MatchingType.map((text, index) => ({ value: index, text }))}
               value={formik.values.matchBy}
-              onChange={formik.handleChange('type')}
+              onChange={formik.handleChange('matchBy')}
               disabled={enabledByStatus}
               width={6}
             />
@@ -333,8 +348,8 @@ function TournamentForm({
         <StatusModal
           open={responseOpen}
           handleDialogClose={handleSuccessDialogClose}
-          dialogText={tournament ? 'Update was successful' : `You have successfully created a new tournament. 
-          It is now open for registration. After registration closes, a tournament schedule will be proposed for you to verify.`}
+          dialogText={tournament ? 'Update was successful'
+            : 'Your tournament is now open for registration.  After registration closes, a tournament schedule will be proposed for you to verify.'}
           dialogTitle="Success!"
           isError={error}
         />
