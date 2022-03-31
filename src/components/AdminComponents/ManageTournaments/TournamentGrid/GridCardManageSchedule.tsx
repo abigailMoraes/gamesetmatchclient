@@ -1,73 +1,84 @@
 import React from 'react';
+import Typography from '@mui/material/Typography';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
-import { Match } from '../../../../interfaces/MatchInterface';
-import MatchService from '../../../Calendar/MatchService';
+import { MatchForAdmin } from '../../../../interfaces/MatchInterface';
 import StatusModal from '../../../General/StatusModal';
 import ReviewSchedule from '../ReviewScheduleForm/ReviewSchedule';
 import GridCardBase from './GridCardBase';
+import ManageTournamentService from '../ManageTournamentService';
+import LoadingOverlay from '../../../General/LoadingOverlay';
+import { TournamentRow, TournamentStatus } from '../ManageTournamentsEnums';
 
 interface GridCardManageScheduleProps {
-  tournament:Tournament
+  tournament:Tournament,
+  tournamentRows: TournamentRow[],
+  setTournamentRows:(arg0:TournamentRow[]) => void,
   formTournament:Tournament | undefined,
   setFormTournament:(arg0:Tournament | undefined) => void,
 }
 
-const mockMatches:Match[] = [{
-  results: 'win',
-  attendance: 'No',
-  matchID: 1,
-  startTime: new Date('2022-02-20 11:00:00'),
-  endTime: new Date('2022-02-20 11:30:00'),
-  duration: 30,
-  type: 'Preliminary',
-  name: 'Mariokart Madness',
-  location: 'West Atrium room 203',
-  description: 'Come join us for some krazy karting! (Individual)',
-}, {
-  results: 'loss',
-  attendance: 'No',
-  matchID: 4,
-  startTime: new Date('2022-03-05 12:00:00'),
-  endTime: new Date('2022-03-05 12:30:00'),
-  duration: 30,
-  type: 'Preliminary',
-  name: 'Mariokart Madness',
-  location: 'West Atrium room 203',
-  description: 'Come join us for some krazy karting! (Individual)',
-}, {
-  results: 'TBD',
-  attendance: 'Yes',
-  matchID: 6,
-  startTime: new Date('2022-03-05 13:30:00'),
-  endTime: new Date('2022-03-05 14:00:00'),
-  duration: 30,
-  type: 'Preliminary',
-  name: 'Mariokart Madness',
-  location: 'West Atrium room 203',
-  description: 'Come join us for some krazy karting! (Individual)',
-}];
+interface GridCardDetailsProps {
+  tournament:Tournament
+}
+function GridCardDetails({ tournament }:GridCardDetailsProps) {
+  return (
+    <Typography variant="body2">
+      {`Round #: ${tournament.currentRound}`}
+    </Typography>
+  );
+}
 
-function GridCardManageSchedule({ tournament, formTournament, setFormTournament }:GridCardManageScheduleProps) {
+const canDelete = (tournament:Tournament) => (tournament.status === TournamentStatus.ReadyToPublishSchedule && tournament.currentRound === 0)
+|| tournament.status === TournamentStatus.RegistrationClosed;
+
+function GridCardManageSchedule({
+  tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
+}:GridCardManageScheduleProps) {
   const [open, setOpen] = React.useState(false);
   const [errorModal, setErrorModal] = React.useState(false);
   // TODO enable delete if its the first round only
-  const [matches, setMatches] = React.useState<Match[]>([]);
+  const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const [openStatusModal, setOpenStatusModal] = React.useState(false);
+  const [createError, setCreateError] = React.useState(false);
+  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.RegistrationClosed);
+  const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
+    || tournament.status === TournamentStatus.ReadyToPublishSchedule);
+  const [enableDelete] = React.useState(canDelete(tournament));
+
+  const tooltip1 = "A schedule has already been created. Press 'Publish Schedule' to view.";
+  const tooltip2 = 'Please create a schedule first.';
 
   const openPublishSchedule = () => {
-    setMatches(mockMatches);
-    setOpen(true);
-    MatchService.getAll(tournament.tournamentID).then((data) => {
-      setMatches(data);
-      setOpen(true);
+    ManageTournamentService.getLatestRoundID(tournament.tournamentID)
+      .then((roundID:number) => ManageTournamentService.getMatchesNeedingScheduling(roundID))
+      .then((data:MatchForAdmin[]) => {
+        setMatches(data);
+        setOpen(true);
+      }).catch(() => {
+        setErrorModal(true);
+      });
+  };
+
+  const createSchedule = () => {
+    setLoading(true);
+    ManageTournamentService.createSchedule(tournament.tournamentID).then(() => {
+      setLoading(false);
+      setOpenStatusModal(true);
+      setScheduleCreated(true);
+      setSchedulePublished(false);
     }).catch(() => {
-      // setErrorModal(true);
-      setMatches(mockMatches);
-      setOpen(true);
+      setLoading(false);
+      setCreateError(true);
+      setOpenStatusModal(true);
     });
   };
 
   const handleDialogClose = () => {
+    setOpenStatusModal(false);
+
     setErrorModal(false);
+    setCreateError(false);
   };
 
   return (
@@ -76,10 +87,17 @@ function GridCardManageSchedule({ tournament, formTournament, setFormTournament 
         tournament={tournament}
         formTournament={formTournament}
         setFormTournament={setFormTournament}
-        buttonName="Publish Schedule"
-        onButtonClick={openPublishSchedule}
-        enableDelete={false}
+        buttonName="Create Schedule"
+        onButtonClick={createSchedule}
+        buttonName2="Publish Schedule"
+        onButtonClick2={openPublishSchedule}
+        enableDelete={enableDelete}
         enableEdit
+        disabledButton1={scheduleCreated}
+        tooltip1={tooltip1}
+        disabledButton2={schedulePublished}
+        tooltip2={tooltip2}
+        gridCardDetails={<GridCardDetails tournament={tournament} />}
       />
       <ReviewSchedule
         open={open}
@@ -87,6 +105,10 @@ function GridCardManageSchedule({ tournament, formTournament, setFormTournament 
         matches={matches}
         setMatches={setMatches}
         tournament={tournament}
+        tournamentRows={tournamentRows}
+        setTournamentRows={setTournamentRows}
+        setPublished={setSchedulePublished}
+        enableEdit
       />
       <StatusModal
         open={errorModal}
@@ -95,6 +117,15 @@ function GridCardManageSchedule({ tournament, formTournament, setFormTournament 
         dialogTitle="Error"
         isError
       />
+      <StatusModal
+        open={openStatusModal}
+        handleDialogClose={handleDialogClose}
+        dialogText={createError ? 'There was an error with creating the schedule.Please try again later or contact support.'
+          : "Schedule was successfully created, click 'Publish Schedule' to view"}
+        dialogTitle={createError ? 'Error' : 'Success'}
+        isError={createError}
+      />
+      <LoadingOverlay isOpen={loading} />
     </>
   );
 }

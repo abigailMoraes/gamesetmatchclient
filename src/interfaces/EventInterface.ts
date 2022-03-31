@@ -4,4 +4,5 @@ export interface ReactBigCalendarEvent {
   start:Date,
   end:Date,
   allDay:boolean,
+  matchStatus?: number,
 }

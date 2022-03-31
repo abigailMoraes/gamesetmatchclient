@@ -8,7 +8,7 @@ const startDateMinDaysAfterRegistration = 2;
 const create = () => {
   const minDate = new Date();
 
-  minDate.setDate(minDate.getDate() - 1);
+  minDate.setDate(minDate.getDate() - startDateMinDaysAfterRegistration);
   return yup.object({
     name: yup
       .string()

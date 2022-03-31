@@ -32,7 +32,7 @@ function RegistrantList({ registrants, currentUserID }:RegistrantListProps):JSX.
     return <div>No registrants yet.</div>;
   }
   return (
-    <Typography variant="body2">
+    <Typography component="span" variant="body2">
       {`Total: ${registrants.length}`}
       <List sx={{
         overflow: 'auto',

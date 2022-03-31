@@ -119,7 +119,7 @@ export default function BrowseTournamentsGrid() {
         setLoading(false);
         setRows(data);
       });
-  }, [loading]);
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       {loading ? <CircularProgress /> : (

@@ -9,9 +9,11 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useAtomValue } from 'jotai';
 import TournamentForm from './TournamentForm/TournamentForm';
-import TournamentDisplayGrid, { TournamentRow } from './TournamentGrid/TournamentDisplayGrid';
+import TournamentDisplayGrid from './TournamentGrid/TournamentDisplayGrid';
 import { loginDataAtom } from '../../../atoms/userAtom';
-import { GridCardTypes, TabNames, TournamentStatus } from './ManageTournamentsEnums';
+import {
+  GridCardTypes, TabNames, TournamentRow, TournamentStatus,
+} from './ManageTournamentsEnums';
 import ManageTournamentService from './ManageTournamentService';
 import { Tournament } from '../../../interfaces/TournamentInterface';
 import StyledButton from '../../General/StyledButton';
@@ -51,20 +53,24 @@ function a11yProps(index: number) {
   };
 }
 
-function statusBasedOnTab(value:number):number {
-  let status = TournamentStatus.OpenForRegistration;
-  if (value === TabNames.ManageSchedule) {
-    status = TournamentStatus.ScheduleReadyForReview;
+function statusesBasedOnTab(value:number):number[] {
+  switch (value) {
+    case TabNames.ManageSchedule:
+      return [TournamentStatus.RegistrationClosed,
+        TournamentStatus.ReadyToPublishSchedule,
+        TournamentStatus.ReadyToPublishNextRound];
+    case TabNames.Ongoing:
+      return [TournamentStatus.Ongoing, TournamentStatus.FinalRound];
+    case TabNames.Over:
+      return [TournamentStatus.TournamentOver];
+    default:
+      return [TournamentStatus.OpenForRegistration];
   }
-
-  if (value === TabNames.Ongoing) {
-    status = TournamentStatus.Ongoing;
-  }
-  return status;
 }
+
 function ManageTournaments() {
   const [value, setValue] = React.useState(0);
-  const [tournaments, setTournaments] = React.useState<TournamentRow[]>([]);
+  const [tournamentRows, setTournamentRows] = React.useState<TournamentRow[]>([]);
   const [open, setOpen] = React.useState(false);
   const userData = useAtomValue(loginDataAtom);
   const [formTournament, setFormTournament] = React.useState<Tournament | undefined>(undefined);
@@ -73,15 +79,14 @@ function ManageTournaments() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
   const openTournamentForm = () => {
     setFormTournament(undefined);
     setOpen(!open);
   };
 
   React.useMemo(() => {
-    ManageTournamentService.getUsersCreatedTournaments(userData.id, statusBasedOnTab(value))
-      .then((data) => setTournaments(data))
+    ManageTournamentService.getUsersCreatedTournaments(userData.id, statusesBasedOnTab(value))
+      .then((data) => setTournamentRows(data))
       .catch(() => console.log('error'));
     setGridUpdate(false);
   }, [value, gridUpate]);
@@ -110,6 +115,7 @@ function ManageTournaments() {
                 <Tab label="Open for Registration" {...a11yProps(0)} />
                 <Tab label="Ready to Schedule" {...a11yProps(1)} />
                 <Tab label="In Progress" {...a11yProps(2)} />
+                <Tab label="Finished" {...a11yProps(3)} />
               </Tabs>
             </Box>
             <TabPanel value={value} index={TabNames.OpenForRegistration}>
@@ -117,7 +123,8 @@ function ManageTournaments() {
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
                 gridTitle=""
-                tournaments={tournaments}
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
                 gridCardComponentName={GridCardTypes.OpenForRegistration}
               />
             </TabPanel>
@@ -126,7 +133,8 @@ function ManageTournaments() {
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
                 gridTitle=""
-                tournaments={tournaments}
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
                 gridCardComponentName={GridCardTypes.ManageSchedule}
               />
             </TabPanel>
@@ -135,8 +143,19 @@ function ManageTournaments() {
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
                 gridTitle=""
-                tournaments={tournaments}
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
                 gridCardComponentName={GridCardTypes.Ongoing}
+              />
+            </TabPanel>
+            <TabPanel value={value} index={TabNames.Over}>
+              <TournamentDisplayGrid
+                formTournament={formTournament}
+                setFormTournament={setFormTournament}
+                gridTitle=""
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
+                gridCardComponentName={GridCardTypes.Over}
               />
             </TabPanel>
           </Grid>
