@@ -19,7 +19,7 @@ import FirebaseAuth from './login/FirebaseAuth';
 import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import BrowseTournamentsGrid from './components/BrowseTournaments/BrowseTournamentsGrid';
-import TournamentHistory from './components/TournamentHistory/TournamentHistory';
+import RegisterTournament from './components/BrowseTournaments/RegisterTournament';
 import ManageTournaments from './components/AdminComponents/ManageTournaments/ManageTournaments';
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
@@ -99,8 +99,8 @@ function App() {
             <Route path="/" element={<RequireAuth><NavigationSideBar /></RequireAuth>}>
               <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />
               <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />
-              <Route path={navigation.registerTournament} element={<RequireAuth><TournamentHistoryCard /></RequireAuth>} />
-              <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistory /></RequireAuth>} />
+              <Route path={navigation.registerTournament} element={<RequireAuth><RegisterTournament /></RequireAuth>} />
+              <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistoryCard /></RequireAuth>} />
               <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournaments /></RequireAuth>} />
               <Route path={navigation.manageUsers} element={<RequireAuth><ManageUsers /></RequireAuth>} />
               <Route path={navigation.settings} element={<RequireAuth><Settings /></RequireAuth>} />
