@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as yup from 'yup';
 import { TournamentStatus } from '../ManageTournamentsEnums';
 
@@ -6,9 +7,8 @@ const maxCharactersReached = (numCharacters:number) => `Maximum of ${numCharacte
 const startDateMinDaysAfterRegistration = 2;
 
 const create = () => {
-  const minDate = new Date();
-
-  minDate.setDate(minDate.getDate() - startDateMinDaysAfterRegistration);
+  const minCloseRegistrationDate = new Date();
+  minCloseRegistrationDate.setDate(minCloseRegistrationDate.getDate() - 1);
   return yup.object({
     name: yup
       .string()
@@ -29,11 +29,14 @@ const create = () => {
       .required('Match Duration is required'),
     startDate: yup
       .date()
-      .min(new Date()),
+      .when('closeRegistrationDate', (closeRegistrationDate, schema) => {
+        const daysAfter = moment(new Date(closeRegistrationDate)).add(startDateMinDaysAfterRegistration, 'days');
+        return schema.min(daysAfter);
+      }),
     closeRegistrationDate: yup
       .date()
       .min(
-        minDate,
+        minCloseRegistrationDate,
         'Registration close date cannot be in the past',
       ),
   });

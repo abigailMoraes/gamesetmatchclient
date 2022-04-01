@@ -121,7 +121,7 @@ function RegisterTournament() {
                 {`Match Duration:  ${tournament.matchDuration} minutes`}
               </Typography>
               <Typography variant="body1">
-                {`Start Date:  ${DateHelpers.formatDateForDisplay(tournament.startDate)}`}
+                {`Start Date:  ${DateHelpers.formatDateForDisplay(new Date(tournament.startDate))}`}
               </Typography>
             </CardContent>
           </Card>
