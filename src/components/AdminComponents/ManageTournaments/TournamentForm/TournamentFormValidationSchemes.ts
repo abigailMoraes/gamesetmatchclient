@@ -3,13 +3,13 @@ import { TournamentStatus } from '../ManageTournamentsEnums';
 
 const maxCharactersReached = (numCharacters:number) => `Maximum of ${numCharacters} characters allowed.`;
 
-const startDateMinDaysAfterRegistration = 2;
+const startDateMinDaysAfterRegistration = 1;
 
 const create = () => {
-  const minDate = new Date();
-
-  // min date has to be at least today
-  minDate.setDate(minDate.getDate() - 1);
+  const minStartDate = new Date();
+  const minCloseRegistrationDate = new Date();
+  minStartDate.setDate(minStartDate.getDate() + startDateMinDaysAfterRegistration);
+  minCloseRegistrationDate.setDate(minCloseRegistrationDate.getDate() - 1);
   return yup.object({
     name: yup
       .string()
@@ -30,11 +30,11 @@ const create = () => {
       .required('Match Duration is required'),
     startDate: yup
       .date()
-      .min(new Date()),
+      .min(minStartDate),
     closeRegistrationDate: yup
       .date()
       .min(
-        minDate,
+        minCloseRegistrationDate,
         'Registration close date cannot be in the past',
       ),
   });
