@@ -12,7 +12,7 @@ function PlayerStats() {
   const [matchLosses, setMatchLosses] = useState<Match[]>([]);
   const [matchDraws, setMatchDraws] = useState<Match[]>([]);
   const [matchPending, setMatchPending] = useState<Match[]>([]);
-  const userID = useAtomValue(userIDAtom);
+  const userID = 3;
 
   useEffect(() => {
     MatchService.getPastMatches(userID).then((data) => {

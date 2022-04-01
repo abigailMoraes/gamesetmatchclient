@@ -19,7 +19,7 @@ function BadgesGrid() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchWins, setMatchWins] = useState<Match[]>([]);
-  const userID = useAtomValue(userIDAtom);
+  const userID = 3;
 
   useEffect(() => {
     MatchService.getPastMatches(userID).then((data) => {

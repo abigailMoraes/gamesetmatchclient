@@ -76,7 +76,7 @@ export default function CompletedTournamentsGrid() {
   const [rowData, setRows] = useState<TournamentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const mainTheme = useTheme() as Theme;
-  const userID = useAtomValue(userIDAtom);
+  const userID = 3;
 
   const theme = createTheme(mainTheme, {
     components: {

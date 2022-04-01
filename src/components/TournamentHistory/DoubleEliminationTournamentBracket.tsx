@@ -1,7 +1,14 @@
 import { DoubleEliminationBracket, SVGViewer, Match } from '@g-loot/react-tournament-brackets';
-import React from 'react';
+import React, {useEffect, useState } from 'react';
+import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
+import exampleMatches from './exampleMatches';
+import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
 
-export default function DoubleElimination() {
+interface CompletedTournamentCardProps {
+  tournament:CompletedTournament,
+}
+
+export default  function DoubleElimination({tournament}: CompletedTournamentCardProps) {
   const exampleDoubleEliminationMatches = {
     upper: [
       {
@@ -358,15 +365,42 @@ export default function DoubleElimination() {
       },
     ],
   };
+
+  const [upperBracketMatches, setUpperBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
+  const [lowerBracketMatches, setLowerBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
+  const [doubleBracketMatches, setDoubleBracketMatches] = useState<{
+    upper: SingleBracketMatch[],
+    lower: SingleBracketMatch[]
+  }>(exampleDoubleEliminationMatches);
+
+  useEffect(() => {
+    async function fetchInformation() {
+      const answerUpper = await BracketService.getUpperBracketTournamentMatchInfo(tournament.tournamentID);
+      const answerLower = await BracketService.getLowerBracketTournamentMatchInfo(tournament.tournamentID);
+      setUpperBracketMatches(answerUpper);
+      setLowerBracketMatches(answerLower);
+      setDoubleBracketMatches({upper: answerUpper, lower:answerLower,});
+      console.log(doubleBracketMatches);
+    }
+
+    fetchInformation();
+    console.log(doubleBracketMatches);
+  }, []);
+
+  console.log(doubleBracketMatches);
   return (
-    <DoubleEliminationBracket
-      matches={exampleDoubleEliminationMatches}
-      matchComponent={Match}
-      svgWrapper={({ children, ...props }) => (
-        <SVGViewer width={500} height={500} {...props}>
-          {children}
-        </SVGViewer>
-      )}
-    />
+      <DoubleEliminationBracket
+          matches={doubleBracketMatches}
+          matchComponent={Match}
+          svgWrapper={({children, ...props}) => (
+              <SVGViewer width={670} height={500} {...props}>
+                {children}
+              </SVGViewer>
+          )}
+      />
   );
 }
+function async() {
+    throw new Error('Function not implemented.');
+}
+
