@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 // import { userIDAtom } from '../../atoms/userAtom';
 import { User } from './MatchHistoryCard';
 import MatchService from './MatchService';
+import { getMatchResult } from '../../interfaces/MatchInterface';
 
 interface IDetail {
   label:String,
@@ -87,7 +88,7 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
                 { hour: '2-digit', minute: '2-digit' },
               )}
             />
-            <Detail label="Result" value={match.results} />
+            <Detail label="Result" value={getMatchResult(match.result)} />
             <Detail label="Attendance" value={match.attendance} />
             <Typography style={{ display: 'inline-flex' }} variant="body1">Participants:</Typography>
             <div>{participants.map((participant) => <Typography variant="body1">{participant.name}</Typography>)}</div>
@@ -95,9 +96,9 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={handleClickClose}>Cancel</Button>
-          {match.results === 'Pending' && match.attendance === 'No'
+          {+match.results === -1 && (match.attendance === 'No' || match.attendance === 'TBD')
             ? <Button color="secondary" onClick={handleConfirmAttendance}>Confirm Attendance</Button> : null}
-          {match.results === 'Pending' && match.attendance === 'Yes'
+          {+match.results === -1 && match.attendance === 'Yes'
             ? <Button color="secondary" onClick={handleDropOut}>Drop Out</Button> : null}
         </DialogActions>
       </Dialog>

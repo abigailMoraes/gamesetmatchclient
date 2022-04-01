@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import styled from '@emotion/styled';
 import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
@@ -11,7 +10,6 @@ import Divider from '@mui/material/Divider';
 import {
   Container, Grid, Theme, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
-
 import { loginDataAtomPersistence } from '../atoms/userAtom';
 import LogoLoginPage from '../components/Logo/LogoLoginPage';
 
@@ -53,13 +51,23 @@ function FirebaseAuth() {
           .then((idToken) => fetch(`${baseURL}/verifyIdToken`, {
             method: 'POST',
             body: idToken,
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }))
-          .then((res) => res.json())
-          .then((data) => {
-            setLoginData(data);
-            navigate('/dashboard');
-          })
-          .catch((err) => console.log(err));
+          .then((res) => {
+            if (res.status === 400) {
+              res.json().then((data) => {
+                setLoginData(data);
+                navigate('/registration');
+              });
+            } else {
+              res.json().then((data) => {
+                setLoginData(data);
+                navigate('/dashboard');
+              });
+            }
+          });
         return false;
       },
       signInFailure(error: any) {

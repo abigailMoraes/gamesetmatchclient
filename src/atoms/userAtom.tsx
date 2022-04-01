@@ -1,19 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import { atom } from 'jotai';
+import { User } from '../interfaces/UserInterface';
 
-interface UserData {
-  email: string
-  firebaseId:string
-  id: number
-  isAdmin: number
-  name: string
-}
-
-export const emptyUser:UserData = {
+export const emptyUser:User = {
   email: '',
   firebaseId: '',
   id: -1,
-  isAdmin: -1,
+  role: -1,
   name: '',
 };
 
@@ -23,7 +16,7 @@ export const loginDataAtom = atom(JSON.parse(localStorage.getItem('userData') ||
 
 export const loginDataAtomPersistence = atom(
   (get) => get(loginDataAtom),
-  (get, set, userData:UserData) => {
+  (get, set, userData:User) => {
     set(loginDataAtom, userData);
     localStorage.setItem('userData', JSON.stringify(userData));
   },

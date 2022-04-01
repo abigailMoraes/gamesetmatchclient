@@ -43,7 +43,16 @@ const dropOutOfMatch = (id: number, mid: number) => fetch(
   },
 );
 
-const updateMatchResults = (id: number, mid: number, result: String) => fetch(
+const updateMatchAttendance = (id: number, mid: number, attendance:string) => fetch(
+  `${process.env.REACT_APP_API_DOMAIN}/api/match/userAttendance`,
+  {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ attendance, userID: id, matchID: mid }),
+  },
+);
+
+const updateMatchResults = (id: number, mid: number, result: number) => fetch(
   `${process.env.REACT_APP_API_DOMAIN}/api/match/userResults`,
   {
     method: 'PUT',
@@ -53,7 +62,7 @@ const updateMatchResults = (id: number, mid: number, result: String) => fetch(
 );
 
 const MatchService = {
-  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults,
+  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults, updateMatchAttendance,
 };
 
 export default MatchService;
