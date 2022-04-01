@@ -72,6 +72,7 @@ function GridCardManageTournamentBase({
   const [confirmationText, setConfirmationText] = React.useState('Are you sure you want to delete?');
 
   const [statusModalOpen, setStatusModalOpen] = React.useState(false);
+  const [removeFromPage, setRemoveFromPage] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('Unexpected error deleting the tournament.');
@@ -79,7 +80,7 @@ function GridCardManageTournamentBase({
   const handleDialogClose = () => {
     setStatusModalOpen(false);
     setLoading(false);
-    if (!error && setTournamentRows && tournamentRows) {
+    if (removeFromPage && setTournamentRows && tournamentRows) {
       const updatedRows = tournamentRows.filter((t:TournamentRow) => t.id !== tournament.tournamentID);
       setTournamentRows(updatedRows);
     }
@@ -96,10 +97,20 @@ function GridCardManageTournamentBase({
 
   const deleteTournament = () => {
     setError(false);
+    setLoading(true);
     ManageTournamentService.deleteTournament(currentTournament.tournamentID).then(() => {
       setStatusModalOpen(true);
+      setRemoveFromPage(true);
     }).catch((err:Error) => {
-      setErrorMessage(err.message);
+      if (err.message === 'SEND_EMAIL_ERROR_MAIL') {
+        setErrorMessage(ManageTournamentService.DeleteTournamentErrorCodes.SEND_EMAIL_ERROR_MAIL);
+        setRemoveFromPage(true);
+      } else if (err.message === 'SEND_EMAIL_ERROR_MESSAGING') {
+        setErrorMessage(ManageTournamentService.DeleteTournamentErrorCodes.SEND_EMAIL_ERROR_MESSAGING);
+        setRemoveFromPage(true);
+      } else {
+        setErrorMessage(err.message);
+      }
       setLoading(false);
       setError(true);
       setStatusModalOpen(true);

@@ -109,6 +109,10 @@ const getMatchesNeedingScheduling = (roundID:number) => fetch(`${baseURL}/rounds
     participants: item.participants,
   })));
 
+const DeleteTournamentErrorCodes = {
+  SEND_EMAIL_ERROR_MAIL: 'Tournament was deleted, but there was an error notifying registrants. Please check your mail configurations.',
+  SEND_EMAIL_ERROR_MESSAGING: 'Tournament was deleted, but there was an error notifying registrants.',
+};
 const deleteTournament = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}`, {
   method: 'DELETE',
 }).then((resp) => handleErrors(resp));
@@ -132,5 +136,6 @@ const ManageTournamentService = {
   closeRegistration,
   deleteTournament,
   getLatestRoundID,
+  DeleteTournamentErrorCodes,
 };
 export default ManageTournamentService;
