@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { DoubleEliminationBracket, SVGViewer, Match } from '@g-loot/react-tournament-brackets';
 import React from 'react';
 
@@ -363,6 +364,7 @@ export default function DoubleElimination() {
       matches={exampleDoubleEliminationMatches}
       matchComponent={Match}
       svgWrapper={({ children, ...props }) => (
+        // eslint-disable-next-line react/jsx-props-no-spreading
         <SVGViewer width={500} height={500} {...props}>
           {children}
         </SVGViewer>
