@@ -118,6 +118,13 @@ function ReviewSchedule({
         return;
       }
 
+      if (moment(start).day() !== moment(end).day()) {
+        setSnackbarOpen(true);
+        setsnackbarErrorMessage('Match cannot span multiple days.');
+        setsnackbarType('error');
+        return;
+      }
+
       const existingMatches = matches.find((m:Match) => m.matchID === event.id);
       const filteredMatches = matches.filter((m:Match) => m.matchID !== event.id);
 
@@ -226,6 +233,16 @@ function ReviewSchedule({
           <StyledButton buttonText={enableEdit ? 'Cancel' : 'Close'} handleClick={handleClose} size="large" />
           { enableEdit && (<StyledButton buttonText="Publish" handleClick={confirmPublish} size="large" />)}
         </DialogActions>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={closeSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={closeSnackbar} severity={snackbarType} sx={{ width: '100%' }}>
+            {snackbarErrorMessage}
+          </Alert>
+        </Snackbar>
       </Dialog>
       <StatusModal
         open={openStatusModal}
@@ -249,16 +266,6 @@ function ReviewSchedule({
       </Dialog>
       <LoadingOverlay isOpen={loading} />
       <MatchDetails isEditable={enableEdit} open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} />
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={closeSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={closeSnackbar} severity={snackbarType} sx={{ width: '100%' }}>
-          {snackbarErrorMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 }
