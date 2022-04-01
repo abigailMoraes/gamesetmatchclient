@@ -177,7 +177,7 @@ function TournamentForm({
 
   React.useMemo(() => {
     formik.resetForm();
-    setEnabledByStatus(tournament ? tournament.status > TournamentStatus.RegistrationClosed : false);
+    setEnabledByStatus(tournament ? tournament.status >= TournamentStatus.RegistrationClosed : false);
     setTournamentOver(tournament ? tournament.status === TournamentStatus.TournamentOver : false);
     formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
     setFormValidation(tournament ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());
@@ -257,7 +257,7 @@ function TournamentForm({
               required
               error={formik.touched.minParticipants && Boolean(formik.errors.minParticipants)}
               helperText={formik.touched.minParticipants ? formik.errors.minParticipants : ''}
-              disabled={tournamentOver}
+              disabled={enabledByStatus}
             />
             <StyledSelect
               id="series"
