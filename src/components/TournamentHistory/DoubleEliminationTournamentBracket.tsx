@@ -366,6 +366,7 @@ export default  function DoubleElimination({tournament}: CompletedTournamentCard
     ],
   };
 
+
   const [upperBracketMatches, setUpperBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
   const [lowerBracketMatches, setLowerBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
   const [doubleBracketMatches, setDoubleBracketMatches] = useState<{
@@ -399,8 +400,5 @@ export default  function DoubleElimination({tournament}: CompletedTournamentCard
           )}
       />
   );
-}
-function async() {
-    throw new Error('Function not implemented.');
 }
 
