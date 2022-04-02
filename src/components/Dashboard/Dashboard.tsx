@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import React from 'react';
-// import { Theme, useTheme } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import Paper from '@mui/material/Paper';
 import { Theme } from '@mui/material/styles';
@@ -15,7 +14,6 @@ import LoadingOverlay from '../General/LoadingOverlay';
 import OverviewTabs from './OverviewGrid/OverviewTabs';
 import MatchService from './Calendar/MatchService';
 
-// TODO: pull hard coded styling to a theme
 function Dashboard() {
   const [matches, setMatches] = React.useState<Match[]>([]);
   const [loading, setLoading] = React.useState(false);
