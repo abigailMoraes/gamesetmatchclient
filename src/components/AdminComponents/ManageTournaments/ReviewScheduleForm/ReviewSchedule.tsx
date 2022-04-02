@@ -1,11 +1,14 @@
 /* eslint-disable react/require-default-props */
 import {
-  DialogContent, DialogTitle, Typography,
+  Alert,
+  AlertColor,
+  DialogContent, DialogTitle, Snackbar, Typography,
 } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 
 import DialogActions from '@mui/material/DialogActions';
 import React from 'react';
+import moment from 'moment';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import { initMatch, Match, MatchForAdmin } from '../../../../interfaces/MatchInterface';
 import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
@@ -18,6 +21,7 @@ import MatchDetails from '../../../General/Matches/MatchDetails';
 import StatusModal from '../../../General/StatusModal';
 import { TournamentRow } from '../ManageTournamentsEnums';
 import LoadingOverlay from '../../../General/LoadingOverlay';
+import { transformEventToAvailabilityString } from '../../../BrowseTournaments/RegisterTournament';
 
 // events can't be moved to before today
 interface ReviewScheduleProps {
@@ -46,6 +50,10 @@ function ReviewSchedule({
   const [getConfirmation, setGetConfirmation] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [errorMessge, setErrorMessage] = React.useState('');
+
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarErrorMessage, setsnackbarErrorMessage] = React.useState('');
+  const [snackbarType, setsnackbarType] = React.useState<AlertColor>('error');
 
   const onEventSelect = (event:any) => {
     const match = matches.find((m) => m.matchID === event.id);
@@ -96,13 +104,50 @@ function ReviewSchedule({
   const onConfirm = () => {
     publishMatches();
   };
+
   const changeEventDetails = React.useCallback(
     ({
       event, start, end,
     }) => {
-      const existingMatches = matches.find((match:Match) => match.matchID === event.id);
-      const filteredMatches = matches.filter((match:Match) => match.matchID !== event.id);
+      setSnackbarOpen(false);
+
+      const today = moment(new Date());
+
+      if (moment(start).isBefore(today)) {
+        setSnackbarOpen(true);
+        setsnackbarErrorMessage('Cannot move a match to the past');
+        setsnackbarType('error');
+        return;
+      }
+
+      if (moment(start).day() !== moment(end).day()) {
+        setSnackbarOpen(true);
+        setsnackbarErrorMessage('Match cannot span multiple days.');
+        setsnackbarType('error');
+        return;
+      }
+
+      const existingMatches = matches.find((m:Match) => m.matchID === event.id);
+      const filteredMatches = matches.filter((m:Match) => m.matchID !== event.id);
+
       if (existingMatches) {
+        const matchToAvailabilityString = transformEventToAvailabilityString(start, end);
+        const newStart = new Date(start);
+        const dayOfWeek = newStart.getDay();
+        const checkPlayersAvailability = {
+          newMatchAsAvailabilityString: matchToAvailabilityString,
+          dayOfWeek,
+        };
+
+        ManageTournamentService.checkNewMatchTime(tournament.tournamentID, existingMatches.matchID, checkPlayersAvailability)
+          .catch((err:Error) => {
+            setsnackbarErrorMessage(err.message);
+            setSnackbarOpen(true);
+            setsnackbarType('warning');
+          });
+
+        // setCachedMatch(existingMatches);
+
         existingMatches.startTime = start;
         existingMatches.endTime = end;
         const updated:MatchForAdmin[] = [...filteredMatches,
@@ -124,6 +169,10 @@ function ReviewSchedule({
     },
     [events],
   );
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   React.useMemo(() => {
     if (matches.length > 0) {
@@ -187,6 +236,16 @@ function ReviewSchedule({
           <StyledButton buttonText={enableEdit ? 'Cancel' : 'Close'} handleClick={handleClose} size="large" />
           { enableEdit && (<StyledButton buttonText="Publish" handleClick={confirmPublish} size="large" />)}
         </DialogActions>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={closeSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={closeSnackbar} severity={snackbarType} sx={{ width: '100%' }}>
+            {snackbarErrorMessage}
+          </Alert>
+        </Snackbar>
       </Dialog>
       <StatusModal
         open={openStatusModal}

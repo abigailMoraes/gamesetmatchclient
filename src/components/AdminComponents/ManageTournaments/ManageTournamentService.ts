@@ -125,6 +125,23 @@ const getLatestRoundID = (tournamentID:number) => fetch(`${baseTournamentsURL}/$
     return latestRound.roundID;
   });
 
+interface CheckNewMatchTime {
+  newMatchAsAvailabilityString:string,
+  dayOfWeek:number,
+}
+
+const checkNewMatchTime = (
+  tournamentID:number,
+  matchID:number,
+  newMatchInfo:CheckNewMatchTime,
+) => fetch(`${baseTournamentsURL}/${tournamentID}/match/${matchID}/checkNewTime`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(newMatchInfo),
+}).then((resp) => handleErrors(resp));
+
 const ManageTournamentService = {
   createTournament,
   updateTournament,
@@ -136,6 +153,7 @@ const ManageTournamentService = {
   closeRegistration,
   deleteTournament,
   getLatestRoundID,
+  checkNewMatchTime,
   DeleteTournamentErrorCodes,
 };
 export default ManageTournamentService;
