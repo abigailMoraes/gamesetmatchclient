@@ -44,11 +44,11 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
   // eslint-disable-next-line eqeqeq
-  const isSingleElimination = tournament.type == 1;
+  const isSingleElimination = tournament.format == 1 || tournament.format == 4;
   // eslint-disable-next-line eqeqeq
-  const isDoubleElimination = tournament.type == 2;
+  const isDoubleElimination = tournament.format == 2;
   // eslint-disable-next-line eqeqeq
-  const isRoundRobin = tournament.type == 3;
+  const isRoundRobin = tournament.format == 3;
   
   const openDetails = () => {
     setOpen(true);
