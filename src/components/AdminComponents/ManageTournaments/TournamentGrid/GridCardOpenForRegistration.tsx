@@ -36,6 +36,7 @@ function GridCardOpenForRegistration({
 }:GridCardOpenForRegistrationProps) {
   const [statusModalOpen, setStatusModalOpen] = React.useState(false);
   const [error, setError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
   const handleDialogClose = () => {
@@ -44,17 +45,19 @@ function GridCardOpenForRegistration({
       const updatedRows = tournamentRows.filter((t:TournamentRow) => t.id !== tournament.tournamentID);
       setTournamentRows(updatedRows);
     }
-    setError(false);
   };
 
   const closeRegistration = () => {
     setLoading(true);
+    setError(false);
+    setErrorMessage('');
     ManageTournamentService.closeRegistration(tournament.tournamentID).then(() => {
       setLoading(false);
       setStatusModalOpen(true);
-    }).catch(() => {
+    }).catch((err:Error) => {
       setLoading(false);
       setError(true);
+      setErrorMessage(err.message);
       setStatusModalOpen(true);
     });
   };
@@ -69,11 +72,13 @@ function GridCardOpenForRegistration({
         enableDelete
         enableEdit
         gridCardDetails={<GridCardDetails tournament={tournament} />}
+        tournamentRows={tournamentRows}
+        setTournamentRows={setTournamentRows}
       />
       <StatusModal
         open={statusModalOpen}
         handleDialogClose={handleDialogClose}
-        dialogText={error ? 'There was an error closing registration.Please try again later or contact support.'
+        dialogText={error ? errorMessage
           : "Tournament registration closed. Go to the 'Ready to Schedule' to continue."}
         dialogTitle={error ? 'Error' : 'Success'}
         isError={error}

@@ -1,10 +1,8 @@
-
 import { Tournament } from '../../interfaces/TournamentInterface';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 import handleErrors from '../General/ServiceHelper';
+
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
-
-
 
 export interface CompletedTournament{
   tournamentID: number,
@@ -54,7 +52,7 @@ export interface Registrant {
   userID: Number,
   name: String,
   email: String,
-  skillLevel: String,
+  skillLevel: number,
 }
 
 const getRegistrants = (tournamentID:Number) => fetch(`${baseURL}/${tournamentID}/registrants`)

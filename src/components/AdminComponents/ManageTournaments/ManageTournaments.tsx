@@ -74,7 +74,7 @@ function ManageTournaments() {
   const [open, setOpen] = React.useState(false);
   const userData = useAtomValue(loginDataAtom);
   const [formTournament, setFormTournament] = React.useState<Tournament | undefined>(undefined);
-  const [gridUpate, setGridUpdate] = React.useState(true);
+  const [gridUpdate, setGridUpdate] = React.useState(true);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -89,7 +89,7 @@ function ManageTournaments() {
       .then((data) => setTournamentRows(data))
       .catch(() => console.log('error'));
     setGridUpdate(false);
-  }, [value, gridUpate]);
+  }, [value, gridUpdate]);
 
   return (
     <Container maxWidth="xl">

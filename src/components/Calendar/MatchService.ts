@@ -1,3 +1,4 @@
+import handleErrors from '../General/ServiceHelper';
 import { Match } from './MatchInterface';
 
 function setMatchDetails(item: Match) {
@@ -50,7 +51,7 @@ const updateMatchAttendance = (id: number, mid: number, attendance:string) => fe
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ attendance, userID: id, matchID: mid }),
   },
-);
+).then((resp) => handleErrors(resp));
 
 const updateMatchResults = (id: number, mid: number, result: number) => fetch(
   `${process.env.REACT_APP_API_DOMAIN}/api/match/userResults`,
@@ -59,7 +60,7 @@ const updateMatchResults = (id: number, mid: number, result: number) => fetch(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ results: result, userID: id, matchID: mid }),
   },
-);
+).then((resp) => handleErrors(resp));
 
 const MatchService = {
   confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults, updateMatchAttendance,

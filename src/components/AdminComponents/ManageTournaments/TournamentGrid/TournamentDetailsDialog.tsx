@@ -50,7 +50,7 @@ function TournamentDetailsDialog({
         <ViewRegistrants tournamentID={tournament.tournamentID} />
       </DialogContent>
       <DialogActions style={{ backgroundColor: theme.palette.primary.main }}>
-        <Button color="secondary" onClick={handleClose}>Cancel</Button>
+        <Button color="secondary" onClick={handleClose}>Close</Button>
       </DialogActions>
     </Dialog>
   );
