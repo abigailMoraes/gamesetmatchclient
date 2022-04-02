@@ -16,7 +16,7 @@ export interface CompletedTournament{
   maxParticipants: number,
   prize: string,
   format: number,
-  type: number,
+  series: number,
   closeRegistrationDate: Date,
   endDate: Date,
   matchDuration: number,
