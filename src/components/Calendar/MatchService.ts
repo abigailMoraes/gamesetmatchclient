@@ -19,7 +19,7 @@ function setMatchDetails(item: Match) {
 const getAll = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/involves/user/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
 
-const getPastMatches = (id: number) => fetch(`http://localhost:8080/api/match/history/involves/user/${id}`)
+const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/history/involves/user/${id}`)
   .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
 
 const getMatchInformationByMatchID = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}`)
