@@ -1,30 +1,55 @@
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 // import { Theme, useTheme } from '@mui/material';
-import CalendarCard from '../Calendar/CalendarCard';
-import MatchHistoryGrid from '../Calendar/MatchHistoryGrid';
+import { useAtomValue } from 'jotai';
+import Paper from '@mui/material/Paper';
+import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/styles';
+import CalendarCard from './Calendar/CalendarCard';
 
 import './Dashboard.css';
+import MatchService from './Calendar/MatchService';
+import { userIDAtom } from '../../atoms/userAtom';
+import { Match } from '../../interfaces/MatchInterface';
+import LoadingOverlay from '../General/LoadingOverlay';
+import OverviewTabs from './OverviewGrid/OverviewTabs';
 
 // TODO: pull hard coded styling to a theme
 function Dashboard() {
+  const [matches, setMatches] = React.useState<Match[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const userID = useAtomValue(userIDAtom);
+  const theme = useTheme() as Theme;
+
+  React.useEffect(() => {
+    setLoading(true);
+    MatchService.getAll(userID)
+      .then((data) => {
+        setLoading(false);
+        setMatches(data);
+      });
+  }, []);
+
   return (
-    <Paper>
+    <Paper sx={{ py: 2, backgroundColor: theme.palette.primary.main, alignContent: 'left' }}>
       <Grid
         container
-        spacing={2}
+        spacing={1}
         sx={{
-          px: 2, py: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
+          display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
         }}
       >
-        <Grid item>
-          <Typography variant="h5"> Your upcoming matches</Typography>
-          <CalendarCard />
+        <Grid item xs={12} sx={{ mx: 4 }}>
+          <Typography variant="h4" textAlign="left">At a glance... </Typography>
         </Grid>
+
+        <LoadingOverlay isOpen={loading} />
         <Grid item>
-          <MatchHistoryGrid />
+          <CalendarCard matches={matches} setMatches={setMatches} />
+        </Grid>
+        <Grid item sx={{ maxHeight: '85vh' }}>
+          <OverviewTabs matches={matches} setMatches={setMatches} />
         </Grid>
       </Grid>
     </Paper>

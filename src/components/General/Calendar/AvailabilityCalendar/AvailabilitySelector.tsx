@@ -4,6 +4,8 @@ import Paper from '@mui/material/Paper';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { Calendar, Views } from 'react-big-calendar';
 import { useAtomValue } from 'jotai';
+import moment, { Moment } from 'moment';
+
 import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
 import { localizerAtom } from '../../../../atoms/localizerAtom';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -18,6 +20,91 @@ interface AvailabilitySelectorProps {
 export type Availability = {
   dayOfWeek:number;
   availabilityString:string
+};
+
+export const availabilityStringToEvents = (availabilities: Availability[]):ReactBigCalendarEvent[] => {
+  const availabilityEvents:ReactBigCalendarEvent[] = [];
+
+  const getEventForPortion = (start:number, duration:number, date:Moment):ReactBigCalendarEvent => {
+    const startTime = date.set('hour', 9 + (start / 2));
+    const endTime = moment(startTime);
+    endTime.add(duration, 'minutes');
+    const event:ReactBigCalendarEvent = {
+      id: availabilityEvents.length,
+      title: 'Available',
+      start: startTime.toDate(),
+      end: endTime.toDate(),
+      allDay: false,
+    };
+    return event;
+  };
+
+  availabilities.forEach((a:Availability) => {
+    const day = new Date();
+    const numDaysToAdd = a.dayOfWeek - day.getDay();
+    const date = numDaysToAdd < 0 ? moment(day).subtract(Math.abs(numDaysToAdd), 'days') : moment(day).add(numDaysToAdd, 'days');
+    date.set('minutes', 0).set('seconds', 0).set('milliseconds', 0);
+    let duration = 30;
+    let start = -1;
+
+    for (let i = 0; i < 24; i += 1) {
+      if (a.availabilityString.charAt(i) === '1') {
+        if (start !== -1) {
+          duration += 30;
+        } else {
+          start = i;
+        }
+      } else {
+        // add event to availabilityEvents
+        // eslint-disable-next-line no-lonely-if
+        if (start !== -1) {
+          const event = getEventForPortion(start, duration, date);
+          availabilityEvents.push(event);
+          duration = 30;
+          start = -1;
+        }
+      }
+    }
+    // in case it goes to the end
+    if (start !== -1) {
+      const event = getEventForPortion(start, duration, date);
+      availabilityEvents.push(event);
+      duration = 30;
+      start = -1;
+    }
+  });
+
+  return availabilityEvents;
+};
+
+export const transformToAvailabilityString = (availabilites:ReactBigCalendarEvent[]):Availability[] => {
+  const availStringObj:Availability[] = [];
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < 7; i++) {
+    const availForDay = availabilites.filter((a) => a.start.getDay() === i);
+    const availArr = new Array(24).fill(0);
+    availForDay.forEach((a) => {
+      const sMoment = moment(a.start);
+      const eMoment = moment(a.end);
+      const sHour = a.start.getHours();
+      const sMin = a.start.getMinutes();
+      const duration = moment.duration(eMoment.diff(sMoment)).asMinutes() / 30;
+
+      // 9 is start of day
+      const index = (sHour - 9) * 2 + (sMin === 0 ? 0 : 1);
+      // eslint-disable-next-line no-plusplus
+      for (let j = index; j < index + duration; j++) {
+        availArr[j] = 1;
+      }
+    });
+
+    const availString = availArr.toString().replaceAll(',', '');
+    availStringObj.push({
+      dayOfWeek: i,
+      availabilityString: availString,
+    });
+  }
+  return availStringObj;
 };
 
 function AvailabilitySelector({ availabilities, setAvailabilities }:AvailabilitySelectorProps) {

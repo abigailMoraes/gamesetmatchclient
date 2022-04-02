@@ -13,7 +13,7 @@ import { AttendanceType, MatchForAdmin } from '../../../interfaces/MatchInterfac
 
 import StyledButton from '../StyledButton';
 import StyledSelect from '../StyledSelect';
-import MatchService from '../../Calendar/MatchService';
+import MatchService from '../../Dashboard/Calendar/MatchService';
 
 interface MatchDetailsProps {
   match:MatchForAdmin,
