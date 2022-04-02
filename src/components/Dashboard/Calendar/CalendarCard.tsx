@@ -5,10 +5,10 @@ import './Calendar.css';
 import React, { useState } from 'react';
 
 import { Paper } from '@mui/material';
-import MatchHistoryDialogue from './MatchHistoryDialogue';
 import { User } from '../OverviewGrid/MatchHistoryCard';
 import UserService from './UserService';
 import { Match } from '../../../interfaces/MatchInterface';
+import MatchHistoryDialogue from './MatchHistoryDialogue';
 
 interface CalendarCardProps {
   matches:Match[],

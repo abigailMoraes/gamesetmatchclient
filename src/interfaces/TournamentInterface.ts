@@ -4,7 +4,7 @@ export interface Tournament {
   description: string,
   startDate: Date,
   location: string,
-  maxParticipants: number,
+  minParticipants: number,
   prize: string,
   format: number,
   matchBy: number,

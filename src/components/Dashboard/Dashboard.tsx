@@ -9,11 +9,11 @@ import { useTheme } from '@mui/styles';
 import CalendarCard from './Calendar/CalendarCard';
 
 import './Dashboard.css';
-import MatchService from './Calendar/MatchService';
 import { userIDAtom } from '../../atoms/userAtom';
 import { Match } from '../../interfaces/MatchInterface';
 import LoadingOverlay from '../General/LoadingOverlay';
 import OverviewTabs from './OverviewGrid/OverviewTabs';
+import MatchService from './Calendar/MatchService';
 
 // TODO: pull hard coded styling to a theme
 function Dashboard() {

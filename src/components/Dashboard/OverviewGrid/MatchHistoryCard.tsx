@@ -15,8 +15,8 @@ import {
 import Container from '@mui/material/Container';
 import { useAtomValue } from 'jotai';
 import { userIDAtom } from '../../../atoms/userAtom';
-import MatchService from '../Calendar/MatchService';
 import { getMatchResult, Match } from '../../../interfaces/MatchInterface';
+import MatchService from '../Calendar/MatchService';
 
 export interface User {
   userID: number,
