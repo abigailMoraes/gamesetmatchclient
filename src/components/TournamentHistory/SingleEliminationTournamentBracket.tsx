@@ -22,7 +22,9 @@ function SingleEliminationTournamentBracket({ tournament }: CompletedTournamentC
     <SingleEliminationBracket
       matches={bracketMatches}
       matchComponent={Match}
+      // eslint-disable-next-line react/no-unstable-nested-components
       svgWrapper={({ children, ...props }) => (
+        // eslint-disable-next-line react/jsx-props-no-spreading
         <SVGViewer height={500} width={670} {...props}>
           {children}
         </SVGViewer>

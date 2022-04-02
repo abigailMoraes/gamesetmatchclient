@@ -49,6 +49,7 @@ function ReviewSchedule({
   const [error, setError] = React.useState(false);
   const [getConfirmation, setGetConfirmation] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [errorMessge, setErrorMessage] = React.useState('');
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarErrorMessage, setsnackbarErrorMessage] = React.useState('');
@@ -92,7 +93,8 @@ function ReviewSchedule({
         setError(false);
         if (setPublished) { setPublished(true); }
       })
-      .catch(() => {
+      .catch((err:Error) => {
+        setErrorMessage(err.message);
         setError(true);
         setLoading(false);
         setStatusModal(true);
@@ -228,6 +230,7 @@ function ReviewSchedule({
             height={500}
             enableEdit={enableEdit}
           />
+          <LoadingOverlay isOpen={loading} />
         </DialogContent>
         <DialogActions>
           <StyledButton buttonText={enableEdit ? 'Cancel' : 'Close'} handleClick={handleClose} size="large" />
@@ -248,13 +251,13 @@ function ReviewSchedule({
         open={openStatusModal}
         handleDialogClose={closeStatusDialog}
         dialogTitle={error ? 'Error' : 'Success!'}
-        dialogText={error ? 'There was an error publishing the schedule. Please try again or contact support.'
+        dialogText={error ? errorMessge
           : 'The schedule has been published.'}
         isError={error}
       />
       <Dialog open={getConfirmation}>
         <DialogTitle>
-          <Typography variant="h6">Please confirm you are ready to publish</Typography>
+          <Typography component="span" variant="h6">Please confirm you are ready to publish</Typography>
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1">Once you publish a schedule you cannot make changes to it.</Typography>
@@ -264,7 +267,6 @@ function ReviewSchedule({
           <StyledButton buttonText="Publish" handleClick={onConfirm} size="large" />
         </DialogActions>
       </Dialog>
-      <LoadingOverlay isOpen={loading} />
       <MatchDetails isEditable={enableEdit} open={openMatchDetails} setOpen={setOpenMatchDetails} match={selectedMatch} setMatch={setSelectedMatch} />
     </>
   );

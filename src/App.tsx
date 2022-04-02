@@ -20,7 +20,6 @@ import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import BrowseTournamentsGrid from './components/BrowseTournaments/BrowseTournamentsGrid';
 import RegisterTournament from './components/BrowseTournaments/RegisterTournament';
-import TournamentHistory from './components/TournamentHistory/TournamentHistory';
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
 import { loginDataAtom } from './atoms/userAtom';
