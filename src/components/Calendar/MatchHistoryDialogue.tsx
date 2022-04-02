@@ -5,10 +5,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { useTheme } from '@mui/styles';
-// import { useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { Theme, useMediaQuery } from '@mui/material';
 import Container from '@mui/material/Container';
-// import { userIDAtom } from '../../atoms/userAtom';
+import { userIDAtom } from '../../atoms/userAtom';
 import { User } from './MatchHistoryCard';
 import MatchService from './MatchService';
 import { getMatchResult } from '../../interfaces/MatchInterface';
@@ -40,7 +40,7 @@ interface IMatchHistoryDialogProps{
 function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  // const userID:number = useAtomValue(userIDAtom);
+  const userID:number = useAtomValue(userIDAtom);
   const { match, participants } = props;
   const [open, setOpen] = useState(true);
 
@@ -49,11 +49,11 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
   };
 
   const handleConfirmAttendance = () => {
-    MatchService.confirmMatchAttendance(3, match.id).then(() => (window.location.reload()));
+    MatchService.confirmMatchAttendance(userID, match.id).then(() => (window.location.reload()));
   };
 
   const handleDropOut = () => {
-    MatchService.dropOutOfMatch(3, match.id).then(() => (window.location.reload()));
+    MatchService.dropOutOfMatch(userID, match.id).then(() => (window.location.reload()));
   };
 
   return (

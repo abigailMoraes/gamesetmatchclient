@@ -28,8 +28,9 @@ function GridCardDetails({ tournament }:GridCardDetailsProps) {
   );
 }
 
-const canDelete = (tournament:Tournament) => (tournament.status === TournamentStatus.ReadyToPublishSchedule && tournament.currentRound === 0)
-|| tournament.status === TournamentStatus.RegistrationClosed;
+// add back when BE fixed
+//  (tournament.status === TournamentStatus.ReadyToPublishSchedule && tournament.currentRound === 0)
+const canDelete = (tournament:Tournament) => tournament.status === TournamentStatus.RegistrationClosed;
 
 function GridCardManageSchedule({
   tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
@@ -45,29 +46,34 @@ function GridCardManageSchedule({
   const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
     || tournament.status === TournamentStatus.ReadyToPublishSchedule);
   const [enableDelete] = React.useState(canDelete(tournament));
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const tooltip1 = "A schedule has already been created. Press 'Publish Schedule' to view.";
   const tooltip2 = 'Please create a schedule first.';
 
   const openPublishSchedule = () => {
+    setErrorModal(false);
     ManageTournamentService.getLatestRoundID(tournament.tournamentID)
       .then((roundID:number) => ManageTournamentService.getMatchesNeedingScheduling(roundID))
       .then((data:MatchForAdmin[]) => {
         setMatches(data);
         setOpen(true);
-      }).catch(() => {
+      }).catch((err:Error) => {
+        setErrorMessage(err.message);
         setErrorModal(true);
       });
   };
 
   const createSchedule = () => {
+    setCreateError(false);
     setLoading(true);
     ManageTournamentService.createSchedule(tournament.tournamentID).then(() => {
       setLoading(false);
       setOpenStatusModal(true);
       setScheduleCreated(true);
       setSchedulePublished(false);
-    }).catch(() => {
+    }).catch((err:Error) => {
+      setErrorMessage(err.message);
       setLoading(false);
       setCreateError(true);
       setOpenStatusModal(true);
@@ -76,9 +82,6 @@ function GridCardManageSchedule({
 
   const handleDialogClose = () => {
     setOpenStatusModal(false);
-
-    setErrorModal(false);
-    setCreateError(false);
   };
 
   return (
@@ -98,6 +101,8 @@ function GridCardManageSchedule({
         disabledButton2={schedulePublished}
         tooltip2={tooltip2}
         gridCardDetails={<GridCardDetails tournament={tournament} />}
+        tournamentRows={tournamentRows}
+        setTournamentRows={setTournamentRows}
       />
       <ReviewSchedule
         open={open}
@@ -120,7 +125,7 @@ function GridCardManageSchedule({
       <StatusModal
         open={openStatusModal}
         handleDialogClose={handleDialogClose}
-        dialogText={createError ? 'There was an error with creating the schedule.Please try again later or contact support.'
+        dialogText={createError ? errorMessage
           : "Schedule was successfully created, click 'Publish Schedule' to view"}
         dialogTitle={createError ? 'Error' : 'Success'}
         isError={createError}

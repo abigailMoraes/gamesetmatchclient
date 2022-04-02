@@ -20,13 +20,12 @@ import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import BrowseTournamentsGrid from './components/BrowseTournaments/BrowseTournamentsGrid';
 import RegisterTournament from './components/BrowseTournaments/RegisterTournament';
-import TournamentHistory from './components/TournamentHistory/TournamentHistory';
-import ManageTournaments from './components/AdminComponents/ManageTournaments/ManageTournaments';
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
 import { loginDataAtom } from './atoms/userAtom';
 import Registration from './login/Registration';
 import TournamentHistoryCard from './components/TournamentHistory/TournamentHistoryCard';
+import ManageTournamentsLanding from './components/AdminComponents/ManageTournaments/ManageTournamentsLanding';
 
 const theme = responsiveFontSizes(createTheme({
   palette: {
@@ -102,7 +101,7 @@ function App() {
               <Route path={navigation.browseTournament} element={<RequireAuth><BrowseTournamentsGrid /></RequireAuth>} />
               <Route path={navigation.registerTournament} element={<RequireAuth><RegisterTournament /></RequireAuth>} />
               <Route path={navigation.tournamentHistory} element={<RequireAuth><TournamentHistoryCard /></RequireAuth>} />
-              <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournaments /></RequireAuth>} />
+              <Route path={navigation.manageTournaments} element={<RequireAuth><ManageTournamentsLanding /></RequireAuth>} />
               <Route path={navigation.manageUsers} element={<RequireAuth><ManageUsers /></RequireAuth>} />
               <Route path={navigation.settings} element={<RequireAuth><Settings /></RequireAuth>} />
             </Route>

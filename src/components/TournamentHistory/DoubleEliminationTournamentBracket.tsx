@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { DoubleEliminationBracket, SVGViewer, Match } from '@g-loot/react-tournament-brackets';
 import React, {useEffect, useState } from 'react';
 import { CompletedTournament } from '../BrowseTournaments/TournamentsService';

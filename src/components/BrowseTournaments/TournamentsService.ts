@@ -1,11 +1,10 @@
-
 import { Tournament } from '../../interfaces/TournamentInterface';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 import { NumberQuery }  from '../TournamentHistory/SingleEliminationBracketMatch';
 import handleErrors from '../General/ServiceHelper';
-const baseURL = `${process.env.REACT_APP_API_DOMAIN}`;
 
 
+const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
 export interface CompletedTournament{
   tournamentID: number,
@@ -56,13 +55,13 @@ export interface Registrant {
   userID: Number,
   name: String,
   email: String,
-  skillLevel: String,
+  skillLevel: number,
 }
 
 const getRegistrants = (tournamentID:Number) => fetch(`${baseURL}/${tournamentID}/registrants`)
   .then((response) => response.json());
 
-const getCompleted = (userID:number) => fetch(`${baseURL}/api/tournaments/user/${userID}/completed`)
+const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/completed`)
   .then((response) => response.json())
   .then((data) => data.map((item: CompletedTournament) => ({
     id: item.tournamentID,
@@ -75,10 +74,10 @@ const getCompleted = (userID:number) => fetch(`${baseURL}/api/tournaments/user/$
     allTournamentDetails: item,
   })));
 
-const getNumberOfCompletedTournaments=(userID:number)=> fetch(`${baseURL}/api/tournaments
+const getNumberOfCompletedTournaments=(userID:number)=> fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
 /user/${userID}/number/completed`).then((response)=>response.json()).then((data:NumberQuery)=> data)
 
-const getNumberOfWonTournaments=(userID:number)=> fetch(`${baseURL}/api/tournaments
+const getNumberOfWonTournaments=(userID:number)=> fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
 /user/${userID}/number/won`).then((response)=>response.json()).then((data:NumberQuery)=> data)
 
 

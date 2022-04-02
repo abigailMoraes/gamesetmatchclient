@@ -26,6 +26,23 @@ interface RegisterTournamentState {
   tournament:Tournament;
 }
 
+export const transformEventToAvailabilityString = (start:Date, end:Date) => {
+  const availArr = new Array(24).fill(0);
+  const sMoment = moment(start);
+  const eMoment = moment(end);
+  const sHour = start.getHours();
+  const sMin = start.getMinutes();
+  const duration = moment.duration(eMoment.diff(sMoment)).asMinutes() / 30;
+
+  // 9 is start of day
+  const index = (sHour - 9) * 2 + (sMin === 0 ? 0 : 1);
+  // eslint-disable-next-line no-plusplus
+  for (let j = index; j < index + duration; j++) {
+    availArr[j] = 1;
+  }
+  return availArr.toString().replaceAll(',', '');
+};
+
 const transformToAvailabilityString = (availabilites:ReactBigCalendarEvent[]):Availability[] => {
   const availStringObj:Availability[] = [];
   // eslint-disable-next-line no-plusplus
@@ -121,7 +138,7 @@ function RegisterTournament() {
                 {`Match Duration:  ${tournament.matchDuration} minutes`}
               </Typography>
               <Typography variant="body1">
-                {`Start Date:  ${DateHelpers.formatDateForDisplay(tournament.startDate)}`}
+                {`Start Date:  ${DateHelpers.formatDateForDisplay(new Date(tournament.startDate))}`}
               </Typography>
             </CardContent>
           </Card>

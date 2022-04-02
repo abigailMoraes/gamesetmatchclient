@@ -8,7 +8,7 @@ interface LoadingOverlayProps {
 function LoadingOverlay({ isOpen }:LoadingOverlayProps) {
   return (
     <Backdrop
-      sx={{ zIndex: (theme:any) => theme.zIndex.drawer + 1 }}
+      sx={{ zIndex: (theme:any) => theme.zIndex.drawer + 2 }}
       open={isOpen}
     >
       <CircularProgress color="secondary" />
