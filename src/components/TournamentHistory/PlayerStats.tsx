@@ -5,23 +5,32 @@ import Typography from '@mui/material/Typography';
 import { userIDAtom } from '../../atoms/userAtom';
 import BadgesGrid from './BadgesGrid';
 import MatchService from '../Calendar/MatchService';
+import TournamentService from '../BrowseTournaments/TournamentsService';
 import { Match } from '../Calendar/MatchInterface';
+import { NumberQuery } from './SingleEliminationBracketMatch';
 
 function PlayerStats() {
   const [matchWins, setMatchWins] = useState<Match[]>([]);
   const [matchLosses, setMatchLosses] = useState<Match[]>([]);
   const [matchDraws, setMatchDraws] = useState<Match[]>([]);
   const [matchPending, setMatchPending] = useState<Match[]>([]);
+  const [tournamentsCompleted, setTournamentsCompleted]=useState<NumberQuery>({next:0});
+  const [tournamentsWon, setTournamentsWon]= useState<NumberQuery>({next:0});
   const userID = useAtomValue(userIDAtom);
 
   useEffect(() => {
     MatchService.getPastMatches(userID).then((data) => {
-      setMatchWins(data.filter((match:any) => match.results === 'Win'));
-      setMatchDraws(data.filter((match:any) => match.results === 'Draw'));
-      setMatchLosses(data.filter((match:any) => match.results === 'Loss'));
-      setMatchPending(data.filter((match:any) => match.results === 'Pending'));
+      setMatchWins(data.filter((match:any) => match.results === 1));
+      setMatchDraws(data.filter((match:any) => match.results === 0));
+      setMatchLosses(data.filter((match:any) => match.results === 2));
+      setMatchPending(data.filter((match:any) => match.results === -1));
     });
+    TournamentService.getNumberOfWonTournaments(userID).then((data:NumberQuery)=>{setTournamentsWon(data);});
+    TournamentService.getNumberOfCompletedTournaments(userID).then((data:NumberQuery)=>{setTournamentsCompleted(data)})
   }, []);
+
+
+
 
   return (
     <div>
@@ -59,11 +68,11 @@ function PlayerStats() {
           style={{ display: 'inline-flex', width: '100%' }}
           type="doughnut"
           data={{
-            labels: ['Wins', 'Loss', 'Draws'],
+            labels: ['Wins', 'Loss'],
             datasets: [
               {
                 backgroundColor: ['#e6e6e6', '#61DAFB', '#27293C'],
-                data: [40, 50, 10],
+                data: [Number(tournamentsWon.next), Number(tournamentsCompleted.next)-Number(tournamentsWon.next)],
               },
             ],
           }}
