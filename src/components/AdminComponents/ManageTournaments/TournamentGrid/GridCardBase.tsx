@@ -66,7 +66,7 @@ function GridCardManageTournamentBase({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
-  // TODO
+
   const [confirmationModalOpen, setConfirmationModalOpen] = React.useState(false);
   const [confirmationTitle, setConfirmationTitle] = React.useState('Confirm Delete');
   const [confirmationText, setConfirmationText] = React.useState('Are you sure you want to delete?');
@@ -127,10 +127,6 @@ function GridCardManageTournamentBase({
     setFormTournament({ ...currentTournament });
     setOpenEdit(true);
   };
-
-  React.useMemo(() => {
-
-  }, [statusModalOpen]);
 
   return (
     <Paper style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
