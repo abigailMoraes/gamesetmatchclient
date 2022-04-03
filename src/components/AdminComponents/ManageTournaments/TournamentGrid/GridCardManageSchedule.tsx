@@ -30,19 +30,22 @@ function GridCardDetails({ tournament }:GridCardDetailsProps) {
 
 // add back when BE fixed
 //  (tournament.status === TournamentStatus.ReadyToPublishSchedule && tournament.currentRound === 0)
-const canDelete = (tournament:Tournament) => tournament.status === TournamentStatus.RegistrationClosed;
+const canDelete = (tournament:Tournament) => tournament.status === TournamentStatus.ReadyToSchedule && tournament.currentRound === 0;
 
 function GridCardManageSchedule({
   tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
 }:GridCardManageScheduleProps) {
   const [open, setOpen] = React.useState(false);
-  const [error, setError] = React.useState(false);
-  // TODO enable delete if its the first round only
+  const [roundID, setRoundID] = React.useState(0);
+
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
+
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
   const [openStatusModal, setOpenStatusModal] = React.useState(false);
   const [statusModalText, setStatusModalText] = React.useState('');
-  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.RegistrationClosed);
+
+  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.ReadyToSchedule);
   const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
     || tournament.status === TournamentStatus.ReadyToPublishSchedule);
   const [enableDelete] = React.useState(canDelete(tournament));
@@ -53,9 +56,10 @@ function GridCardManageSchedule({
   const openPublishSchedule = () => {
     setError(false);
     ManageTournamentService.getLatestRoundID(tournament.tournamentID)
-      .then((roundID:number) => {
-        if (roundID) {
-          return ManageTournamentService.getMatchesNeedingScheduling(roundID);
+      .then((latestRoundID:number) => {
+        if (latestRoundID) {
+          setRoundID(latestRoundID);
+          return ManageTournamentService.getMatchesNeedingScheduling(latestRoundID);
         }
         throw new Error('No schedule found. Round number is invalid.');
       })
@@ -120,6 +124,7 @@ function GridCardManageSchedule({
         setTournamentRows={setTournamentRows}
         setPublished={setSchedulePublished}
         enableEdit
+        roundID={roundID}
       />
       <StatusModal
         open={openStatusModal}

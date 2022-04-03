@@ -1,4 +1,5 @@
 import { Tournament } from '../../interfaces/TournamentInterface';
+import { TournamentStatus } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 import { NumberQuery } from '../TournamentHistory/SingleEliminationBracketMatch';
 import handleErrors from '../General/ServiceHelper';
@@ -35,7 +36,7 @@ const getRegisteredTournaments = (userID:number) => fetch(`${process.env.REACT_A
     allTournamentDetails: item,
   })));
 
-const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&status=0`)
+const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&status=${TournamentStatus.OpenForRegistration}`)
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
     id: item.tournamentID,

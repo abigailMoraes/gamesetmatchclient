@@ -15,8 +15,9 @@ export enum GridCardTypes {
 }
 
 export enum TournamentStatus {
+  Default,
   OpenForRegistration,
-  RegistrationClosed,
+  ReadyToSchedule,
   ReadyToPublishSchedule,
   Ongoing,
   ReadyToPublishNextRound,

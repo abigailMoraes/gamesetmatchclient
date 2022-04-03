@@ -67,8 +67,9 @@ export const getMatchResult = (resultStatus:number) => {
 };
 
 export enum MatchStatus {
-  VALID,
-  AVAILABILITY_ISSUE,
+  GREAT,
+  OK,
+  BAD,
 }
 
 export enum MatchResultTypes {

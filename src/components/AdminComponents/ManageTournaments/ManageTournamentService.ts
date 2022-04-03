@@ -142,6 +142,13 @@ const checkNewMatchTime = (
   body: JSON.stringify(newMatchInfo),
 }).then((resp) => handleErrors(resp));
 
+const endCurrentRound = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/endCurrentRound`, {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((resp) => handleErrors(resp));
+
 const ManageTournamentService = {
   createTournament,
   updateTournament,
@@ -155,5 +162,6 @@ const ManageTournamentService = {
   getLatestRoundID,
   checkNewMatchTime,
   DeleteTournamentErrorCodes,
+  endCurrentRound,
 };
 export default ManageTournamentService;
