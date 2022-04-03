@@ -5,7 +5,7 @@ import { Tournament } from '../../../../interfaces/TournamentInterface';
 import ConfirmActionModal from '../../../General/ConfirmActionModal';
 import LoadingOverlay from '../../../General/LoadingOverlay';
 import StatusModal from '../../../General/StatusModal';
-import { TournamentRow } from '../ManageTournamentsEnums';
+import { TournamentRow, TournamentStatus } from '../ManageTournamentsEnums';
 import ManageTournamentService from '../ManageTournamentService';
 import ReviewSchedule from '../ReviewScheduleForm/ReviewSchedule';
 import GridCardBase from './GridCardBase';
@@ -67,7 +67,8 @@ function GridCardOngoing({
     ManageTournamentService.endCurrentRound(tournament.tournamentID)
       .then(() => {
         setLoading(false);
-        setStatusModalText("Round has been ended. You can now go to 'Manage Schedule' to schedule the next round");
+        setStatusModalText(`Round has been ended. You can now go to ${tournament.status === TournamentStatus.Ongoing
+          ? "'Manage Schedule'" : "'Finished'"}.`);
         setStatusModal(true);
       }).catch((err:Error) => {
         setLoading(false);

@@ -2,6 +2,7 @@ import { Match, setMatchDetails } from '../../../interfaces/MatchInterface';
 import handleErrors from '../../General/ServiceHelper';
 
 const getAll = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/involves/user/${id}`)
+  .then((resp) => handleErrors(resp))
   .then((response) => response.json());
 
 const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
