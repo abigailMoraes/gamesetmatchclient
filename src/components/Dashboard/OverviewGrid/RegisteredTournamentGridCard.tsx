@@ -18,7 +18,6 @@ import StatusModal from '../../General/StatusModal';
 import TournamentService from '../../BrowseTournaments/TournamentsService';
 import { userIDAtom } from '../../../atoms/userAtom';
 import { ReactBigCalendarEvent } from '../../../interfaces/EventInterface';
-import { TournamentStatus } from '../../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 import UpdateAvailability from './UpdateAvailability';
 import { Availability, availabilityStringToEvents } from '../../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 
@@ -93,7 +92,7 @@ function RegisteredTournamentGridCard({ tournament, tournamentRows, setTournamen
   };
 
   useEffect(() => {
-    setDeregisterDisabled(isDeregisterDisabled(tournament.status));
+    setDeregisterDisabled(isDeregisterDisabled(tournament));
   }, []);
 
   return (

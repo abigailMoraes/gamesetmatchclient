@@ -8,6 +8,7 @@ export const emptyUser:User = {
   id: -1,
   role: -1,
   name: '',
+  picture: '',
 };
 
 const emptyUserString = JSON.stringify(emptyUser);

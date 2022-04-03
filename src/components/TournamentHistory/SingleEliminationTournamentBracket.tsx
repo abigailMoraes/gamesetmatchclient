@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Match, SingleEliminationBracket, SVGViewer, createTheme } from '@g-loot/react-tournament-brackets';
+import {
+  Match, SingleEliminationBracket, SVGViewer,
+} from '@g-loot/react-tournament-brackets';
 import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
 import exampleMatches from './exampleMatches';
 import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
-import { Theme, useTheme} from '@mui/material';
 
 interface CompletedTournamentCardProps {
   tournament:CompletedTournament,
@@ -11,7 +12,7 @@ interface CompletedTournamentCardProps {
 
 function SingleEliminationTournamentBracket({ tournament }: CompletedTournamentCardProps) {
   const [bracketMatches, setBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
-  
+
   useEffect(() => {
     async function fetchInformation() {
       const answer = await BracketService.getBracketTournamentMatchInfo(tournament.tournamentID);
