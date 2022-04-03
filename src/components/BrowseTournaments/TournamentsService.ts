@@ -60,7 +60,8 @@ export interface Registrant {
 const getRegistrants = (tournamentID:Number) => fetch(`${baseURL}/${tournamentID}/registrants`)
   .then((response) => response.json());
 
-const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/completed`)
+const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
+/api/tournaments/user/${userID}/completed`)
   .then((response) => response.json())
   .then((data) => data.map((item: CompletedTournament) => ({
     id: item.tournamentID,
@@ -73,8 +74,9 @@ const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAI
     allTournamentDetails: item,
   })));
 
-const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
-/user/${userID}/number/completed`).then((response) => response.json()).then((data:NumberQuery) => data);
+const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
+/api/tournaments/user/${userID}/number/completed`).then((response) => 
+response.json()).then((data:NumberQuery) => data);
 
 const getNumberOfWonTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
 /user/${userID}/number/won`).then((response) => response.json()).then((data:NumberQuery) => data);

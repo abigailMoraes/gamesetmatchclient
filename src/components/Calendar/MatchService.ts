@@ -64,7 +64,8 @@ const updateMatchResults = (id: number, mid: number, result: number) => fetch(
 ).then((resp) => handleErrors(resp));
 
 const MatchService = {
-  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults, updateMatchAttendance,
+  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults, 
+  updateMatchAttendance,
 };
 
 export default MatchService;

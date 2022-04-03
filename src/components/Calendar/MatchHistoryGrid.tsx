@@ -90,7 +90,6 @@ function CustomToolbar() {
 export default function MatchHistoryGrid() {
   const [rowData, setRows] = useState<MatchHistoryRow[]>([]);
   const mainTheme = useTheme() as Theme;
-  // const userID = useAtomValue(userIDAtom);
   const userID = useAtomValue(userIDAtom);
   const theme = createTheme(mainTheme, {
     components: {

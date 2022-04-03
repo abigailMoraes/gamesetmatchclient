@@ -48,10 +48,10 @@ const getParticipantInformation = (matchID: number) => fetch(`${process.env.REAC
 ${matchID}/userMatchInfo`)
   .then((response) => response.json()).then((data) => data.map((item:Participant) => ({
     id: item.id,
-    isWinner: item.resultText === 'Win',
+    isWinner: item.resultText === '1',
     name: item.name,
     status: item.status,
-    resultText: item.resultText,
+    resultText: item.resultText === '1'? "Win": item.resultText === '2'? "Loss": item.resultText='0'? "Tie":"TBD",
   })));
 
 const getNextMatchIDSingleElimination = (roundID:number, matchID:number) => fetch(`
