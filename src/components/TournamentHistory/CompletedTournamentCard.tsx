@@ -9,12 +9,12 @@ import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
 import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material';
+import { Theme, useMediaQuery } from '@mui/material';
 import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
 import SingleEliminationTournamentBracket from './SingleEliminationTournamentBracket';
 import DoubleElimination from './DoubleEliminationTournamentBracket';
+import ReactVirtualizedTable from './RoundRobinTable';
 
 interface IDetail {
   label:String,
@@ -41,11 +41,15 @@ interface CompletedTournamentCardProps {
 
 function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
   const theme = useTheme() as Theme;
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
   // eslint-disable-next-line eqeqeq
-  const isSingleElimination = tournament.type == 1;
+  const isSingleElimination = tournament.format == 2;
   // eslint-disable-next-line eqeqeq
-  const isDoubleElimination = tournament.type == 2;
+  const isDoubleElimination = tournament.format == 3;
+  // eslint-disable-next-line eqeqeq
+  const isRoundRobin = tournament.format == 1;
+  
   const openDetails = () => {
     setOpen(true);
   };
@@ -75,6 +79,7 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
       </CardActions>
       <Dialog
         open={open}
+        fullScreen={fullScreen}
         onClose={handleClose}
         PaperProps={{
           style: {
@@ -92,20 +97,9 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
           <Typography variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
             {tournament.name}
           </Typography>
-          <Typography variant="h6" style={{ padding: '5px 0px 5px 0px' }}>
-            {tournament.description}
-          </Typography>
-          <Container style={{ display: 'flex', flexDirection: 'column' }}>
-            <Detail label="Location" value={tournament.location} />
-            <Detail label="Format" value={tournament.format} />
-            <Detail label="Start Date" value={new Date(tournament.startDate).toLocaleDateString('en-US')} />
-            <Detail label="End Date" value={new Date(tournament.endDate).toLocaleDateString('en-US')} />
-          </Container>
-          <Typography variant="h4">
-            Tournament Summary
-          </Typography>
           {isSingleElimination && <SingleEliminationTournamentBracket tournament={tournament} />}
-          {isDoubleElimination && <DoubleElimination />}
+          {isDoubleElimination && <DoubleElimination tournament={tournament} />}
+          {isRoundRobin && <ReactVirtualizedTable tournament={tournament} />}
         </DialogContent>
         <DialogActions style={{ backgroundColor: theme.palette.primary.main }}>
           <Button color="secondary" onClick={handleClose}>Cancel</Button>

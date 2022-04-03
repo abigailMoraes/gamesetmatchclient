@@ -18,7 +18,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SearchIcon from '@mui/icons-material/Search';
 import HistoryIcon from '@mui/icons-material/History';
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -167,7 +167,7 @@ function NavigationSideBar() {
         }
         </List>
         <div style={{ position: 'absolute', bottom: 0 }}>
-          <MenuItem id="settings" label="Settings" icon={<SettingsIcon />} route={navigation.settings} />
+          {/* <MenuItem id="settings" label="Settings" icon={<SettingsIcon />} route={navigation.settings} /> */}
           <MenuItem id="logout" label="Logout" icon={<LogoutIcon />} route={navigation.logout} onClick={handleLogout} />
         </div>
       </Drawer>

@@ -6,3 +6,9 @@ export interface User {
   name: String,
   picture: String,
 }
+
+export enum UserRoles {
+  Employee,
+  Admin,
+  RootAdmin,
+}

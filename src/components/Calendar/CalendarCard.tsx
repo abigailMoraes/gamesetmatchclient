@@ -19,6 +19,7 @@ function CalendarCard() {
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<Match>(matches[0]);
+  //const userID = useAtomValue(userIDAtom);
   const userID = useAtomValue(userIDAtom);
   useEffect(() => {
     MatchService.getAll(userID)
