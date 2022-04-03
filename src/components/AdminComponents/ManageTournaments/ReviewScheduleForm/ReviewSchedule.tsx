@@ -21,9 +21,8 @@ import MatchDetails from '../../../General/Matches/MatchDetails';
 import StatusModal from '../../../General/StatusModal';
 import { TournamentRow } from '../ManageTournamentsEnums';
 import LoadingOverlay from '../../../General/LoadingOverlay';
-import { transformEventToAvailabilityString } from '../../../BrowseTournaments/RegisterTournament';
+import { transformEventToAvailabilityString } from '../../../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 
-// events can't be moved to before today
 interface ReviewScheduleProps {
   open:boolean,
   setOpen:(arg0:boolean) => void;
@@ -34,11 +33,11 @@ interface ReviewScheduleProps {
   setPublished?:(arg0:boolean) => void,
   tournamentRows?:TournamentRow[],
   setTournamentRows?:(arg0:TournamentRow[]) => void,
+  roundID:number
 }
 
-// TODO change event colour based oon match status
 function ReviewSchedule({
-  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows,
+  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows, roundID,
 }:ReviewScheduleProps) {
   const [openStatusModal, setStatusModal] = React.useState(false);
   const [lastMatch, setLastMatch] = React.useState(new Date());
@@ -85,7 +84,7 @@ function ReviewSchedule({
   const publishMatches = () => {
     setLoading(true);
     setGetConfirmation(false);
-    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, tournament.currentRound, matches)
+    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, roundID, matches)
       .then(() => ManageTournamentService.publishSchedule(matches))
       .then(() => {
         setLoading(false);
@@ -152,8 +151,6 @@ function ReviewSchedule({
             setSnackbarOpen(true);
             setsnackbarType('warning');
           });
-
-        // setCachedMatch(existingMatches);
 
         existingMatches.startTime = start;
         existingMatches.endTime = end;
@@ -225,7 +222,7 @@ function ReviewSchedule({
           {enableEdit && (
           <Typography variant="body2">
             Matches in red indicate that the scheduler could not find a time that satisfied both player&apos;s availabilities.
-            Green indicates a good match.
+            Yellow indicates one player&apos;s availabilities was satisified. Green indicates a good match.
           </Typography>
           )}
           <GeneralBigDragNDropCalendar
@@ -259,7 +256,7 @@ function ReviewSchedule({
         handleDialogClose={closeStatusDialog}
         dialogTitle={error ? 'Error' : 'Success!'}
         dialogText={error ? errorMessge
-          : 'The schedule has been published.'}
+          : 'The schedule has been published. Participants have been notified of their upcoming matches.'}
         isError={error}
       />
       <Dialog open={getConfirmation}>

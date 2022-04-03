@@ -131,6 +131,8 @@ export default function TournamentDisplayGrid({
             return (
               <GridCardOngoing
                 tournament={params.value}
+                tournamentRows={tournamentRows}
+                setTournamentRows={setTournamentRows}
                 formTournament={formTournament}
                 setFormTournament={setFormTournament}
               />

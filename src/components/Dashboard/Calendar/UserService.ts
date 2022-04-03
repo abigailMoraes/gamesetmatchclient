@@ -1,13 +1,12 @@
-import { User } from './MatchHistoryCard';
+import { User } from '../../../interfaces/UserInterface';
 
 function setUserDetails(item: User) {
   return {
-    userID: item.userID,
-    firebaseID: item.firebaseID,
+    userID: item.id,
+    firebaseID: item.firebaseId,
     name: item.name,
     email: item.email,
-    is_admin: item.is_admin,
-
+    is_admin: item.role,
   };
 }
 

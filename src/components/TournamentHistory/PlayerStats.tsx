@@ -4,9 +4,9 @@ import { CChart } from '@coreui/react-chartjs';
 import Typography from '@mui/material/Typography';
 import { userIDAtom } from '../../atoms/userAtom';
 import BadgesGrid from './BadgesGrid';
-import MatchService from '../Calendar/MatchService';
+import MatchService from '../Dashboard/Calendar/MatchService';
+import { Match } from '../Dashboard/Calendar/MatchInterface';
 import TournamentService from '../BrowseTournaments/TournamentsService';
-import { Match } from '../Calendar/MatchInterface';
 import { NumberQuery } from './SingleEliminationBracketMatch';
 
 function PlayerStats() {

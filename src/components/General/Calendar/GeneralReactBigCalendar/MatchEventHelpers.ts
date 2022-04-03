@@ -13,5 +13,5 @@ export const matchToEvent = (matches:Match[]):ReactBigCalendarEvent[] => matches
   start: new Date(match.startTime),
   end: new Date(match.endTime),
   allDay: false,
-  matchStatus: match.isConflict,
+  matchStatus: match.matchStatus,
 }));

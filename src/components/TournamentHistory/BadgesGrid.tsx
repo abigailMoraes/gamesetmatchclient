@@ -11,8 +11,8 @@ import { useAtomValue } from 'jotai';
 import CardHeader from '@mui/material/CardHeader';
 import { userIDAtom } from '../../atoms/userAtom';
 import TournamentService from '../BrowseTournaments/TournamentsService';
-import { Match } from '../Calendar/MatchInterface';
-import MatchService from '../Calendar/MatchService';
+import { Match } from '../Dashboard/Calendar/MatchInterface';
+import MatchService from '../Dashboard/Calendar/MatchService';
 import { Tournament } from '../../interfaces/TournamentInterface';
 
 function BadgesGrid() {

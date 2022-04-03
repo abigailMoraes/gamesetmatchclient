@@ -12,8 +12,8 @@ import { AttendanceType, MatchForAdmin } from '../../../interfaces/MatchInterfac
 
 import StyledButton from '../StyledButton';
 import StyledSelect from '../StyledSelect';
-import MatchService from '../../Calendar/MatchService';
 import StatusModal from '../StatusModal';
+import MatchService from '../../Dashboard/Calendar/MatchService';
 
 interface MatchDetailsProps {
   match:MatchForAdmin,
@@ -58,7 +58,7 @@ function MatchDetails({
   };
 
   const handleUpdate = () => {
-    const updateMatchResults = (res:number) => MatchService.updateMatchResults(match.playerOneID, 806, res)
+    const updateMatchResults = (res:number) => MatchService.updateMatchResults(match.playerOneID, match.matchID, res)
       .then(() => {
         const updatedMatch = match;
         updatedMatch.participants[0].results = res;

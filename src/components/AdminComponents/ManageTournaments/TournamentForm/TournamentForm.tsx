@@ -45,6 +45,7 @@ const tournamentTemplate = {
   series: 0,
   adminHostsTournament: 0,
   minParticipants: 2,
+  status: 0,
 };
 
 const startDateErrorMessage = `Start date must be ${ValidationSchemes.startDateMinDaysAfterRegistration} days after registration period closes`;
@@ -103,6 +104,7 @@ function TournamentForm({
       } else {
         const request = values;
         request.adminHostsTournament = userID;
+        request.status = 0;
         ManageTournamentService.createTournament(request).then(() => {
           setLoading(false);
           setResponseOpen(true);
@@ -177,7 +179,7 @@ function TournamentForm({
 
   React.useMemo(() => {
     formik.resetForm();
-    setEnabledByStatus(tournament ? tournament.status >= TournamentStatus.RegistrationClosed : false);
+    setEnabledByStatus(tournament ? tournament.status >= TournamentStatus.ReadyToSchedule : false);
     setTournamentOver(tournament ? tournament.status === TournamentStatus.TournamentOver : false);
     formik.setValues(tournament ? { ...tournament } : { ...tournamentTemplate });
     setFormValidation(tournament ? ValidationSchemes.getEditScheme(tournament.status) : ValidationSchemes.create());

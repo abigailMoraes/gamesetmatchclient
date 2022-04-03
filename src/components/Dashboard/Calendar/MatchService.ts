@@ -1,24 +1,8 @@
-import handleErrors from '../General/ServiceHelper';
-import { Match } from './MatchInterface';
-
-function setMatchDetails(item: Match) {
-  return {
-    results: item.results,
-    attendance: item.attendance,
-    id: item.matchID,
-    startTime: item.startTime,
-    endTime: item.endTime,
-    duration: item.duration,
-    type: item.type,
-    name: item.name,
-    location: item.location,
-    description: item.description,
-    allMatchDetails: item,
-  };
-}
+import { Match, setMatchDetails } from '../../../interfaces/MatchInterface';
+import handleErrors from '../../General/ServiceHelper';
 
 const getAll = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/involves/user/${id}`)
-  .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
+  .then((response) => response.json());
 
 const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
 /api/match/history/involves/user/${id}`)
@@ -64,8 +48,14 @@ const updateMatchResults = (id: number, mid: number, result: number) => fetch(
 ).then((resp) => handleErrors(resp));
 
 const MatchService = {
-  confirmMatchAttendance, getAll, getPastMatches, getMatchInformationByMatchID, dropOutOfMatch, updateMatchResults, 
+  confirmMatchAttendance,
+  getAll,
+  getPastMatches,
+  getMatchInformationByMatchID,
+  dropOutOfMatch,
+  updateMatchResults,
   updateMatchAttendance,
+  setMatchDetails,
 };
 
 export default MatchService;

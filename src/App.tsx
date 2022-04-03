@@ -19,13 +19,13 @@ import FirebaseAuth from './login/FirebaseAuth';
 import NavigationSideBar from './components/Navigation/NavigationSideBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import BrowseTournamentsGrid from './components/BrowseTournaments/BrowseTournamentsGrid';
-import RegisterTournament from './components/BrowseTournaments/RegisterTournament';
 import ManageUsers from './components/AdminComponents/ManageUsers/ManageUsers';
 import navigation from './components/Navigation/navigation.json';
 import { loginDataAtom } from './atoms/userAtom';
 import Registration from './login/Registration';
 import TournamentHistoryCard from './components/TournamentHistory/TournamentHistoryCard';
 import ManageTournamentsLanding from './components/AdminComponents/ManageTournaments/ManageTournamentsLanding';
+import RegisterTournament from './components/BrowseTournaments/RegisterTournament';
 
 const theme = responsiveFontSizes(createTheme({
   palette: {
