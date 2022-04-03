@@ -1,10 +1,8 @@
 import React from 'react';
-
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,6 +19,7 @@ interface IDetail {
   value:any
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Detail({ label, value }:IDetail) {
   return (
     <div style={{ display: 'inline-flex' }}>
@@ -49,7 +48,7 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
   const isDoubleElimination = tournament.format == 3;
   // eslint-disable-next-line eqeqeq
   const isRoundRobin = tournament.format == 1;
-  
+
   const openDetails = () => {
     setOpen(true);
   };

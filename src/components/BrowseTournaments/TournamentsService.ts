@@ -1,8 +1,7 @@
 import { Tournament } from '../../interfaces/TournamentInterface';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
-import { NumberQuery }  from '../TournamentHistory/SingleEliminationBracketMatch';
+import { NumberQuery } from '../TournamentHistory/SingleEliminationBracketMatch';
 import handleErrors from '../General/ServiceHelper';
-
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
@@ -74,17 +73,18 @@ const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAI
     allTournamentDetails: item,
   })));
 
-const getNumberOfCompletedTournaments=(userID:number)=> fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
-/user/${userID}/number/completed`).then((response)=>response.json()).then((data:NumberQuery)=> data)
+const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
+/user/${userID}/number/completed`).then((response) => response.json()).then((data:NumberQuery) => data);
 
-const getNumberOfWonTournaments=(userID:number)=> fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
-/user/${userID}/number/won`).then((response)=>response.json()).then((data:NumberQuery)=> data)
-
+const getNumberOfWonTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
+/user/${userID}/number/won`).then((response) => response.json()).then((data:NumberQuery) => data);
 
 const TournamentService = {
   getAll,
   registerForTournament,
   getRegistrants,
-  getCompleted, getNumberOfCompletedTournaments, getNumberOfWonTournaments,
+  getCompleted,
+  getNumberOfCompletedTournaments,
+  getNumberOfWonTournaments,
 };
 export default TournamentService;
