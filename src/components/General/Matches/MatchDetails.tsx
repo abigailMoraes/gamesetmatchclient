@@ -133,7 +133,7 @@ function MatchDetails({
     setPlayerTwoAttendance(AttendanceType.indexOf(match.participants[1]?.attendance));
   }, [open]);
 
-  const winnerOptions = [{ value: -1, text: 'Pending' }, { value: 0, text: 'Tie' },
+  const winnerOptions = [{ value: -1, text: 'Pending' },
     { value: match.playerOneID, text: `${match.participants[0]?.name}` },
     { value: match.playerTwoID, text: `${match.participants[1]?.name}` }];
 

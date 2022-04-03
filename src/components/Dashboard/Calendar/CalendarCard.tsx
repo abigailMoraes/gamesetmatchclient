@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Paper } from '@mui/material';
 import { User } from '../OverviewGrid/MatchHistoryCard';
 import UserService from './UserService';
-import { Match } from '../../../interfaces/MatchInterface';
+import { initMatch, Match } from '../../../interfaces/MatchInterface';
 import MatchHistoryDialogue from './MatchHistoryDialogue';
 
 interface CalendarCardProps {
@@ -20,13 +20,13 @@ function CalendarCard({ matches, setMatches }:CalendarCardProps) {
   const localizer = momentLocalizer(moment);
   const [participants, setParticipants] = useState<User[]>([]);
   const [modalState, setModalState] = useState(false);
-  const [selectedMatch, setSelectedMatch] = useState<Match>(matches[0]);
-  const events:Event[] = matches.map((item:any) => ({
+  const [selectedMatch, setSelectedMatch] = useState<Match>(initMatch);
+  const events:Event[] = matches.map((item:Match) => ({
     title: item.name,
     start: new Date(item.startTime),
     end: new Date(item.endTime),
     allDay: false,
-    resource: item.id,
+    resource: item.matchID,
   }));
   const [selectedEvent, setSelectedEvent] = useState<Event>();
   const handleSelectedEvent = (event: Event) => {
@@ -35,17 +35,7 @@ function CalendarCard({ matches, setMatches }:CalendarCardProps) {
     UserService.getMatchParticipants(event.resource).then((data) => setParticipants(data));
     setModalState(true);
   };
-  // eslint-disable-next-line react/no-unstable-nested-components
-  function Modal() {
-    return (
-      <div className={`modal-${modalState ? 'show' : 'hide'}`}>
-        <div className="modal-content">
-          <MatchHistoryDialogue match={selectedMatch} participants={participants} matches={matches} setMatches={setMatches} />
-        </div>
-      </div>
 
-    );
-  }
   return (
     <Paper sx={{ p: 2, minHeight: '90vh' }}>
       <Calendar
@@ -65,7 +55,14 @@ function CalendarCard({ matches, setMatches }:CalendarCardProps) {
         onSelectEvent={(e) => { handleSelectedEvent(e); }}
         popup
       />
-      {selectedEvent && <Modal />}
+      <MatchHistoryDialogue
+        match={selectedMatch}
+        participants={participants}
+        matches={matches}
+        setMatches={setMatches}
+        open={modalState}
+        setOpen={setModalState}
+      />
     </Paper>
   );
 }
