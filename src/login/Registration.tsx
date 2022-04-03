@@ -6,8 +6,8 @@ import {
 } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Box, Typography } from '@mui/material';
-import { useAtomValue } from 'jotai';
-import { loginDataAtom } from '../atoms/userAtom';
+import { useAtom, useAtomValue } from 'jotai';
+import { loginDataAtom, loginDataAtomPersistence } from '../atoms/userAtom';
 import LogoLoginPage from '../components/Logo/LogoLoginPage';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
@@ -63,6 +63,7 @@ function Registration() {
   const [isSubmit, setDisplay] = useState(false);
   const [alert, setDisplayMessage] = useState(<div />);
   const userData = useAtomValue(loginDataAtom);
+  const [loginData, setLoginData] = useAtom(loginDataAtomPersistence);
   let message : string = 'Field is empty';
 
   return (
@@ -86,14 +87,14 @@ function Registration() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData),
           }).then((response) => {
-            response.text().then((str) => {
-              message = str;
-            }).then(() => {
+            response.json().then((data) => {
+              message = data.message;
               if (response.status === 200) {
+                setLoginData({ ...loginData, id: data.id });
                 setDisplayMessage(
                   <Alert onClose={() => { navigate('/dashboard'); }} sx={{ maxWidth: '30%', alignSelf: 'center' }}>
                     {message}
-                    &nbsp; Close message to be redirected to dashboard.
+                  &nbsp; Close message to be redirected to dashboard.
                   </Alert>,
                 );
               } else {
