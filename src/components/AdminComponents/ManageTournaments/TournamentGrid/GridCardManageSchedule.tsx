@@ -8,6 +8,7 @@ import GridCardBase from './GridCardBase';
 import ManageTournamentService from '../ManageTournamentService';
 import LoadingOverlay from '../../../General/LoadingOverlay';
 import { TournamentRow, TournamentStatus } from '../ManageTournamentsEnums';
+import { initRound, Round } from '../../../../interfaces/RoundInterface';
 
 interface GridCardManageScheduleProps {
   tournament:Tournament,
@@ -36,7 +37,7 @@ function GridCardManageSchedule({
   tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
 }:GridCardManageScheduleProps) {
   const [open, setOpen] = React.useState(false);
-  const [roundID, setRoundID] = React.useState(0);
+  const [round, setRound] = React.useState<Round>(initRound);
 
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
 
@@ -49,17 +50,18 @@ function GridCardManageSchedule({
   const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
     || tournament.status === TournamentStatus.ReadyToPublishSchedule);
   const [enableDelete] = React.useState(canDelete(tournament));
+  const [manualScheduleCreation, setManualScheduleCreation] = React.useState(false);
 
   const tooltip1 = "A schedule has already been created. Press 'Publish Schedule' to view.";
   const tooltip2 = 'Please create a schedule first.';
 
   const openPublishSchedule = () => {
     setError(false);
-    ManageTournamentService.getLatestRoundID(tournament.tournamentID)
-      .then((latestRoundID:number) => {
-        if (latestRoundID) {
-          setRoundID(latestRoundID);
-          return ManageTournamentService.getMatchesNeedingScheduling(latestRoundID);
+    ManageTournamentService.getLatestRound(tournament.tournamentID)
+      .then((latestRound:Round) => {
+        if (latestRound) {
+          setRound(latestRound);
+          return ManageTournamentService.getMatchesNeedingScheduling(latestRound.roundID);
         }
         throw new Error('No schedule found. Round number is invalid.');
       })
@@ -82,6 +84,7 @@ function GridCardManageSchedule({
       setOpenStatusModal(true);
       setScheduleCreated(true);
       setSchedulePublished(false);
+      setManualScheduleCreation(true);
     }).catch((err:Error) => {
       setStatusModalText(err.message);
       setLoading(false);
@@ -92,6 +95,17 @@ function GridCardManageSchedule({
 
   const handleDialogClose = () => {
     setOpenStatusModal(false);
+    if (manualScheduleCreation && !error) {
+      const updatedTournamentRow = tournamentRows.find((t:TournamentRow) => t.id === tournament.tournamentID);
+
+      if (updatedTournamentRow) {
+        const index = tournamentRows.findIndex((t:TournamentRow) => t.id === tournament.tournamentID);
+        updatedTournamentRow.allTournamentDetails.currentRound += 1;
+        const updatedTournamentRows:TournamentRow[] = [...tournamentRows];
+        updatedTournamentRows[index] = updatedTournamentRow;
+        setTournamentRows(updatedTournamentRows);
+      }
+    }
   };
 
   return (
@@ -124,7 +138,7 @@ function GridCardManageSchedule({
         setTournamentRows={setTournamentRows}
         setPublished={setSchedulePublished}
         enableEdit
-        roundID={roundID}
+        round={round}
       />
       <StatusModal
         open={openStatusModal}

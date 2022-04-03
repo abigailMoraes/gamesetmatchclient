@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import { MatchForAdmin } from '../../../../interfaces/MatchInterface';
+import { initRound, Round } from '../../../../interfaces/RoundInterface';
 import { Tournament } from '../../../../interfaces/TournamentInterface';
 import ConfirmActionModal from '../../../General/ConfirmActionModal';
 import LoadingOverlay from '../../../General/LoadingOverlay';
@@ -35,6 +36,7 @@ function GridCardOngoing({
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [round, setRound] = React.useState<Round>(initRound);
 
   const [error, setError] = React.useState(false);
   const [statusModal, setStatusModal] = React.useState(false);
@@ -47,8 +49,11 @@ function GridCardOngoing({
   const openSchedule = () => {
     setLoading(true);
     setError(false);
-    ManageTournamentService.getLatestRoundID(tournament.tournamentID)
-      .then((roundID:number) => ManageTournamentService.getMatchesNeedingScheduling(roundID))
+    ManageTournamentService.getLatestRound(tournament.tournamentID)
+      .then((latestRound:Round) => {
+        setRound(latestRound);
+        return ManageTournamentService.getMatchesNeedingScheduling(latestRound.roundID);
+      })
       .then((data:any) => {
         setLoading(false);
         setMatches(data);
@@ -114,7 +119,7 @@ function GridCardOngoing({
         setMatches={setMatches}
         tournament={tournament}
         enableEdit={false}
-        roundID={0}
+        round={round}
       />
       <StatusModal
         open={statusModal}
