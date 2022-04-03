@@ -33,11 +33,14 @@ function GeneralBigDragNDropCalendar({
 
   const eventPropGetter = React.useCallback(
     (event) => ({
-      ...(event?.matchStatus === MatchStatus.AVAILABILITY_ISSUE && {
-        className: 'availabilityIssue',
+      ...(event?.matchStatus === MatchStatus.BAD && {
+        className: 'badMatch',
       }),
-      ...(event?.matchStatus === MatchStatus.VALID && {
-        className: 'validMatch',
+      ...(event?.matchStatus === MatchStatus.OK && {
+        className: 'okMatch',
+      }),
+      ...(event?.matchStatus === MatchStatus.GREAT && {
+        className: 'greatMatch',
       }),
     }),
     [],

@@ -84,10 +84,14 @@
     background-color: #cb742e;
 }
 
-.availabilityIssue, .availabilityIssue.rbc-event.rbc-selected {
+.badMatch, .badMatch.rbc-event.rbc-selected {
     background-color: rgb(123, 36, 36);
 }
 
-.validMatch, .validMatch.rbc-event.rbc-selected {
+.greatMatch, .greatMatch.rbc-event.rbc-selected {
     background-color: rgb(36, 91, 58);
+}
+
+.okMatch, .okMatch.rbc-event.rbc-selected {
+    background-color: rgb(219, 162, 64);
 }

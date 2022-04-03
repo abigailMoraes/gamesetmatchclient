@@ -219,7 +219,7 @@ function ReviewSchedule({
           {enableEdit && (
           <Typography variant="body2">
             Matches in red indicate that the scheduler could not find a time that satisfied both player&apos;s availabilities.
-            Green indicates a good match.
+            Yellow indicates one player&apos;s availabilities was satisified. Green indicates a good match.
           </Typography>
           )}
           <GeneralBigDragNDropCalendar
