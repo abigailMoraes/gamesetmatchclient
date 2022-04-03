@@ -74,7 +74,6 @@ function CustomToolbar() {
 
 export default function CompletedTournamentsGrid() {
   const [rowData, setRows] = useState<TournamentRow[]>([]);
-  const [loading, setLoading] = useState(true);
   const mainTheme = useTheme() as Theme;
   const userID = useAtomValue(userIDAtom);
 
@@ -114,15 +113,11 @@ export default function CompletedTournamentsGrid() {
   // TODO: fix this so it only gets called once, move to parent and only pass data?
   React.useEffect(() => {
     TournamentService.getCompleted(userID)
-      .then((data) => {
-        setLoading(false);
-        setRows(data);
-      });
-  }, [loading]);
+      .then((data) => setRows(data));
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      {loading ? <CircularProgress /> : (
         <DataGrid
           components={{ Toolbar: CustomToolbar }}
           isRowSelectable={() => false}
@@ -131,7 +126,6 @@ export default function CompletedTournamentsGrid() {
           columns={columns}
           rowHeight={200}
         />
-      )}
     </ThemeProvider>
   );
 }
