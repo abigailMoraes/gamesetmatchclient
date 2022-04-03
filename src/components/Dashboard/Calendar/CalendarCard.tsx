@@ -21,7 +21,6 @@ function CalendarCard({ matches, setMatches }:CalendarCardProps) {
   const [participants, setParticipants] = useState<User[]>([]);
   const [modalState, setModalState] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<Match>(matches[0]);
-
   const events:Event[] = matches.map((item:any) => ({
     title: item.name,
     start: new Date(item.startTime),

@@ -49,6 +49,7 @@ function Detail({ label, value }:IDetail) {
 
 function MatchHistoryCard(props: any) {
   const theme = useTheme() as Theme;
+  //const userID = useAtomValue(userIDAtom);
   const userID = useAtomValue(userIDAtom);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { match, matches, setMatches } = props;

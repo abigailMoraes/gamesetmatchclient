@@ -24,7 +24,7 @@ function BadgesGrid() {
   useEffect(() => {
     MatchService.getPastMatches(userID).then((data) => {
       setMatches(data);
-      setMatchWins(data.filter((match:any) => match.results === 'Win'));
+      setMatchWins(data.filter((match:any) => match.results === 1));
     });
   }, []);
 

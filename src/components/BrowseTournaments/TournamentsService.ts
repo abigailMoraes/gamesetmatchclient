@@ -1,5 +1,6 @@
 import { Tournament } from '../../interfaces/TournamentInterface';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
+import { NumberQuery } from '../TournamentHistory/SingleEliminationBracketMatch';
 import handleErrors from '../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
@@ -13,7 +14,7 @@ export interface CompletedTournament{
   maxParticipants: number,
   prize: string,
   format: number,
-  type: number,
+  series: number,
   closeRegistrationDate: Date,
   endDate: Date,
   matchDuration: number,
@@ -52,7 +53,8 @@ export interface RegisterForTournamentBody {
   skillLevel?: number;
 }
 
-const registerForTournament = (tournamentID: Number, body: RegisterForTournamentBody) => fetch(`${baseURL}/${tournamentID}/register`, {
+const registerForTournament = (tournamentID: Number, body: RegisterForTournamentBody) => fetch(`${baseURL}/
+${tournamentID}/register`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -77,7 +79,7 @@ export interface Registrant {
 const getRegistrants = (tournamentID:Number) => fetch(`${baseURL}/${tournamentID}/registrants`)
   .then((response) => response.json());
 
-const getCompleted = (userID:number) => fetch(`http://localhost:8080/api/tournaments/${userID}/completed`)
+const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/completed`)
   .then((response) => response.json())
   .then((data) => data.map((item: CompletedTournament) => ({
     id: item.tournamentID,
@@ -106,6 +108,12 @@ const updateAvailabilities = (
   body: JSON.stringify(availabilities),
 }).then((resp) => handleErrors(resp));
 
+const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
+/user/${userID}/number/completed`).then((response) => response.json()).then((data:NumberQuery) => data);
+
+const getNumberOfWonTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
+/user/${userID}/number/won`).then((response) => response.json()).then((data:NumberQuery) => data);
+
 const TournamentService = {
   getAll,
   registerForTournament,
@@ -115,5 +123,7 @@ const TournamentService = {
   deregisterForTournament,
   getAvailabilityForATournament,
   updateAvailabilities,
+  getNumberOfCompletedTournaments,
+  getNumberOfWonTournaments,
 };
 export default TournamentService;
