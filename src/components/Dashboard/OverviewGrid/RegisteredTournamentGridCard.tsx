@@ -15,11 +15,11 @@ import { TournamentRow } from '../../BrowseTournaments/BrowseTournamentsGrid';
 import TournamentDetailsDialog from '../../AdminComponents/ManageTournaments/TournamentGrid/TournamentDetailsDialog';
 import LoadingOverlay from '../../General/LoadingOverlay';
 import StatusModal from '../../General/StatusModal';
-import TournamentService from '../../BrowseTournaments/TournamentsService';
 import { userIDAtom } from '../../../atoms/userAtom';
 import { ReactBigCalendarEvent } from '../../../interfaces/EventInterface';
 import UpdateAvailability from './UpdateAvailability';
 import { Availability, availabilityStringToEvents } from '../../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
+import TournamentService from '../../BrowseTournaments/TournamentsService';
 
 interface RegisteredTournamentGridCardProps {
   tournament:Tournament,
@@ -27,7 +27,7 @@ interface RegisteredTournamentGridCardProps {
   setTournamentRows: (arg0:TournamentRow[]) => void,
 }
 
-const isDeregisterDisabled = (t:Tournament):boolean => t.currentRound === 0;
+const isDeregisterDisabled = (t:Tournament):boolean => t.currentRound !== 0;
 
 function RegisteredTournamentGridCard({ tournament, tournamentRows, setTournamentRows }:RegisteredTournamentGridCardProps) {
   const theme = useTheme() as Theme;
