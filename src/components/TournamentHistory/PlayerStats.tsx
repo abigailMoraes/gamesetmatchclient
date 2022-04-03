@@ -14,8 +14,8 @@ function PlayerStats() {
   const [matchLosses, setMatchLosses] = useState<Match[]>([]);
   const [matchDraws, setMatchDraws] = useState<Match[]>([]);
   const [matchPending, setMatchPending] = useState<Match[]>([]);
-  const [tournamentsCompleted, setTournamentsCompleted]=useState<NumberQuery>({next:0});
-  const [tournamentsWon, setTournamentsWon]= useState<NumberQuery>({next:0});
+  const [tournamentsCompleted, setTournamentsCompleted] = useState<NumberQuery>({ next: 0 });
+  const [tournamentsWon, setTournamentsWon] = useState<NumberQuery>({ next: 0 });
   const userID = useAtomValue(userIDAtom);
 
   useEffect(() => {
@@ -25,12 +25,9 @@ function PlayerStats() {
       setMatchLosses(data.filter((match:any) => match.results === 2));
       setMatchPending(data.filter((match:any) => match.results === -1));
     });
-    TournamentService.getNumberOfWonTournaments(userID).then((data:NumberQuery)=>{setTournamentsWon(data);});
-    TournamentService.getNumberOfCompletedTournaments(userID).then((data:NumberQuery)=>{setTournamentsCompleted(data)})
+    TournamentService.getNumberOfWonTournaments(userID).then((data:NumberQuery) => { setTournamentsWon(data); });
+    TournamentService.getNumberOfCompletedTournaments(userID).then((data:NumberQuery) => { setTournamentsCompleted(data); });
   }, []);
-
-
-
 
   return (
     <div>
@@ -72,7 +69,7 @@ function PlayerStats() {
             datasets: [
               {
                 backgroundColor: ['#e6e6e6', '#61DAFB', '#27293C'],
-                data: [Number(tournamentsWon.next), Number(tournamentsCompleted.next)-Number(tournamentsWon.next)],
+                data: [Number(tournamentsWon.next), Number(tournamentsCompleted.next) - Number(tournamentsWon.next)],
               },
             ],
           }}

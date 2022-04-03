@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unstable-nested-components */
 import { DoubleEliminationBracket, SVGViewer, Match } from '@g-loot/react-tournament-brackets';
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
 import exampleMatches from './exampleMatches';
 import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
@@ -9,7 +10,7 @@ interface CompletedTournamentCardProps {
   tournament:CompletedTournament,
 }
 
-export default  function DoubleElimination({tournament}: CompletedTournamentCardProps) {
+export default function DoubleElimination({ tournament }: CompletedTournamentCardProps) {
   const exampleDoubleEliminationMatches = {
     upper: [
       {
@@ -367,7 +368,6 @@ export default  function DoubleElimination({tournament}: CompletedTournamentCard
     ],
   };
 
-
   const [upperBracketMatches, setUpperBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
   const [lowerBracketMatches, setLowerBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
   const [doubleBracketMatches, setDoubleBracketMatches] = useState<{
@@ -381,7 +381,7 @@ export default  function DoubleElimination({tournament}: CompletedTournamentCard
       const answerLower = await BracketService.getLowerBracketTournamentMatchInfo(tournament.tournamentID);
       setUpperBracketMatches(answerUpper);
       setLowerBracketMatches(answerLower);
-      setDoubleBracketMatches({upper: answerUpper, lower:answerLower,});
+      setDoubleBracketMatches({ upper: answerUpper, lower: answerLower });
       console.log(doubleBracketMatches);
     }
 
@@ -391,15 +391,15 @@ export default  function DoubleElimination({tournament}: CompletedTournamentCard
 
   console.log(doubleBracketMatches);
   return (
-      <DoubleEliminationBracket
-          matches={doubleBracketMatches}
-          matchComponent={Match}
-          svgWrapper={({children, ...props}) => (
-              <SVGViewer width={670} height={500} {...props}>
-                {children}
-              </SVGViewer>
-          )}
-      />
+    <DoubleEliminationBracket
+      matches={doubleBracketMatches}
+      matchComponent={Match}
+      svgWrapper={({ children, ...props }) => (
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <SVGViewer width={670} height={500} {...props}>
+          {children}
+        </SVGViewer>
+      )}
+    />
   );
 }
-
