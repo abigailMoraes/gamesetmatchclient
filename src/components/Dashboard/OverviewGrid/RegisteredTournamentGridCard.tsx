@@ -28,7 +28,7 @@ interface RegisteredTournamentGridCardProps {
   setTournamentRows: (arg0:TournamentRow[]) => void,
 }
 
-const isDeregisterDisabled = (status:TournamentStatus):boolean => status === TournamentStatus.OpenForRegistration;
+const isDeregisterDisabled = (t:Tournament):boolean => t.currentRound === 0;
 
 function RegisteredTournamentGridCard({ tournament, tournamentRows, setTournamentRows }:RegisteredTournamentGridCardProps) {
   const theme = useTheme() as Theme;
