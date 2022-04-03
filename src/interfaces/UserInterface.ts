@@ -1,9 +1,10 @@
 export interface User {
-  email: string
-  firebaseId:string
-  id: number
-  role: number
-  name: string
+  email: String,
+  firebaseId: String,
+  id: number,
+  role: number,
+  name: String,
+  picture: String,
 }
 
 export enum UserRoles {

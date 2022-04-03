@@ -8,12 +8,11 @@ import Card from '@mui/material/Card';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import { useAtomValue } from 'jotai';
-import moment from 'moment';
 import Tooltip from '@mui/material/Tooltip/Tooltip';
 import StyledPaper from '../General/StyledPaper';
 import BackButton from '../General/BackButton';
 import StyledButton from '../General/StyledButton';
-import AvailabilitySelector, { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
+import AvailabilitySelector, { Availability, transformToAvailabilityString } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 import TournamentService, { RegisterForTournamentBody } from './TournamentsService';
 import StatusModal from '../General/StatusModal';
 import { userIDAtom } from '../../atoms/userAtom';
@@ -25,53 +24,6 @@ import DateHelpers from '../General/Calendar/DateHelpers';
 interface RegisterTournamentState {
   tournament:Tournament;
 }
-
-export const transformEventToAvailabilityString = (start:Date, end:Date) => {
-  const availArr = new Array(24).fill(0);
-  const sMoment = moment(start);
-  const eMoment = moment(end);
-  const sHour = start.getHours();
-  const sMin = start.getMinutes();
-  const duration = moment.duration(eMoment.diff(sMoment)).asMinutes() / 30;
-
-  // 9 is start of day
-  const index = (sHour - 9) * 2 + (sMin === 0 ? 0 : 1);
-  // eslint-disable-next-line no-plusplus
-  for (let j = index; j < index + duration; j++) {
-    availArr[j] = 1;
-  }
-  return availArr.toString().replaceAll(',', '');
-};
-
-const transformToAvailabilityString = (availabilites:ReactBigCalendarEvent[]):Availability[] => {
-  const availStringObj:Availability[] = [];
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < 7; i++) {
-    const availForDay = availabilites.filter((a) => a.start.getDay() === i);
-    const availArr = new Array(24).fill(0);
-    availForDay.forEach((a) => {
-      const sMoment = moment(a.start);
-      const eMoment = moment(a.end);
-      const sHour = a.start.getHours();
-      const sMin = a.start.getMinutes();
-      const duration = moment.duration(eMoment.diff(sMoment)).asMinutes() / 30;
-
-      // 9 is start of day
-      const index = (sHour - 9) * 2 + (sMin === 0 ? 0 : 1);
-      // eslint-disable-next-line no-plusplus
-      for (let j = index; j < index + duration; j++) {
-        availArr[j] = 1;
-      }
-    });
-
-    const availString = availArr.toString().replaceAll(',', '');
-    availStringObj.push({
-      dayOfWeek: i,
-      availabilityString: availString,
-    });
-  }
-  return availStringObj;
-};
 
 function RegisterTournament() {
   const location = useLocation();

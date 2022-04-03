@@ -1,14 +1,25 @@
 export interface Match {
-  results: String,
+  results: number,
   attendance: String,
   matchID: number,
   startTime: Date,
   endTime: Date,
   roundID: number,
+  roundNumber:number,
   name: String,
   location: String,
   description: String,
   matchStatus: number
+}
+
+export interface MatchHistoryRow {
+  id: number,
+  startTime: Date,
+  endTime: Date,
+  name: String,
+  location: String,
+  description: String,
+  allMatchDetails: Match
 }
 
 export interface Participants {
@@ -26,12 +37,13 @@ export interface MatchForAdmin extends Match{
 }
 
 export const initMatch = {
-  results: '',
+  results: -1,
   attendance: '',
   matchID: -1,
   startTime: new Date(),
   endTime: new Date(),
   roundID: 1,
+  roundNumber: 1,
   name: '',
   matchStatus: 0,
   location: '',
@@ -68,3 +80,15 @@ export enum MatchResultTypes {
 }
 
 export const AttendanceType = ['TBD', 'No', 'Yes'];
+
+export function setMatchDetails(item: Match):MatchHistoryRow {
+  return {
+    id: item.matchID,
+    startTime: item.startTime,
+    endTime: item.endTime,
+    name: item.name,
+    location: item.location,
+    description: item.description,
+    allMatchDetails: item,
+  };
+}

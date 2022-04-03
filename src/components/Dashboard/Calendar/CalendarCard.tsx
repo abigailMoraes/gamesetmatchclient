@@ -2,31 +2,25 @@ import { Calendar, momentLocalizer, Event } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
-import React, { useEffect, useState } from 'react';
-import { useAtomValue } from 'jotai';
-import { userIDAtom } from '../../atoms/userAtom';
-import MatchService from './MatchService';
-import MatchHistoryDialogue from './MatchHistoryDialogue';
-import { User } from './MatchHistoryCard';
-import UserService from './UserService';
-import { Match } from './MatchInterface';
+import React, { useState } from 'react';
 
-function CalendarCard() {
+import { Paper } from '@mui/material';
+import { User } from '../OverviewGrid/MatchHistoryCard';
+import UserService from './UserService';
+import { Match } from '../../../interfaces/MatchInterface';
+import MatchHistoryDialogue from './MatchHistoryDialogue';
+
+interface CalendarCardProps {
+  matches:Match[],
+  setMatches:(argo0:Match[]) => void,
+}
+
+function CalendarCard({ matches, setMatches }:CalendarCardProps) {
   moment.locale('en-US');
   const localizer = momentLocalizer(moment);
-  const [matches, setMatches] = useState([]);
   const [participants, setParticipants] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<Match>(matches[0]);
-  const userID = useAtomValue(userIDAtom);
-  useEffect(() => {
-    MatchService.getAll(userID)
-      .then((data) => {
-        setLoading(false);
-        setMatches(data);
-      });
-  }, [loading]);
   const events:Event[] = matches.map((item:any) => ({
     title: item.name,
     start: new Date(item.startTime),
@@ -46,14 +40,14 @@ function CalendarCard() {
     return (
       <div className={`modal-${modalState ? 'show' : 'hide'}`}>
         <div className="modal-content">
-          <MatchHistoryDialogue match={selectedMatch} participants={participants} />
+          <MatchHistoryDialogue match={selectedMatch} participants={participants} matches={matches} setMatches={setMatches} />
         </div>
       </div>
 
     );
   }
   return (
-    <div>
+    <Paper sx={{ p: 2, minHeight: '90vh' }}>
       <Calendar
         selected={selectedEvent}
         step={60}
@@ -67,12 +61,12 @@ function CalendarCard() {
         endAccessor="end"
         resourceAccessor="resource"
         views={['month', 'week', 'day', 'agenda']}
-        style={{ height: '80vh' }}
+        style={{ height: '85vh', width: '50vw' }}
         onSelectEvent={(e) => { handleSelectedEvent(e); }}
         popup
       />
       {selectedEvent && <Modal />}
-    </div>
+    </Paper>
   );
 }
 
