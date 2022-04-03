@@ -14,9 +14,9 @@ import {
 } from '@mui/material';
 import Container from '@mui/material/Container';
 import { useAtomValue } from 'jotai';
-import { userIDAtom } from '../../atoms/userAtom';
-import MatchService from './MatchService';
-import { getMatchResult } from '../../interfaces/MatchInterface';
+import { userIDAtom } from '../../../atoms/userAtom';
+import { getMatchResult, Match } from '../../../interfaces/MatchInterface';
+import MatchService from '../Calendar/MatchService';
 
 export interface User {
   userID: number,
@@ -52,7 +52,7 @@ function MatchHistoryCard(props: any) {
   // const userID = useAtomValue(userIDAtom);
   const userID = useAtomValue(userIDAtom);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const { match } = props;
+  const { match, matches, setMatches } = props;
   const [open, setOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [result, setResult] = useState(match.result);
@@ -75,7 +75,17 @@ function MatchHistoryCard(props: any) {
   const handleUpdateMatchResults = () => {
     MatchService.updateMatchResults(userID, match.matchID, result).then(() => {
       match.results = result;
-    }).then(() => window.location.reload());
+    }).then(() => {
+      const matchToUpdate = matches.find((m:Match) => m.matchID === match.matchID);
+      if (matchToUpdate) {
+        const filteredMatches = matches.filter((m:Match) => m.matchID !== match.matchID);
+        matchToUpdate.results = result;
+        const updated:Match[] = [...filteredMatches,
+          { ...matchToUpdate },
+        ];
+        setMatches(updated);
+      }
+    });
   };
 
   const handleResultChange = (event:SelectChangeEvent) => {

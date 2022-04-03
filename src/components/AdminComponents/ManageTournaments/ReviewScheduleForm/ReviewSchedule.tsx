@@ -21,9 +21,8 @@ import MatchDetails from '../../../General/Matches/MatchDetails';
 import StatusModal from '../../../General/StatusModal';
 import { TournamentRow } from '../ManageTournamentsEnums';
 import LoadingOverlay from '../../../General/LoadingOverlay';
-import { transformEventToAvailabilityString } from '../../../BrowseTournaments/RegisterTournament';
+import { transformEventToAvailabilityString } from '../../../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 
-// events can't be moved to before today
 interface ReviewScheduleProps {
   open:boolean,
   setOpen:(arg0:boolean) => void;
@@ -36,7 +35,6 @@ interface ReviewScheduleProps {
   setTournamentRows?:(arg0:TournamentRow[]) => void,
 }
 
-// TODO change event colour based oon match status
 function ReviewSchedule({
   open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows,
 }:ReviewScheduleProps) {
@@ -152,8 +150,6 @@ function ReviewSchedule({
             setSnackbarOpen(true);
             setsnackbarType('warning');
           });
-
-        // setCachedMatch(existingMatches);
 
         existingMatches.startTime = start;
         existingMatches.endTime = end;

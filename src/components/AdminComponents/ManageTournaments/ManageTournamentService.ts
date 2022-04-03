@@ -103,7 +103,7 @@ const getMatchesNeedingScheduling = (roundID:number) => fetch(`${baseURL}/rounds
     startTime: new Date(item.startTime),
     endTime: new Date(item.endTime),
     roundID: item.roundID,
-    isConflict: item.isConflict,
+    matchStatus: item.matchStatus,
     playerOneID: item.playerOneID,
     playerTwoID: item.playerTwoID,
     participants: item.participants,
