@@ -114,16 +114,23 @@ function ReviewSchedule({
       const today = moment(new Date());
 
       if (moment(start).isBefore(today)) {
-        setSnackbarOpen(true);
         setsnackbarErrorMessage('Cannot move a match to the past');
         setsnackbarType('error');
+        setSnackbarOpen(true);
         return;
       }
 
       if (moment(start).day() !== moment(end).day()) {
-        setSnackbarOpen(true);
         setsnackbarErrorMessage('Match cannot span multiple days.');
         setsnackbarType('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
+      if (moment(start).hour() < 9 || moment(end).hour() > 21) {
+        setsnackbarErrorMessage('Match must between 9 a.m. to 9 p.m.');
+        setsnackbarType('error');
+        setSnackbarOpen(true);
         return;
       }
 
