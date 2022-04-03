@@ -1,4 +1,5 @@
 import { Tournament } from '../../interfaces/TournamentInterface';
+import { TournamentStatus } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
 import handleErrors from '../General/ServiceHelper';
 
@@ -22,7 +23,7 @@ export interface CompletedTournament{
   registered:boolean,
 }
 
-const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&status=0`)
+const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&status=${TournamentStatus.OpenForRegistration}`)
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
     id: item.tournamentID,

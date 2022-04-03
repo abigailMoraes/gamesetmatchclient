@@ -58,7 +58,7 @@ function MatchDetails({
   };
 
   const handleUpdate = () => {
-    const updateMatchResults = (res:number) => MatchService.updateMatchResults(match.playerOneID, 806, res)
+    const updateMatchResults = (res:number) => MatchService.updateMatchResults(match.playerOneID, match.matchID, res)
       .then(() => {
         const updatedMatch = match;
         updatedMatch.participants[0].results = res;

@@ -30,19 +30,20 @@ function GridCardDetails({ tournament }:GridCardDetailsProps) {
 
 // add back when BE fixed
 //  (tournament.status === TournamentStatus.ReadyToPublishSchedule && tournament.currentRound === 0)
-const canDelete = (tournament:Tournament) => tournament.status === TournamentStatus.RegistrationClosed;
+const canDelete = (tournament:Tournament) => tournament.status === TournamentStatus.ReadyToSchedule && tournament.currentRound === 0;
 
 function GridCardManageSchedule({
   tournament, tournamentRows, setTournamentRows, formTournament, setFormTournament,
 }:GridCardManageScheduleProps) {
   const [open, setOpen] = React.useState(false);
   const [errorModal, setErrorModal] = React.useState(false);
-  // TODO enable delete if its the first round only
+  const [roundID, setRoundID] = React.useState(0);
+
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [openStatusModal, setOpenStatusModal] = React.useState(false);
   const [createError, setCreateError] = React.useState(false);
-  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.RegistrationClosed);
+  const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.ReadyToSchedule);
   const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
     || tournament.status === TournamentStatus.ReadyToPublishSchedule);
   const [enableDelete] = React.useState(canDelete(tournament));
@@ -54,7 +55,10 @@ function GridCardManageSchedule({
   const openPublishSchedule = () => {
     setErrorModal(false);
     ManageTournamentService.getLatestRoundID(tournament.tournamentID)
-      .then((roundID:number) => ManageTournamentService.getMatchesNeedingScheduling(roundID))
+      .then((latestRoundID:number) => {
+        setRoundID(latestRoundID);
+        return ManageTournamentService.getMatchesNeedingScheduling(latestRoundID);
+      })
       .then((data:MatchForAdmin[]) => {
         setMatches(data);
         setOpen(true);
@@ -114,6 +118,7 @@ function GridCardManageSchedule({
         setTournamentRows={setTournamentRows}
         setPublished={setSchedulePublished}
         enableEdit
+        roundID={roundID}
       />
       <StatusModal
         open={errorModal}

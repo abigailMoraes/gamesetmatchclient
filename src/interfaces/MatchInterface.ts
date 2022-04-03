@@ -8,7 +8,7 @@ export interface Match {
   name: String,
   location: String,
   description: String,
-  isConflict: number
+  matchStatus: number
 }
 
 export interface Participants {
@@ -33,7 +33,7 @@ export const initMatch = {
   endTime: new Date(),
   roundID: 1,
   name: '',
-  isConflict: 0,
+  matchStatus: 0,
   location: '',
   description: ' ',
   playerOneID: 0,

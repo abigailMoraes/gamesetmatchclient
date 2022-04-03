@@ -56,7 +56,7 @@ function a11yProps(index: number) {
 function statusesBasedOnTab(value:number):number[] {
   switch (value) {
     case TabNames.ManageSchedule:
-      return [TournamentStatus.RegistrationClosed,
+      return [TournamentStatus.ReadyToSchedule,
         TournamentStatus.ReadyToPublishSchedule,
         TournamentStatus.ReadyToPublishNextRound];
     case TabNames.Ongoing:

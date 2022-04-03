@@ -34,11 +34,12 @@ interface ReviewScheduleProps {
   setPublished?:(arg0:boolean) => void,
   tournamentRows?:TournamentRow[],
   setTournamentRows?:(arg0:TournamentRow[]) => void,
+  roundID:number
 }
 
 // TODO change event colour based oon match status
 function ReviewSchedule({
-  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows,
+  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows, roundID,
 }:ReviewScheduleProps) {
   const [openStatusModal, setStatusModal] = React.useState(false);
   const [lastMatch, setLastMatch] = React.useState(new Date());
@@ -85,7 +86,7 @@ function ReviewSchedule({
   const publishMatches = () => {
     setLoading(true);
     setGetConfirmation(false);
-    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, tournament.currentRound, matches)
+    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, roundID, matches)
       .then(() => ManageTournamentService.publishSchedule(matches))
       .then(() => {
         setLoading(false);
@@ -252,7 +253,7 @@ function ReviewSchedule({
         handleDialogClose={closeStatusDialog}
         dialogTitle={error ? 'Error' : 'Success!'}
         dialogText={error ? errorMessge
-          : 'The schedule has been published.'}
+          : 'The schedule has been published. Participants have been notified of their upcoming matches.'}
         isError={error}
       />
       <Dialog open={getConfirmation}>
