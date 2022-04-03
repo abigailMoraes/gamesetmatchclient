@@ -91,10 +91,11 @@ function Registration() {
               message = data.message;
               if (response.status === 200) {
                 setLoginData({ ...loginData, id: data.id });
+                setTimeout(() => navigate('/dashboard'), 2000);
                 setDisplayMessage(
                   <Alert onClose={() => { navigate('/dashboard'); }} sx={{ maxWidth: '30%', alignSelf: 'center' }}>
                     {message}
-                  &nbsp; Close message to be redirected to dashboard.
+                  &nbsp; Close this message if you are not redirected to dashboard.
                   </Alert>,
                 );
               } else {
