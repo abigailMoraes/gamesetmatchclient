@@ -38,25 +38,6 @@ function PlayerStats() {
         <BadgesGrid />
       </div>
       <Typography variant="body1" style={{ fontSize: '1.5rem', fontFamily: 'Abel', color: 'rgb(230, 230, 230)' }}>
-        Matches Played
-      </Typography>
-      <div style={{ display: 'inline-flex', width: '40%', padding: '20px' }}>
-        <CChart
-          title="Matches Played"
-          style={{ display: 'inline-flex', width: '100%' }}
-          type="doughnut"
-          data={{
-            labels: ['Won', 'Lost', 'Draw', 'Pending'],
-            datasets: [
-              {
-                backgroundColor: ['#e6e6e6', '#61DAFB', '#27293C', '#cb742e'],
-                data: [matchWins.length, matchLosses.length, matchDraws.length, matchPending.length],
-              },
-            ],
-          }}
-        />
-      </div>
-      <Typography variant="body1" style={{ fontSize: '1.5rem', fontFamily: 'Abel', color: 'rgb(230, 230, 230)' }}>
         Tournaments Played
       </Typography>
       <div style={{ display: 'inline-flex', width: '40%', padding: '20px' }}>
@@ -70,6 +51,25 @@ function PlayerStats() {
               {
                 backgroundColor: ['#e6e6e6', '#61DAFB', '#27293C'],
                 data: [Number(tournamentsWon.next), Number(tournamentsCompleted.next) - Number(tournamentsWon.next)],
+              },
+            ],
+          }}
+        />
+      </div>
+      <Typography variant="body1" style={{ fontSize: '1.5rem', fontFamily: 'Abel', color: 'rgb(230, 230, 230)' }}>
+        Matches Played
+      </Typography>
+      <div style={{ display: 'inline-flex', width: '40%', padding: '20px' }}>
+        <CChart
+          title="Matches Played"
+          style={{ display: 'inline-flex', width: '100%' }}
+          type="doughnut"
+          data={{
+            labels: ['Won', 'Lost', 'Draw', 'Pending'],
+            datasets: [
+              {
+                backgroundColor: ['#e6e6e6', '#61DAFB', '#27293C', '#cb742e'],
+                data: [matchWins.length, matchLosses.length, matchDraws.length, matchPending.length],
               },
             ],
           }}

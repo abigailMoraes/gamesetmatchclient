@@ -70,10 +70,13 @@ interface MuiVirtualizedTableProps extends WithStyles<typeof styles> {
   rowHeight?: number;
 }
 
-class MuiVirtualizedTable extends React.PureComponent<MuiVirtualizedTableProps, {
-  headerHeight: 48,
-  rowHeight: 48,
-}> {
+class MuiVirtualizedTable extends React.PureComponent<MuiVirtualizedTableProps> {
+  // eslint-disable-next-line react/static-property-placement
+  static defaultProps = {
+    headerHeight: 48,
+    rowHeight: 48,
+  };
+
   getRowClassName = ({ index }: Row) => {
     const { classes, onRowClick } = this.props;
 
@@ -202,6 +205,7 @@ export default function ReactVirtualizedTable({ tournament }:CompletedTournament
       participants: ['Emily Carano', 'Kyle Ray'],
       winner: 'Emily Carano',
     }]);
+
   React.useEffect(() => {
     async function fetchInformation() {
       const answer = await BracketService.getRoundRobinTournamentMatchInfo(tournament.tournamentID);

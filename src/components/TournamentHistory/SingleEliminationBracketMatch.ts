@@ -106,7 +106,7 @@ const getRoundRobinTournamentMatchInfo = async (tournamentID: number | undefined
         tournamentRoundText: item.tournamentRoundText,
         startTime: item.startTime,
         endTime: item.endTime,
-        participants: [players[0].name, players[1].name],
+        participants: `${players[0].name}, ${players[1].name}`,
         winner: winner.name,
       };
     }),

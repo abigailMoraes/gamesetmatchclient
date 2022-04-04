@@ -382,14 +382,11 @@ export default function DoubleElimination({ tournament }: CompletedTournamentCar
       setUpperBracketMatches(answerUpper);
       setLowerBracketMatches(answerLower);
       setDoubleBracketMatches({ upper: answerUpper, lower: answerLower });
-      console.log(doubleBracketMatches);
     }
 
     fetchInformation();
-    console.log(doubleBracketMatches);
   }, []);
 
-  console.log(doubleBracketMatches);
   return (
     <DoubleEliminationBracket
       matches={doubleBracketMatches}

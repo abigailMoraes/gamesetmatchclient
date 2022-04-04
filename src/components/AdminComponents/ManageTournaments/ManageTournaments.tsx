@@ -172,13 +172,7 @@ function ManageTournaments() {
               />
             </TabPanel>
             <TabPanel value={value} index={TabNames.Over}>
-              <div style={{ height: '100vh', width: '100%' }}>
-                <div style={{ display: 'flex', height: '100%' }}>
-                  <div style={{ flexGrow: 1 }}>
-                    <CompletedTournamentsGrid />
-                  </div>
-                </div>
-              </div>
+              <CompletedTournamentsGrid />
             </TabPanel>
           </Grid>
         </Grid>
