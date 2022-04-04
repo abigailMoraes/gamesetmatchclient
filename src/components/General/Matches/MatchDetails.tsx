@@ -58,6 +58,8 @@ function MatchDetails({
   };
 
   const handleUpdate = () => {
+    setUpdateMatchError(false);
+
     const updateMatchResults = (res:number) => MatchService.updateMatchResults(match.playerOneID, match.matchID, res)
       .then(() => {
         const updatedMatch = match;
@@ -100,6 +102,13 @@ function MatchDetails({
 
     if (playerTwoAttendance !== AttendanceType.indexOf(match.participants[1]?.attendance)) {
       requestsToMake.push(updateAttendance(match.playerTwoID, match.matchID, AttendanceType[playerTwoAttendance], match.participants[1].name));
+    }
+
+    if (requestsToMake.length === 0) {
+      setStatusModalText('No changes to save.');
+      setUpdateMatchError(true);
+      setOpenStatusModal(true);
+      return;
     }
 
     Promise.all(requestsToMake)
@@ -156,7 +165,7 @@ function MatchDetails({
               ${new Date(match.startTime).toLocaleTimeString(
                   'en-US',
                   {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
                   },
                 )} - ${new Date(match.endTime).toLocaleTimeString(
                   'en-US',

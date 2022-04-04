@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import React from 'react';
 import { MatchForAdmin } from '../../../../interfaces/MatchInterface';
 import { initRound, Round } from '../../../../interfaces/RoundInterface';
-import { Tournament } from '../../../../interfaces/TournamentInterface';
+import { CurrentTournamentStatus, Tournament } from '../../../../interfaces/TournamentInterface';
 import ConfirmActionModal from '../../../General/ConfirmActionModal';
 import LoadingOverlay from '../../../General/LoadingOverlay';
 import StatusModal from '../../../General/StatusModal';
@@ -70,10 +70,11 @@ function GridCardOngoing({
     setLoading(true);
     setError(false);
     ManageTournamentService.endCurrentRound(tournament.tournamentID)
-      .then(() => {
+      .then((response) => response.json())
+      .then((data:CurrentTournamentStatus) => {
         setLoading(false);
-        setStatusModalText(`Round has been ended. You can now go to ${tournament.status === TournamentStatus.Ongoing
-          ? "'Manage Schedule'" : "'Finished'"}.`);
+        setStatusModalText(`Round has been ended. You can now go to ${data.currentTournamentStatus === TournamentStatus.TournamentOver
+          ? "'Finished'" : "'Manage Schedule'"}.`);
         setStatusModal(true);
       }).catch((err:Error) => {
         setLoading(false);

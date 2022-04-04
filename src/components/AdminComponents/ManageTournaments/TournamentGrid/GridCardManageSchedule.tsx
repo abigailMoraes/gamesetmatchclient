@@ -49,7 +49,7 @@ function GridCardManageSchedule({
   const [schedulePublished, setSchedulePublished] = React.useState(tournament.status === TournamentStatus.ReadyToSchedule);
   const [scheduleCreated, setScheduleCreated] = React.useState(tournament.status === TournamentStatus.ReadyToPublishNextRound
     || tournament.status === TournamentStatus.ReadyToPublishSchedule);
-  const [enableDelete] = React.useState(canDelete(tournament));
+  const [enableDelete, setEnableDelete] = React.useState(canDelete(tournament));
   const [manualScheduleCreation, setManualScheduleCreation] = React.useState(false);
 
   const tooltip1 = "A schedule has already been created. Press 'Publish Schedule' to view.";
@@ -85,6 +85,7 @@ function GridCardManageSchedule({
       setScheduleCreated(true);
       setSchedulePublished(false);
       setManualScheduleCreation(true);
+      setEnableDelete(false);
     }).catch((err:Error) => {
       setStatusModalText(err.message);
       setLoading(false);
