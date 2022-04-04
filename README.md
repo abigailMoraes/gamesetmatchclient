@@ -1,7 +1,6 @@
 # Setup
 
-Create a `.env` file in the root directory of this project 
-Fil out the following enviroment variables:
+Create a `.env` file in the root directory of this project. Fill out the following enviroment variables:
 ```
 REACT_APP_API_DOMAIN=<your local api hostname>
 
