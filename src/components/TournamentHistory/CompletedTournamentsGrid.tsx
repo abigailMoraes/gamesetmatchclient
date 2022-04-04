@@ -7,7 +7,6 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
 import { useState } from 'react';
 import { useTheme } from '@mui/styles';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useAtomValue } from 'jotai';
 import CompletedTournamentCard from './CompletedTournamentCard';
 import TournamentService from '../BrowseTournaments/TournamentsService';
@@ -118,14 +117,14 @@ export default function CompletedTournamentsGrid() {
 
   return (
     <ThemeProvider theme={theme}>
-        <DataGrid
-          components={{ Toolbar: CustomToolbar }}
-          isRowSelectable={() => false}
-          autoHeight
-          rows={rowData}
-          columns={columns}
-          rowHeight={200}
-        />
+      <DataGrid
+        components={{ Toolbar: CustomToolbar }}
+        isRowSelectable={() => false}
+        autoHeight
+        rows={rowData}
+        columns={columns}
+        rowHeight={200}
+      />
     </ThemeProvider>
   );
 }

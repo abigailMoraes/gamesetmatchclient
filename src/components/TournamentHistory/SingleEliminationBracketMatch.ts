@@ -44,46 +44,42 @@ export interface RoundNumber{
 export interface ParticipantName{
   name: String;
 }
-const getParticipantInformation = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/
-${matchID}/userMatchInfo`)
+const getParticipantInformation = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${matchID}/userMatchInfo`)
+  // eslint-disable-next-line no-return-assign
   .then((response) => response.json()).then((data) => data.map((item:Participant) => ({
     id: item.id,
     isWinner: item.resultText === '1',
     name: item.name,
     status: item.status,
-    resultText: item.resultText === '1'? "Win": item.resultText === '2'? "Loss": item.resultText='0'? "Tie":"TBD",
+    // eslint-disable-next-line no-nested-ternary
+    resultText: item.resultText === '1' ? 'Win' : item.resultText === '2' ? 'Loss' : item.resultText === '0' ? 'Tie' : 'TBD',
   })));
 
-const getNextMatchIDSingleElimination = (roundID:number, matchID:number) => fetch(`
-${process.env.REACT_APP_API_DOMAIN}/api/tournament/round/${roundID}/match/${matchID}`)
+const getNextMatchIDSingleElimination = (roundID:number, matchID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/round/${roundID}/match/${matchID}`)
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getNextMatchIDMultipleMatchesPerRound = (roundID:number, matchID:number) => fetch(`
-${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner/multiple`)
+const getNextMatchIDMultipleMatchesPerRound = (roundID:number, matchID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner/multiple`)
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getNextWinnerMatchID = (roundID: number, matchID: number) => fetch(`
-${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner`)
+const getNextWinnerMatchID = (roundID: number, matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner`)
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getNextLoserMatchID = (roundID: number, matchID: number) => fetch(`
-${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/loser`)
+const getNextLoserMatchID = (roundID: number, matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/loser`)
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getRoundNumber = (roundID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/
-round/${roundID}/roundNumber`)
+const getRoundNumber = (roundID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/roundNumber`)
   .then((response) => response.json())
   .then((data:RoundNumber) => ({
     roundNumber: data.roundNumber,
@@ -96,8 +92,7 @@ const getWinner = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN
   }));
 
 const getRoundRobinTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/
-bracketMatchInfo`);
+  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`);
   const json = await response.json();
   return Promise.all(
     json.map(async (item: RoundRobinMatch) => {
@@ -119,8 +114,7 @@ bracketMatchInfo`);
 };
 
 const getUpperBracketTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/
-bracketMatchInfo`);
+  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`);
   const json = await response.json();
   return Promise.all(
     json.map(async (item: SingleBracketMatch) => {
@@ -144,8 +138,7 @@ bracketMatchInfo`);
 };
 
 const getLowerBracketTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/
-bracketMatchInfo`);
+  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`);
   const json = await response.json();
   return Promise.all(
     json.map(async (item: SingleBracketMatch) => {

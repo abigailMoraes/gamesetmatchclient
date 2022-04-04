@@ -26,10 +26,12 @@ const create = () => {
     matchDuration: yup
       .number()
       .min(1, 'Must be greater than 0')
+      .max(720, 'Maximum match duration of 720 minutes allowed')
       .required('Match Duration is required'),
     minParticipants: yup
       .number()
       .min(2, 'Must be greater than 1')
+      .max(300, 'Maximum of 300 participants allowed')
       .required('Minimum number of players is required'),
     startDate: yup
       .date()
@@ -87,10 +89,12 @@ const editInProgress = yup.object({
   matchDuration: yup
     .number()
     .min(1, 'Must be greater than 0')
+    .max(720, 'Maximum match duration of 720 minutes allowed')
     .required('Match Duration is required'),
   minParticipants: yup
     .number()
     .min(2, 'Must be greater than 1')
+    .max(300, 'Maximum of 300 participants allowed')
     .required('Minimum number of players is required'),
 });
 
