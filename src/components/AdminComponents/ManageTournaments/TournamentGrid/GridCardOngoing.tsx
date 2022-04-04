@@ -1,11 +1,12 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import { MatchForAdmin } from '../../../../interfaces/MatchInterface';
-import { Tournament } from '../../../../interfaces/TournamentInterface';
+import { initRound, Round } from '../../../../interfaces/RoundInterface';
+import { CurrentTournamentStatus, Tournament } from '../../../../interfaces/TournamentInterface';
 import ConfirmActionModal from '../../../General/ConfirmActionModal';
 import LoadingOverlay from '../../../General/LoadingOverlay';
 import StatusModal from '../../../General/StatusModal';
-import { TournamentRow } from '../ManageTournamentsEnums';
+import { TournamentRow, TournamentStatus } from '../ManageTournamentsEnums';
 import ManageTournamentService from '../ManageTournamentService';
 import ReviewSchedule from '../ReviewScheduleForm/ReviewSchedule';
 import GridCardBase from './GridCardBase';
@@ -35,6 +36,7 @@ function GridCardOngoing({
   const [matches, setMatches] = React.useState<MatchForAdmin[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [round, setRound] = React.useState<Round>(initRound);
 
   const [error, setError] = React.useState(false);
   const [statusModal, setStatusModal] = React.useState(false);
@@ -47,8 +49,11 @@ function GridCardOngoing({
   const openSchedule = () => {
     setLoading(true);
     setError(false);
-    ManageTournamentService.getLatestRoundID(tournament.tournamentID)
-      .then((roundID:number) => ManageTournamentService.getMatchesNeedingScheduling(roundID))
+    ManageTournamentService.getLatestRound(tournament.tournamentID)
+      .then((latestRound:Round) => {
+        setRound(latestRound);
+        return ManageTournamentService.getMatchesNeedingScheduling(latestRound.roundID);
+      })
       .then((data:any) => {
         setLoading(false);
         setMatches(data);
@@ -65,9 +70,11 @@ function GridCardOngoing({
     setLoading(true);
     setError(false);
     ManageTournamentService.endCurrentRound(tournament.tournamentID)
-      .then(() => {
+      .then((response) => response.json())
+      .then((data:CurrentTournamentStatus) => {
         setLoading(false);
-        setStatusModalText("Round has been ended. You can now go to 'Manage Schedule' to schedule the next round");
+        setStatusModalText(`Round has been ended. You can now go to ${data.currentTournamentStatus === TournamentStatus.TournamentOver
+          ? "'Finished'" : "'Manage Schedule'"}.`);
         setStatusModal(true);
       }).catch((err:Error) => {
         setLoading(false);
@@ -113,7 +120,7 @@ function GridCardOngoing({
         setMatches={setMatches}
         tournament={tournament}
         enableEdit={false}
-        roundID={0}
+        round={round}
       />
       <StatusModal
         open={statusModal}

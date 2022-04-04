@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
@@ -19,6 +19,8 @@ interface IMatchHistoryDialogProps{
   participants:User[],
   matches:Match[],
   setMatches:(argo0:Match[]) => void,
+  open:boolean,
+  setOpen:(arg0:boolean) => void,
 }
 
 function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
@@ -26,9 +28,8 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const userID:number = useAtomValue(userIDAtom);
   const {
-    match, participants, matches, setMatches,
+    match, participants, matches, setMatches, open, setOpen,
   } = props;
-  const [open, setOpen] = useState(true);
 
   const handleClickClose = () => {
     setOpen(false);
@@ -45,6 +46,7 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
         ];
         setMatches(updated);
       }
+      setOpen(false);
     });
   };
 
@@ -59,6 +61,7 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
         ];
         setMatches(updated);
       }
+      setOpen(false);
     });
   };
 

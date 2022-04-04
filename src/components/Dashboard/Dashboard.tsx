@@ -13,19 +13,33 @@ import { Match } from '../../interfaces/MatchInterface';
 import LoadingOverlay from '../General/LoadingOverlay';
 import OverviewTabs from './OverviewGrid/OverviewTabs';
 import MatchService from './Calendar/MatchService';
+import StatusModal from '../General/StatusModal';
 
 function Dashboard() {
   const [matches, setMatches] = React.useState<Match[]>([]);
   const [loading, setLoading] = React.useState(false);
+  const [statusModalOpen, setStatusModalOpen] = React.useState(false);
+  const [statusModalText, setStatusModalText] = React.useState('');
   const userID = useAtomValue(userIDAtom);
   const theme = useTheme() as Theme;
+
+  const handleDialogClose = () => {
+    setStatusModalOpen(false);
+  };
 
   React.useEffect(() => {
     setLoading(true);
     MatchService.getAll(userID)
       .then((data) => {
+        if (data.some((d:any) => d === null)) {
+          throw new Error("Received invalid match: 'null'");
+        }
         setLoading(false);
         setMatches(data);
+      }).catch((err:Error) => {
+        setLoading(false);
+        setStatusModalText(err.message);
+        setStatusModalOpen(true);
       });
   }, []);
 
@@ -50,6 +64,14 @@ function Dashboard() {
           <OverviewTabs matches={matches} setMatches={setMatches} />
         </Grid>
       </Grid>
+      <StatusModal
+        open={statusModalOpen}
+        handleDialogClose={handleDialogClose}
+        dialogText={statusModalText}
+        dialogTitle="Error"
+        isError
+      />
+
     </Paper>
   );
 }

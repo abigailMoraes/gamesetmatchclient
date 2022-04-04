@@ -181,7 +181,6 @@ function MatchHistoryCard(props: any) {
             >
               <MenuItem value={1}>Win</MenuItem>
               <MenuItem value={2}>Loss</MenuItem>
-              <MenuItem value={0}>Draw</MenuItem>
               <MenuItem value={-1}>Pending</MenuItem>
             </Select>
           </FormControl>

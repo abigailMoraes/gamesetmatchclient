@@ -6,9 +6,12 @@ import { Calendar, Views } from 'react-big-calendar';
 import { useAtomValue } from 'jotai';
 import moment, { Moment } from 'moment';
 
+import Snackbar from '@mui/material/Snackbar';
+import Alert, { AlertColor } from '@mui/material/Alert';
 import { ReactBigCalendarEvent } from '../../../../interfaces/EventInterface';
 import { localizerAtom } from '../../../../atoms/localizerAtom';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import './AvailabilitySelector.css';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar as any);
 
@@ -126,6 +129,9 @@ export const transformToAvailabilityString = (availabilites:ReactBigCalendarEven
 
 function AvailabilitySelector({ availabilities, setAvailabilities }:AvailabilitySelectorProps) {
   const localizer = useAtomValue(localizerAtom);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarErrorMessage, setsnackbarErrorMessage] = React.useState('');
+  const [snackbarType, setsnackbarType] = React.useState<AlertColor>('error');
 
   const handleSelectSlot = React.useCallback(
     ({ start, end }) => {
@@ -140,7 +146,6 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
       };
       const updatedAvailabilites = [...availabilities, availability];
       setAvailabilities(updatedAvailabilites);
-      // update availabilities
     },
     [availabilities],
   );
@@ -160,6 +165,20 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
     ({
       event, start, end,
     }) => {
+      setSnackbarOpen(false);
+      if (moment(start).day() !== moment(end).day()) {
+        setsnackbarErrorMessage('Availability cannot span multiple days.');
+        setsnackbarType('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
+      if (moment(start).hour() < 9 || moment(end).hour() > 21) {
+        setsnackbarErrorMessage('Availability must between 9 a.m. to 9 p.m.');
+        setsnackbarType('error');
+        setSnackbarOpen(true);
+        return;
+      }
       const existingAvail = availabilities.find((ev:ReactBigCalendarEvent) => ev.id === event.id);
       const filteredAvailabilities = availabilities.filter((ev:ReactBigCalendarEvent) => ev.id !== event.id);
       if (existingAvail) {
@@ -183,6 +202,10 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
     }),
     [],
   );
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Paper style={{ padding: '10px' }}>
@@ -212,6 +235,16 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
           max={new Date(0, 0, 0, 21, 0, 0)}
         />
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={closeSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={closeSnackbar} severity={snackbarType} sx={{ width: '100%' }}>
+          {snackbarErrorMessage}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }

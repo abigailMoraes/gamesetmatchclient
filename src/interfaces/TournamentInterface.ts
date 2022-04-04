@@ -17,4 +17,8 @@ export interface Tournament {
   currentRound:number,
 }
 
+export interface CurrentTournamentStatus {
+  currentTournamentStatus:number
+}
+
 export const SkillLevels = ['Beginner', 'Intermediate', 'Advanced'];

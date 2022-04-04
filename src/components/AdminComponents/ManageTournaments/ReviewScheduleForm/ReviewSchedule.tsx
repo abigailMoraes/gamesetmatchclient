@@ -22,6 +22,7 @@ import StatusModal from '../../../General/StatusModal';
 import { TournamentRow } from '../ManageTournamentsEnums';
 import LoadingOverlay from '../../../General/LoadingOverlay';
 import { transformEventToAvailabilityString } from '../../../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
+import { Round } from '../../../../interfaces/RoundInterface';
 
 interface ReviewScheduleProps {
   open:boolean,
@@ -33,11 +34,11 @@ interface ReviewScheduleProps {
   setPublished?:(arg0:boolean) => void,
   tournamentRows?:TournamentRow[],
   setTournamentRows?:(arg0:TournamentRow[]) => void,
-  roundID:number
+  round:Round
 }
 
 function ReviewSchedule({
-  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows, roundID,
+  open, setOpen, matches, setMatches, tournament, enableEdit = false, setPublished, tournamentRows = [], setTournamentRows, round,
 }:ReviewScheduleProps) {
   const [openStatusModal, setStatusModal] = React.useState(false);
   const [lastMatch, setLastMatch] = React.useState(new Date());
@@ -84,7 +85,7 @@ function ReviewSchedule({
   const publishMatches = () => {
     setLoading(true);
     setGetConfirmation(false);
-    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, roundID, matches)
+    ManageTournamentService.saveUpdatedSchedule(tournament.tournamentID, round.roundID, matches)
       .then(() => ManageTournamentService.publishSchedule(matches))
       .then(() => {
         setLoading(false);
@@ -207,7 +208,7 @@ function ReviewSchedule({
         </DialogTitle>
         <DialogContent dividers>
           <Typography component="span" variant="body1">
-            {`Round #: ${tournament.currentRound}`}
+            {`Round #: ${round.roundNumber}`}
           </Typography>
           <Typography variant="body1">
             {`Round duration: ${DateHelpers.formatDateForDisplay(firstMatch)} - ${DateHelpers.formatDateForDisplay(lastMatch)}`}

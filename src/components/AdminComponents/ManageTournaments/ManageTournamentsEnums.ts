@@ -25,7 +25,7 @@ export enum TournamentStatus {
   TournamentOver,
 }
 
-export const FormatType = ['Round-Robin', 'Single-knockout', 'Double-elimination'];
+export const FormatType = ['Round-Robin', 'Single-knockout', 'Double-knockout', 'Single-bracket'];
 
 export const MatchingType = ['Randomly', 'By Skill', 'Seed'];
 

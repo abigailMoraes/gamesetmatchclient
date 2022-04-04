@@ -17,6 +17,7 @@ import {
 import ManageTournamentService from './ManageTournamentService';
 import { Tournament } from '../../../interfaces/TournamentInterface';
 import StyledButton from '../../General/StyledButton';
+import LoadingOverlay from '../../General/LoadingOverlay';
 
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props
@@ -75,21 +76,41 @@ function ManageTournaments() {
   const userData = useAtomValue(loginDataAtom);
   const [formTournament, setFormTournament] = React.useState<Tournament | undefined>(undefined);
   const [gridUpdate, setGridUpdate] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setLoading(true);
+    ManageTournamentService.getUsersCreatedTournaments(userData.id, statusesBasedOnTab(newValue))
+      .then((data) => {
+        setTournamentRows(data);
+        setValue(newValue);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        setValue(newValue);
+        console.log('error');
+      });
   };
   const openTournamentForm = () => {
     setFormTournament(undefined);
     setOpen(!open);
   };
 
+  // for the first load
   React.useMemo(() => {
-    ManageTournamentService.getUsersCreatedTournaments(userData.id, statusesBasedOnTab(value))
-      .then((data) => setTournamentRows(data))
-      .catch(() => console.log('error'));
+    setLoading(true);
+    ManageTournamentService.getUsersCreatedTournaments(userData.id, statusesBasedOnTab(0))
+      .then((data) => {
+        setTournamentRows(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        console.log('error');
+      });
     setGridUpdate(false);
-  }, [value, gridUpdate]);
+  }, [gridUpdate]);
 
   return (
     <Container maxWidth="xl">
@@ -118,6 +139,7 @@ function ManageTournaments() {
                 <Tab label="Finished" {...a11yProps(3)} />
               </Tabs>
             </Box>
+            <LoadingOverlay isOpen={loading} />
             <TabPanel value={value} index={TabNames.OpenForRegistration}>
               <TournamentDisplayGrid
                 formTournament={formTournament}

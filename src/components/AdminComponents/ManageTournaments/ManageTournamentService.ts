@@ -117,12 +117,12 @@ const deleteTournament = (tournamentID:number) => fetch(`${baseTournamentsURL}/$
   method: 'DELETE',
 }).then((resp) => handleErrors(resp));
 
-const getLatestRoundID = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/rounds`)
+const getLatestRound = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/rounds`)
   .then((resp) => handleErrors(resp))
   .then((response:any) => response.json())
   .then((data:any) => {
     const latestRound = data.reduce((acc:any, curr:any) => ((acc.roundNumber - curr.roundNumber > 0) ? acc : curr), {});
-    return latestRound.roundID;
+    return latestRound;
   });
 
 interface CheckNewMatchTime {
@@ -159,7 +159,7 @@ const ManageTournamentService = {
   getMatchesNeedingScheduling,
   closeRegistration,
   deleteTournament,
-  getLatestRoundID,
+  getLatestRound,
   checkNewMatchTime,
   DeleteTournamentErrorCodes,
   endCurrentRound,
