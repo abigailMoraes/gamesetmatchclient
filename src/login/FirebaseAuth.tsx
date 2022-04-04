@@ -57,15 +57,15 @@ function FirebaseAuth() {
             },
           }))
           .then((res) => {
-            if (res.status !== 200) {
+            if (res.status === 200) {
               res.json().then((data) => {
                 setLoginData(data);
-                navigate('/registration');
+                navigate('/dashboard');
               });
             } else {
               res.json().then((data) => {
                 setLoginData(data);
-                navigate('/dashboard');
+                navigate('/registration');
               });
             }
           });
