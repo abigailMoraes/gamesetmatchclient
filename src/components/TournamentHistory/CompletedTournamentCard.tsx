@@ -13,6 +13,7 @@ import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
 import SingleEliminationTournamentBracket from './SingleEliminationTournamentBracket';
 import DoubleElimination from './DoubleEliminationTournamentBracket';
 import ReactVirtualizedTable from './RoundRobinTable';
+import { TournamentFormats } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 
 interface IDetail {
   label:String,
@@ -42,12 +43,6 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
-  // eslint-disable-next-line eqeqeq
-  const isSingleElimination = tournament.format == 2;
-  // eslint-disable-next-line eqeqeq
-  const isDoubleElimination = tournament.format == 3;
-  // eslint-disable-next-line eqeqeq
-  const isRoundRobin = tournament.format == 1;
 
   const openDetails = () => {
     setOpen(true);
@@ -68,9 +63,6 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
         </Typography>
         <Typography variant="body2">
           {`Start Date: ${new Date(tournament.startDate).toLocaleDateString('en-US')}`}
-        </Typography>
-        <Typography variant="body2">
-          {`Number Of Matches: ${tournament.numberOfMatches}`}
         </Typography>
       </CardContent>
       <CardActions>
@@ -96,9 +88,9 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
           <Typography variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
             {tournament.name}
           </Typography>
-          {isSingleElimination && <SingleEliminationTournamentBracket tournament={tournament} />}
-          {isDoubleElimination && <DoubleElimination tournament={tournament} />}
-          {isRoundRobin && <ReactVirtualizedTable tournament={tournament} />}
+          {tournament.format === TournamentFormats.SingleKnockout && <SingleEliminationTournamentBracket tournament={tournament} />}
+          {tournament.format === TournamentFormats.DoubleKnockout && <DoubleElimination tournament={tournament} />}
+          {tournament.format === TournamentFormats.RoundRobin && <ReactVirtualizedTable tournament={tournament} />}
         </DialogContent>
         <DialogActions style={{ backgroundColor: theme.palette.primary.main }}>
           <Button color="secondary" onClick={handleClose}>Cancel</Button>

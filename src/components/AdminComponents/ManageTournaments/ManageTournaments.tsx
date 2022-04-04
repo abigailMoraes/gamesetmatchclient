@@ -18,6 +18,7 @@ import ManageTournamentService from './ManageTournamentService';
 import { Tournament } from '../../../interfaces/TournamentInterface';
 import StyledButton from '../../General/StyledButton';
 import LoadingOverlay from '../../General/LoadingOverlay';
+import CompletedTournamentsGrid from '../../TournamentHistory/CompletedTournamentsGrid';
 
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props
@@ -89,7 +90,6 @@ function ManageTournaments() {
       .catch(() => {
         setLoading(false);
         setValue(newValue);
-        console.log('error');
       });
   };
   const openTournamentForm = () => {
@@ -107,7 +107,6 @@ function ManageTournaments() {
       })
       .catch(() => {
         setLoading(false);
-        console.log('error');
       });
     setGridUpdate(false);
   }, [gridUpdate]);
@@ -171,14 +170,7 @@ function ManageTournaments() {
               />
             </TabPanel>
             <TabPanel value={value} index={TabNames.Over}>
-              <TournamentDisplayGrid
-                formTournament={formTournament}
-                setFormTournament={setFormTournament}
-                gridTitle=""
-                tournamentRows={tournamentRows}
-                setTournamentRows={setTournamentRows}
-                gridCardComponentName={GridCardTypes.Over}
-              />
+              <CompletedTournamentsGrid />
             </TabPanel>
           </Grid>
         </Grid>

@@ -1,7 +1,6 @@
 import { Tournament } from '../../interfaces/TournamentInterface';
 import { TournamentStatus } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 import { Availability } from '../General/Calendar/AvailabilityCalendar/AvailabilitySelector';
-import { NumberQuery } from '../TournamentHistory/SingleEliminationBracketMatch';
 import handleErrors from '../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
@@ -43,8 +42,8 @@ const getAll = (userID:number) => fetch(`${baseURL}?registeredUser=${userID}&sta
     name: item.name,
     description: item.description,
     location: item.location,
-    startDate: item.startDate,
-    closeRegistrationDate: item.closeRegistrationDate,
+    startDate: new Date(item.startDate),
+    closeRegistrationDate: new Date(item.closeRegistrationDate),
     allTournamentDetails: item,
   })));
 
@@ -88,15 +87,12 @@ const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAI
     name: item.name,
     description: item.description,
     location: item.location,
-    startDate: item.startDate,
+    startDate: new Date(item.startDate),
     numberOfMatches: item.numberOfMatches,
     prize: item.prize,
     allTournamentDetails: item,
   })));
 
-const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
-/api/tournaments/user/${userID}/number/completed`).then((response) => 
-response.json()).then((data:NumberQuery) => data);
 const getAvailabilityForATournament = (tournamentID: Number, userID:number) => fetch(`${baseURL}/${tournamentID}/availabilities/${userID}`)
   .then((resp) => handleErrors(resp))
   .then((response) => response.json());
@@ -113,11 +109,12 @@ const updateAvailabilities = (
   body: JSON.stringify(availabilities),
 }).then((resp) => handleErrors(resp));
 
-const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
-/user/${userID}/number/completed`).then((response) => response.json()).then((data:NumberQuery) => data);
+// eslint-disable-next-line max-len
+const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/number/completed`)
+  .then((response) => response.json());
 
 const getNumberOfWonTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
-/user/${userID}/number/won`).then((response) => response.json()).then((data:NumberQuery) => data);
+/user/${userID}/number/won`).then((response) => response.json());
 
 const TournamentService = {
   getAll,
