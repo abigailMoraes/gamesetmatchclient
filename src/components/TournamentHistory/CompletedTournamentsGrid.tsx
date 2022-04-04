@@ -120,7 +120,6 @@ export default function CompletedTournamentsGrid() {
       <DataGrid
         components={{ Toolbar: CustomToolbar }}
         isRowSelectable={() => false}
-        autoHeight
         rows={rowData}
         columns={columns}
         rowHeight={200}

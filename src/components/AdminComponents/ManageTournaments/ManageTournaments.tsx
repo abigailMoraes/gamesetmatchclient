@@ -18,6 +18,7 @@ import ManageTournamentService from './ManageTournamentService';
 import { Tournament } from '../../../interfaces/TournamentInterface';
 import StyledButton from '../../General/StyledButton';
 import LoadingOverlay from '../../General/LoadingOverlay';
+import CompletedTournamentsGrid from '../../TournamentHistory/CompletedTournamentsGrid';
 
 interface TabPanelProps {
   // eslint-disable-next-line react/require-default-props
@@ -171,14 +172,13 @@ function ManageTournaments() {
               />
             </TabPanel>
             <TabPanel value={value} index={TabNames.Over}>
-              <TournamentDisplayGrid
-                formTournament={formTournament}
-                setFormTournament={setFormTournament}
-                gridTitle=""
-                tournamentRows={tournamentRows}
-                setTournamentRows={setTournamentRows}
-                gridCardComponentName={GridCardTypes.Over}
-              />
+              <div style={{ height: '100vh', width: '100%' }}>
+                <div style={{ display: 'flex', height: '100%' }}>
+                  <div style={{ flexGrow: 1 }}>
+                    <CompletedTournamentsGrid />
+                  </div>
+                </div>
+              </div>
             </TabPanel>
           </Grid>
         </Grid>
