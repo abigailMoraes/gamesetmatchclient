@@ -90,7 +90,6 @@ function ManageTournaments() {
       .catch(() => {
         setLoading(false);
         setValue(newValue);
-        console.log('error');
       });
   };
   const openTournamentForm = () => {
@@ -108,7 +107,6 @@ function ManageTournaments() {
       })
       .catch(() => {
         setLoading(false);
-        console.log('error');
       });
     setGridUpdate(false);
   }, [gridUpdate]);
