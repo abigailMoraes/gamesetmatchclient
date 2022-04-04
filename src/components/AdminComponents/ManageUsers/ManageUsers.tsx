@@ -13,6 +13,8 @@ const validateEmail = (email : string) => String(email).toLowerCase().match(
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 );
 
+const baseURL = window.location.href.replace(window.location.pathname, '/');
+
 function ManageUsers() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [message, setDisplayMessage] = useState('');
@@ -40,7 +42,7 @@ function ManageUsers() {
     e.preventDefault();
     ManageUsersService.generateInvitationCode().then((data) => {
       setIsGenerated(true);
-      (document.getElementById('invitationCode') as HTMLInputElement).value = data.invitationCode;
+      (document.getElementById('invitationCode') as HTMLInputElement).value = baseURL.concat(data.invitationCode);
     });
   };
 
@@ -95,7 +97,7 @@ function ManageUsers() {
                 ? (
                   <div>
                     <div style={{ margin: '2%' }} />
-                    <TextField disabled size="small" id="invitationCode" variant="outlined" />
+                    <TextField disabled size="medium" id="invitationCode" variant="outlined" />
                     <span style={{ marginLeft: '1%' }} />
                     <Button variant="contained" size="large" onClick={clickToCopy}> Copy </Button>
                   </div>

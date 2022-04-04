@@ -118,6 +118,7 @@ function Registration() {
             <CustomField
               id="code"
               name="code"
+              autoComplete="off"
               placeholder="  GAMESETMATCH"
             />
           </ColumnContainer>
