@@ -8,7 +8,7 @@ function TournamentHistoryCard() {
       <div style={{ width: '80%' }}>
         <PlayerStats />
       </div>
-      <div style={{ width: '30%' }}>
+      <div style={{ width: '40%' }}>
         <CompletedTournamentsGrid />
       </div>
     </div>

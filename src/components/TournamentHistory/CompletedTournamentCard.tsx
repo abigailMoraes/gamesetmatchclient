@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -14,6 +14,7 @@ import SingleEliminationTournamentBracket from './SingleEliminationTournamentBra
 import DoubleElimination from './DoubleEliminationTournamentBracket';
 import ReactVirtualizedTable from './RoundRobinTable';
 import { TournamentFormats } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
+import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
 
 interface IDetail {
   label:String,
@@ -43,7 +44,10 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
-
+  const [bracketMatches, setBracketMatches] = useState<SingleBracketMatch[]>([]);
+  const [upperBracketMatches, setUpperBracketMatches] = useState<SingleBracketMatch[]>([]);
+  const [lowerBracketMatches, setLowerBracketMatches] = useState<SingleBracketMatch[]>([]);
+  const [doubleBracketMatches, setDoubleBracketMatches] = useState< { upper: SingleBracketMatch[], lower: SingleBracketMatch[] } >( { upper: [], lower: [] } );
   const openDetails = () => {
     setOpen(true);
   };
@@ -52,6 +56,22 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
     setOpen(false);
   };
 
+  useEffect(() => {
+        async function fetchInformation() {
+            if (tournament.format == 2) {
+                const answerUpper = await BracketService.getUpperBracketTournamentMatchInfo(tournament.tournamentID);
+                const answerLower = await BracketService.getLowerBracketTournamentMatchInfo(tournament.tournamentID);
+                setUpperBracketMatches(answerUpper);
+                setLowerBracketMatches(answerLower);
+                setDoubleBracketMatches({ upper: answerUpper, lower: answerLower });
+            } else {
+                const answer = await BracketService.getBracketTournamentMatchInfo(tournament.tournamentID);
+                setBracketMatches(answer);
+            }
+        }
+        fetchInformation();
+    }, []);
+  
   return (
     <Card style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
       <CardContent style={{ textAlign: 'left' }}>
@@ -63,6 +83,9 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
         </Typography>
         <Typography variant="body2">
           {`Start Date: ${new Date(tournament.startDate).toLocaleDateString('en-US')}`}
+        </Typography>
+        <Typography variant="body2">
+          {`Number Of Matches: ${tournament.numberOfMatches}`}
         </Typography>
       </CardContent>
       <CardActions>
@@ -88,8 +111,10 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
           <Typography variant="h4" style={{ padding: '10px 0px 10px 0px' }}>
             {tournament.name}
           </Typography>
-          {tournament.format === TournamentFormats.SingleKnockout && <SingleEliminationTournamentBracket tournament={tournament} />}
-          {tournament.format === TournamentFormats.DoubleKnockout && <DoubleElimination tournament={tournament} />}
+          {tournament.format === TournamentFormats.SingleKnockout && <SingleEliminationTournamentBracket 
+              tournament={tournament} bracketMatchList={bracketMatches} />}
+          {tournament.format === TournamentFormats.DoubleKnockout && <DoubleElimination tournament={tournament} 
+            doubleBracketMatchList={doubleBracketMatches} />}
           {tournament.format === TournamentFormats.RoundRobin && <ReactVirtualizedTable tournament={tournament} />}
         </DialogContent>
         <DialogActions style={{ backgroundColor: theme.palette.primary.main }}>

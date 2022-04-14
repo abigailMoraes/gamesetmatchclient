@@ -79,8 +79,7 @@ export interface Registrant {
 const getRegistrants = (tournamentID:Number) => fetch(`${baseURL}/${tournamentID}/registrants`)
   .then((response) => response.json());
 
-const getCompleted = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
-/api/tournaments/user/${userID}/completed`)
+const getCompleted = (userID:number) => fetch(`${baseURL}/user/${userID}/completed`)
   .then((response) => response.json())
   .then((data) => data.map((item: CompletedTournament) => ({
     id: item.tournamentID,
@@ -110,11 +109,10 @@ const updateAvailabilities = (
 }).then((resp) => handleErrors(resp));
 
 // eslint-disable-next-line max-len
-const getNumberOfCompletedTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/number/completed`)
+const getNumberOfCompletedTournaments = (userID:number) => fetch(`${baseURL}/user/${userID}/number/completed`)
   .then((response) => response.json());
 
-const getNumberOfWonTournaments = (userID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments
-/user/${userID}/number/won`).then((response) => response.json());
+const getNumberOfWonTournaments = (userID:number) => fetch(`${baseURL}/user/${userID}/number/won`).then((response) => response.json());
 
 const TournamentService = {
   getAll,

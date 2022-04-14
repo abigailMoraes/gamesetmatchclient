@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { userIDAtom } from '../../atoms/userAtom';
 import BadgesGrid from './BadgesGrid';
 import MatchService from '../Dashboard/Calendar/MatchService';
-import { Match } from '../Dashboard/Calendar/MatchInterface';
+import {getMatchResult, Match } from '../../interfaces/MatchInterface';
 import TournamentService from '../BrowseTournaments/TournamentsService';
 import { NumberQuery } from './SingleEliminationBracketMatch';
 
@@ -17,13 +17,12 @@ function PlayerStats() {
   const [tournamentsCompleted, setTournamentsCompleted] = useState<NumberQuery>({ next: 0 });
   const [tournamentsWon, setTournamentsWon] = useState<NumberQuery>({ next: 0 });
   const userID = useAtomValue(userIDAtom);
-
   useEffect(() => {
-    MatchService.getPastMatches(userID).then((data) => {
-      setMatchWins(data.filter((match:any) => match.results === 1));
-      setMatchDraws(data.filter((match:any) => match.results === 0));
-      setMatchLosses(data.filter((match:any) => match.results === 2));
-      setMatchPending(data.filter((match:any) => match.results === -1));
+    MatchService.getPastMatches(userID).then((data:Match[]) => {
+      setMatchWins(data.filter((match:Match) => match.results === 1));
+      setMatchDraws(data.filter((match:Match) => match.results === 0));
+      setMatchLosses(data.filter((match:Match) => match.results === 2));
+      setMatchPending(data.filter((match:Match) => match.results === -1));
     });
     TournamentService.getNumberOfWonTournaments(userID).then((data:NumberQuery) => { setTournamentsWon(data); });
     TournamentService.getNumberOfCompletedTournaments(userID).then((data:NumberQuery) => { setTournamentsCompleted(data); });
