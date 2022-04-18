@@ -17,7 +17,6 @@ function PlayerStats() {
   const [tournamentsCompleted, setTournamentsCompleted] = useState<NumberQuery>({ next: 0 });
   const [tournamentsWon, setTournamentsWon] = useState<NumberQuery>({ next: 0 });
   const userID = useAtomValue(userIDAtom);
-
   useEffect(() => {
     MatchService.getPastMatches(userID).then((data:Match[]) => {
       setMatchWins(data.filter((match:Match) => match.results === MatchResultTypes.Win));

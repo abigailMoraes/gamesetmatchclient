@@ -15,6 +15,9 @@ import MatchService from '../Dashboard/Calendar/MatchService';
 import { MatchResultTypes } from '../../interfaces/MatchInterface';
 
 function BadgesGrid() {
+  const [matchesPlayed, setMatchesPlayed] = useState(0);
+  const [tournamentsPlayed, setTournamentsPlayed] = useState(0);
+  const [matchesWon, setMatchesWon] = useState(0);
   const [matchesPlayedAchievement, setMatchesPlayedAchievement] = useState<String>('');
   const [matchesPlayedNeededAchievement, setMatchesPlayedNeededAchievement] = useState(0);
   const [matchesWonAchievement, setMatchesWonAchievement] = useState<String>('');
@@ -26,56 +29,59 @@ function BadgesGrid() {
   useEffect(() => {
     MatchService.getPastMatches(userID).then((data) => {
       let matchesPlayedAchieve = '';
-      if (data.length >= 10) {
+      if (data.length <= 10) {
         matchesPlayedAchieve = 'Novice Gamer';
         setMatchesPlayedNeededAchievement(10);
-      } else if (data.length >= 20) {
-        matchesPlayedAchieve = 'Seasoned Gamer';
+      } else if (data.length <= 20) {
+        matchesPlayedAchieve = 'Intermediate Gamer';
         setMatchesPlayedNeededAchievement(20);
-      } else if (data.length >= 50) {
-        matchesPlayedAchieve = 'Veteran Gamer';
+      } else if (data.length <= 50) {
+        matchesPlayedAchieve = 'Expert Gamer';
         setMatchesPlayedNeededAchievement(50);
       } else {
-        matchesPlayedAchieve = 'Matches Played';
+        matchesPlayedAchieve = 'Veteran Gamer';
         setMatchesPlayedNeededAchievement(data.length);
       }
       setMatchesPlayedAchievement(matchesPlayedAchieve);
       const wins = data.filter((match:any) => match.results === MatchResultTypes.Win);
       let matchesWonAchieve = '';
       setMatchesWonNeededAchievement(wins.length);
-      if (wins.length >= 5) {
+      if (wins.length <= 5) {
         matchesWonAchieve = 'Bronze Award';
         setMatchesWonNeededAchievement(5);
-      } else if (wins.length >= 20) {
+      } else if (wins.length <= 20) {
         matchesWonAchieve = 'Silver Award';
         setMatchesWonNeededAchievement(20);
-      } else if (wins.length >= 50) {
+      } else if (wins.length <= 50) {
         matchesWonAchieve = 'Gold Award';
         setMatchesWonNeededAchievement(50);
       } else {
         matchesWonAchieve = 'Matches Won';
         setMatchesWonNeededAchievement(wins.length);
       }
+      setMatchesPlayed(data.length);
+      setMatchesWon(wins.length);
       setMatchesWonAchievement(matchesWonAchieve);
     });
   }, []);
   useEffect(() => {
     TournamentService.getCompleted(userID).then((data) => {
-      let tournamentsPlayed = '';
-      if (data.length >= 10) {
-        tournamentsPlayed = 'Early Days';
+      let tournamentsPlayedAchieve = '';
+      if (data.length <= 10) {
+        tournamentsPlayedAchieve = 'Early Days';
         setTournamentsNeededAchievement(10);
-      } else if (data.length >= 20) {
-        tournamentsPlayed = 'Frequent Player';
+      } else if (data.length <= 20) {
+        tournamentsPlayedAchieve = 'Frequent Player';
         setTournamentsNeededAchievement(20);
-      } else if (data.length >= 30) {
-        tournamentsPlayed = 'Tournament Aficionado';
+      } else if (data.length <= 30) {
+        tournamentsPlayedAchieve = 'Tournament Aficionado';
         setTournamentsNeededAchievement(30);
       } else {
-        tournamentsPlayed = 'Tournaments Played';
+        tournamentsPlayedAchieve = 'Tournament Fiend';
         setTournamentsNeededAchievement(data.length);
       }
-      setTournamentsPlayedAchievement(tournamentsPlayed);
+      setTournamentsPlayed(data.length);
+      setTournamentsPlayedAchievement(tournamentsPlayedAchieve);
     });
   }, []);
 
@@ -101,7 +107,7 @@ function BadgesGrid() {
             )}
             subheader={(
               <Typography variant="body1" style={{ textAlign: 'left' }}>
-                {`${tournamentsNeededAchievement} / ${tournamentsNeededAchievement}    Tournaments Played`}
+                {`${tournamentsPlayed} / ${tournamentsNeededAchievement}    Tournaments Played`}
               </Typography>
             )}
           />
@@ -118,7 +124,7 @@ function BadgesGrid() {
             title={(<Typography variant="h6" style={{ textAlign: 'left' }}>{` ${matchesWonAchievement} `}</Typography>)}
             subheader={(
               <Typography variant="body1" style={{ textAlign: 'left' }}>
-                {`${matchesWonNeededAchievement} / ${matchesWonNeededAchievement}    Matches Won`}
+                {`${matchesWon} / ${matchesWonNeededAchievement}    Matches Won`}
               </Typography>
                   )}
           />
@@ -140,7 +146,7 @@ function BadgesGrid() {
             subheader={
               (
                 <Typography variant="body1" style={{ textAlign: 'left' }}>
-                  {`${matchesPlayedNeededAchievement} / ${matchesPlayedNeededAchievement}    Matches Played`}
+                  {`${matchesPlayed} / ${matchesPlayedNeededAchievement}    Matches Played`}
                 </Typography>
               )
           }
