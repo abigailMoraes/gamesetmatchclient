@@ -9,10 +9,10 @@ interface CompletedTournamentCardPropsDoubleElimination {
   tournament:CompletedTournament,
   doubleBracketMatchList:{
     upper: SingleBracketMatch[],
-    lower: SingleBracketMatch[]}
-  }
+    lower: SingleBracketMatch[] }
+}
 
-export default function DoubleElimination({ tournament, doubleBracketMatchList}: CompletedTournamentCardPropsDoubleElimination) {
+export default function DoubleElimination({ tournament, doubleBracketMatchList }: CompletedTournamentCardPropsDoubleElimination) {
   return (
     <DoubleEliminationBracket
       matches={doubleBracketMatchList}

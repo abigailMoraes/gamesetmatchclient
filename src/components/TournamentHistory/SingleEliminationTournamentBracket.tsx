@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Match, SingleEliminationBracket, SVGViewer,
 } from '@g-loot/react-tournament-brackets';
-import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
+import { SingleBracketMatch } from './SingleEliminationBracketMatch';
 import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
 
 interface CompletedTournamentCardProps {
@@ -10,7 +10,7 @@ interface CompletedTournamentCardProps {
   bracketMatchList:SingleBracketMatch[],
 }
 
-function SingleEliminationTournamentBracket({ tournament, bracketMatchList }: CompletedTournamentCardProps) {
+function SingleEliminationTournamentBracket({ bracketMatchList }: CompletedTournamentCardProps) {
   return (
     <SingleEliminationBracket
       matches={bracketMatchList}

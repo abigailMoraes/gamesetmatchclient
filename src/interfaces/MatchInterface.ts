@@ -91,5 +91,4 @@ export function setMatchDetails(item: Match):MatchHistoryRow {
     description: item.description,
     allMatchDetails: item,
   };
-  
 }

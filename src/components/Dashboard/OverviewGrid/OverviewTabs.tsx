@@ -61,7 +61,6 @@ function OverviewTabs({ matches, setMatches }:OverviewTabsProps) {
   const [value, setValue] = React.useState(0);
   const [tournamentRows, setTournamentRows] = React.useState<TournamentRow[]>([]);
   const userID = useAtomValue(userIDAtom);
-  
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

@@ -33,7 +33,6 @@ function RegisteredTournamentGridCard({ tournament, tournamentRows, setTournamen
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const userID = useAtomValue(userIDAtom);
-  
 
   const [deregisterDisabled, setDeregisterDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
