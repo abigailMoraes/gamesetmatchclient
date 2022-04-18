@@ -48,13 +48,16 @@ function FirebaseAuth() {
       signInSuccessWithAuthResult(authResult : any, redirectUrl: any) {
       // Note: the JWT Token returned from authResult has a different aud, use the one returned by getIdToken()
         firebase.auth().currentUser?.getIdToken()
-          .then((idToken) => fetch(`${baseURL}/verifyIdToken`, {
-            method: 'POST',
-            body: idToken,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }))
+          .then((idToken) => {
+            console.log(idToken);
+            return fetch(`${baseURL}/verifyIdToken`, {
+              method: 'POST',
+              body: idToken,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+          })
           .then((res) => {
             if (res.status === 400) {
               res.json().then((data) => {
