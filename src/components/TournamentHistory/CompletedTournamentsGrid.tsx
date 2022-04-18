@@ -75,7 +75,6 @@ export default function CompletedTournamentsGrid() {
   const [rowData, setRows] = useState<TournamentRow[]>([]);
   const mainTheme = useTheme() as Theme;
   const userID = useAtomValue(userIDAtom);
-
   const theme = createTheme(mainTheme, {
     components: {
       // Use `MuiDataGrid` on both DataGrid and DataGridPro

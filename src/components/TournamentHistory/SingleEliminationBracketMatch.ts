@@ -44,26 +44,27 @@ export interface RoundNumber{
 export interface ParticipantName{
   name: String;
 }
+const getSeriesWinnerID = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${matchID}/series/winner`)
+  .then((response) => response.json()).then((data:NumberQuery) => ({ next: data.next }));
 const getParticipantInformation = (matchID: number, winnerID: NumberQuery) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/
 ${matchID}/userMatchInfo`)
   .then((response) => response.json()).then((data) => data.map((item:Participant) => ({
     id: item.id,
-    isWinner: item.id == winnerID.next,
+    isWinner: item.id === String(winnerID.next),
     name: item.name,
     status: item.status,
-    resultText:item.id == winnerID.next ? 'Win' : 'Loss',
+    resultText: item.id === String(winnerID.next) ? 'Win' : 'Loss',
   })));
 
-
 const getNextWinnerMatchID = (roundID: number, matchID: number) => fetch(`
-${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner`)
+${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner/matchID`)
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
 const getNextLoserMatchID = (roundID: number, matchID: number) => fetch(`
-${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/loser`)
+${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/loser/matchID`)
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
@@ -91,7 +92,7 @@ bracketMatchInfo`);
       const roundNumber = await getRoundNumber(Number(item.tournamentRoundText));
       const winner = await getSeriesWinnerID(item.id);
       const players = await getParticipantInformation(item.id, winner);
-      const winnerName = players[0].id === winner.next? players[0].name : players[1].name;
+      const winnerName = players[0].id === winner.next ? players[0].name : players[1].name;
       return {
         id: item.id,
         round: roundNumber.roundNumber,
@@ -153,9 +154,9 @@ bracketMatchInfo`);
         participants: players,
       };
     }),
-  ).then((matches:SingleBracketMatch[]) => matches.filter((match) => 
-      ((match.nextMatchId != null && match.nextLooserMatchId == null))))
-      .then((filtered:SingleBracketMatch[]) => filtered);
+  ).then((matches:SingleBracketMatch[]) => matches.filter((match) => ((match.nextMatchId != null
+    && match.nextLooserMatchId == null))))
+    .then((filtered:SingleBracketMatch[]) => filtered);
 };
 
 const getBracketTournamentMatchInfo = async (tournamentID: number | undefined) => {
@@ -181,12 +182,6 @@ const getBracketTournamentMatchInfo = async (tournamentID: number | undefined) =
   );
 };
 
-const getSeriesWinnerID = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${matchID}/series/winner`)
-    .then((response) => response.json())
-    .then((data:NumberQuery) => ({
-        next: data.next,
-    }));
-
 const BracketService = {
   getBracketTournamentMatchInfo,
   getUpperBracketTournamentMatchInfo,
@@ -196,5 +191,3 @@ const BracketService = {
 };
 
 export default BracketService;
-
-
