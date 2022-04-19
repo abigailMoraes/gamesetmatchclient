@@ -73,10 +73,10 @@ export enum MatchStatus {
 }
 
 export enum MatchResultTypes {
-  Tie,
-  Win,
-  Loss,
-  Pending,
+  Tie = 0,
+  Win = 1,
+  Loss = 2,
+  Pending = -1,
 }
 
 export const AttendanceType = ['TBD', 'No', 'Yes'];
