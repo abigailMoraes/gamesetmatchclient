@@ -1,4 +1,5 @@
 import { User } from '../../../interfaces/UserInterface';
+import SecurityService from '../../../security/SecurityService';
 
 function setUserDetails(item: User) {
   return {
@@ -10,7 +11,12 @@ function setUserDetails(item: User) {
   };
 }
 
-const getMatchParticipants = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}/participants`)
+const getMatchParticipants = (id: number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}/participants`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => (response.json())).then((data) => data.map((item:User) => setUserDetails(item)));
 
 const UserService = {

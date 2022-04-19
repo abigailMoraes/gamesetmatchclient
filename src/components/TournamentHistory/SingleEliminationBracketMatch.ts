@@ -1,4 +1,7 @@
 /* eslint-disable max-len */
+
+import SecurityService from '../../security/SecurityService';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export interface Participant{
   id: string | number;
@@ -44,7 +47,12 @@ export interface RoundNumber{
 export interface ParticipantName{
   name: String;
 }
-const getParticipantInformation = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${matchID}/userMatchInfo`)
+const getParticipantInformation = (matchID: number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${matchID}/userMatchInfo`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   // eslint-disable-next-line no-return-assign
   .then((response) => response.json()).then((data) => data.map((item:Participant) => ({
     id: item.id,
@@ -55,44 +63,78 @@ const getParticipantInformation = (matchID: number) => fetch(`${process.env.REAC
     resultText: item.resultText === '1' ? 'Win' : item.resultText === '2' ? 'Loss' : item.resultText === '0' ? 'Tie' : 'TBD',
   })));
 
-const getNextMatchIDSingleElimination = (roundID:number, matchID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/round/${roundID}/match/${matchID}`)
+const getNextMatchIDSingleElimination = (roundID:number, matchID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/round/${roundID}/match/${matchID}`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getNextMatchIDMultipleMatchesPerRound = (roundID:number, matchID:number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner/multiple`)
+const getNextMatchIDMultipleMatchesPerRound = (roundID:number, matchID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner/multiple`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getNextWinnerMatchID = (roundID: number, matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner`)
+const getNextWinnerMatchID = (roundID: number, matchID: number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/winner`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getNextLoserMatchID = (roundID: number, matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/loser`)
+const getNextLoserMatchID = (roundID: number, matchID: number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/match/${matchID}/next/loser`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data:NumberQuery) => ({
     next: data.next,
   }));
 
-const getRoundNumber = (roundID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/roundNumber`)
+const getRoundNumber = (roundID: number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/round/${roundID}/roundNumber`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data:RoundNumber) => ({
     roundNumber: data.roundNumber,
   }));
 
-const getWinner = (matchID: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${matchID}/winner`)
+const getWinner = (matchID: number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${matchID}/winner`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data:WinnerName) => ({
     name: data.winner,
   }));
 
 const getRoundRobinTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`);
+  const response = await SecurityService.authorizationToken().then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }));
   const json = await response.json();
   return Promise.all(
     json.map(async (item: RoundRobinMatch) => {
@@ -114,7 +156,11 @@ const getRoundRobinTournamentMatchInfo = async (tournamentID: number | undefined
 };
 
 const getUpperBracketTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`);
+  const response = await SecurityService.authorizationToken().then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }));
   const json = await response.json();
   return Promise.all(
     json.map(async (item: SingleBracketMatch) => {
@@ -138,7 +184,11 @@ const getUpperBracketTournamentMatchInfo = async (tournamentID: number | undefin
 };
 
 const getLowerBracketTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`);
+  const response = await SecurityService.authorizationToken().then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }));
   const json = await response.json();
   return Promise.all(
     json.map(async (item: SingleBracketMatch) => {
@@ -160,9 +210,11 @@ const getLowerBracketTournamentMatchInfo = async (tournamentID: number | undefin
 };
 
 const getBracketTournamentMatchInfo = async (tournamentID: number | undefined) => {
-  const response = await fetch(
-    `${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`,
-  );
+  const response = await SecurityService.authorizationToken().then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournament/${tournamentID}/bracketMatchInfo`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }));
   const json = await response.json();
   return Promise.all(
     json.map(async (item: SingleBracketMatch) => {

@@ -1,34 +1,40 @@
 import { Match, MatchForAdmin } from '../../../interfaces/MatchInterface';
 import { Tournament } from '../../../interfaces/TournamentInterface';
+import SecurityService from '../../../security/SecurityService';
 import handleErrors from '../../General/ServiceHelper';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
 
 const baseTournamentsURL = `${process.env.REACT_APP_API_DOMAIN}/api/tournaments`;
 
-const saveUpdatedSchedule = (tournamentID:number, roundID: number, matches: Match[]) => fetch(`${baseTournamentsURL}/${tournamentID}/round/${roundID}
+const saveUpdatedSchedule = (tournamentID:number, roundID: number, matches: Match[]) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}/round/${roundID}
 `, {
-  method: 'PUT',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(matches),
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify(matches),
+  })).then((resp) => handleErrors(resp));
 
-}).then((resp) => handleErrors(resp));
+const publishSchedule = (matches:Match[]) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseURL}/publish`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify(matches),
+  })).then((resp) => handleErrors(resp));
 
-const publishSchedule = (matches:Match[]) => fetch(`${baseURL}/publish
-`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(matches),
-
-}).then((resp) => handleErrors(resp));
-
-const createSchedule = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/runCreateSchedule`, {
-  method: 'POST',
-}).then((resp) => handleErrors(resp));
+const createSchedule = (tournamentID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}/runCreateSchedule`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  })).then((resp) => handleErrors(resp));
 
 interface CreateTournamentRequestBody {
   name: string,
@@ -44,17 +50,23 @@ interface CreateTournamentRequestBody {
   adminHostsTournament:number
 }
 
-const createTournament = (body: CreateTournamentRequestBody) => fetch(`${baseTournamentsURL}`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(body),
-}).then((resp) => handleErrors(resp));
+const createTournament = (body: CreateTournamentRequestBody) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify(body),
+  })).then((resp) => handleErrors(resp));
 
-const closeRegistration = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/closeRegistration`, {
-  method: 'PUT',
-}).then((resp) => handleErrors(resp));
+const closeRegistration = (tournamentID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}/closeRegistration`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  })).then((resp) => handleErrors(resp));
 
 interface UpdateTournamentRequestBody {
   name: string,
@@ -69,21 +81,25 @@ interface UpdateTournamentRequestBody {
   series: number,
 }
 
-const updateTournament = (tournamentID:Number, body: UpdateTournamentRequestBody) => fetch(`${baseTournamentsURL}/${tournamentID}`, {
-  method: 'PUT',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(body),
-}).then((resp) => handleErrors(resp));
+const updateTournament = (tournamentID:Number, body: UpdateTournamentRequestBody) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify(body),
+  })).then((resp) => handleErrors(resp));
 
-const getUsersCreatedTournaments = (userID:number, status:number[]) => fetch(`${baseTournamentsURL}?createdBy=${userID}`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ statuses: status }),
-})
+const getUsersCreatedTournaments = (userID:number, status:number[]) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}?createdBy=${userID}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify({ statuses: status }),
+  }))
   .then((response) => response.json())
   .then((data) => data.map((item: Tournament) => ({
     id: item.tournamentID,
@@ -95,7 +111,12 @@ const getUsersCreatedTournaments = (userID:number, status:number[]) => fetch(`${
     allTournamentDetails: item,
   })));
 
-const getMatchesNeedingScheduling = (roundID:number) => fetch(`${baseURL}/rounds/${roundID}/matches`)
+const getMatchesNeedingScheduling = (roundID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseURL}/rounds/${roundID}/matches`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((response) => response.json())
   .then((data) => data.map((item: MatchForAdmin) => ({
     matchID: item.matchID,
@@ -113,11 +134,20 @@ const DeleteTournamentErrorCodes = {
   SEND_EMAIL_ERROR_MAIL: 'Tournament was deleted, but there was an error notifying registrants. Please check your mail configurations.',
   SEND_EMAIL_ERROR_MESSAGING: 'Tournament was deleted, but there was an error notifying registrants.',
 };
-const deleteTournament = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}`, {
-  method: 'DELETE',
-}).then((resp) => handleErrors(resp));
+const deleteTournament = (tournamentID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  })).then((resp) => handleErrors(resp));
 
-const getLatestRound = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/rounds`)
+const getLatestRound = (tournamentID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}/rounds`, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  }))
   .then((resp) => handleErrors(resp))
   .then((response:any) => response.json())
   .then((data:any) => {
@@ -134,20 +164,24 @@ const checkNewMatchTime = (
   tournamentID:number,
   matchID:number,
   newMatchInfo:CheckNewMatchTime,
-) => fetch(`${baseTournamentsURL}/${tournamentID}/match/${matchID}/checkNewTime`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(newMatchInfo),
-}).then((resp) => handleErrors(resp));
+) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}/match/${matchID}/checkNewTime`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify(newMatchInfo),
+  })).then((resp) => handleErrors(resp));
 
-const endCurrentRound = (tournamentID:number) => fetch(`${baseTournamentsURL}/${tournamentID}/endCurrentRound`, {
-  method: 'PUT',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-}).then((resp) => handleErrors(resp));
+const endCurrentRound = (tournamentID:number) => SecurityService.authorizationToken()
+  .then((idToken) => fetch(`${baseTournamentsURL}/${tournamentID}/endCurrentRound`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+  })).then((resp) => handleErrors(resp));
 
 const ManageTournamentService = {
   createTournament,
