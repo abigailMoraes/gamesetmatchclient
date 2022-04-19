@@ -4,7 +4,7 @@ import React from 'react';
 import { useAtom } from 'jotai';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import 'firebase/compat/auth';
 import Divider from '@mui/material/Divider';
 import {
@@ -32,7 +32,7 @@ function FirebaseAuth() {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useAtom(loginDataAtomPersistence);
   const matches = useMediaQuery(theme.breakpoints.up('md'));
-
+  const { invitationcode } = useParams();
   // Configure FirebaseUI.
   const uiConfig = {
   // Popup signin flow rather than redirect flow.
@@ -47,8 +47,9 @@ function FirebaseAuth() {
     callbacks: {
       signInSuccessWithAuthResult(authResult : any, redirectUrl: any) {
       // Note: the JWT Token returned from authResult has a different aud, use the one returned by getIdToken()
+        const postURL = `${baseURL}/verifyIdToken`.concat(invitationcode ? `/${invitationcode}` : '');
         firebase.auth().currentUser?.getIdToken()
-          .then((idToken) => fetch(`${baseURL}/verifyIdToken`, {
+          .then((idToken) => fetch(postURL, {
             method: 'POST',
             body: idToken,
             headers: {
@@ -56,15 +57,15 @@ function FirebaseAuth() {
             },
           }))
           .then((res) => {
-            if (res.status === 400) {
+            if (res.status === 200) {
               res.json().then((data) => {
                 setLoginData(data);
-                navigate('/registration');
+                navigate('/dashboard');
               });
             } else {
               res.json().then((data) => {
                 setLoginData(data);
-                navigate('/dashboard');
+                navigate('/registration');
               });
             }
           });
