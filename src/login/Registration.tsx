@@ -9,6 +9,7 @@ import { Alert, Box, Typography } from '@mui/material';
 import { useAtom, useAtomValue } from 'jotai';
 import { loginDataAtom, loginDataAtomPersistence } from '../atoms/userAtom';
 import LogoLoginPage from '../components/Logo/LogoLoginPage';
+import SecurityService from '../security/SecurityService';
 
 const baseURL = `${process.env.REACT_APP_API_DOMAIN}/api`;
 
@@ -82,35 +83,39 @@ function Registration() {
         onSubmit={(
           values: Values,
         ) => {
-          fetch(`${baseURL}/validateInviteCode/${values.code}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData),
-          }).then((response) => {
-            response.json().then((data) => {
-              message = data.message;
-              if (response.status === 200) {
-                setLoginData({ ...loginData, id: data.id });
-                setTimeout(() => navigate('/dashboard'), 2000);
-                setDisplayMessage(
-                  <Alert onClose={() => { navigate('/dashboard'); }} sx={{ maxWidth: '30%', alignSelf: 'center' }}>
-                    {message}
+          SecurityService.authorizationToken()
+            .then((idToken) => fetch(`${baseURL}/validateInviteCode/${values.code}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${idToken}`,
+              },
+              body: JSON.stringify(userData),
+            })).then((response) => {
+              response.json().then((data) => {
+                message = data.message;
+                if (response.status === 200) {
+                  setLoginData({ ...loginData, id: data.id });
+                  setTimeout(() => navigate('/dashboard'), 2000);
+                  setDisplayMessage(
+                    <Alert onClose={() => { navigate('/dashboard'); }} sx={{ maxWidth: '30%', alignSelf: 'center' }}>
+                      {message}
                   &nbsp; Close this message if you are not redirected to dashboard.
-                  </Alert>,
-                );
-              } else {
-                if (response.status !== 400) {
-                  message = 'Field is empty';
+                    </Alert>,
+                  );
+                } else {
+                  if (response.status !== 400) {
+                    message = 'Field is empty';
+                  }
+                  setDisplayMessage(
+                    <Alert severity="error" sx={{ maxWidth: '30%', alignSelf: 'center' }}>
+                      {message}
+                    </Alert>,
+                  );
                 }
-                setDisplayMessage(
-                  <Alert severity="error" sx={{ maxWidth: '30%', alignSelf: 'center' }}>
-                    {message}
-                  </Alert>,
-                );
-              }
-              setDisplay(true);
+                setDisplay(true);
+              });
             });
-          });
         }}
       >
         <CustomForm className="">
