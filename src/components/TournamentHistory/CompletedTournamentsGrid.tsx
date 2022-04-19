@@ -5,23 +5,19 @@ import {
 // When using TypeScript 4.x and above
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, Theme } from '@mui/material/styles';
-import { useState } from 'react';
 import { useTheme } from '@mui/styles';
-import { useAtomValue } from 'jotai';
 import CompletedTournamentCard from './CompletedTournamentCard';
-import TournamentService from '../BrowseTournaments/TournamentsService';
-import { userIDAtom } from '../../atoms/userAtom';
-import { Tournament } from '../../interfaces/TournamentInterface';
+import { TournamentRow } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 
-export interface TournamentRow {
-  id: Number,
-  name: String,
-  description: String,
-  location: String,
-  startDate: Date,
-  numberOfMatches: number,
-  allTournamentDetails: Tournament
-}
+// export interface TournamentRow {
+//   id: Number,
+//   name: String,
+//   description: String,
+//   location: String,
+//   startDate: Date,
+//   numberOfMatches: number,
+//   allTournamentDetails: Tournament
+// }
 
 const columns: GridColDef[] = [
   {
@@ -71,10 +67,11 @@ function CustomToolbar() {
   );
 }
 
-export default function CompletedTournamentsGrid() {
-  const [rowData, setRows] = useState<TournamentRow[]>([]);
+interface CompletedTournamentsGridProps {
+  tournamentRows:TournamentRow[]
+}
+export default function CompletedTournamentsGrid({ tournamentRows }:CompletedTournamentsGridProps) {
   const mainTheme = useTheme() as Theme;
-  const userID = useAtomValue(userIDAtom);
   const theme = createTheme(mainTheme, {
     components: {
       // Use `MuiDataGrid` on both DataGrid and DataGridPro
@@ -108,12 +105,6 @@ export default function CompletedTournamentsGrid() {
     },
   });
 
-  // TODO: fix this so it only gets called once, move to parent and only pass data?
-  React.useEffect(() => {
-    TournamentService.getCompleted(userID)
-      .then((data) => setRows(data));
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <div style={{ height: '100vh', width: '100%' }}>
@@ -122,7 +113,7 @@ export default function CompletedTournamentsGrid() {
             <DataGrid
               components={{ Toolbar: CustomToolbar }}
               isRowSelectable={() => false}
-              rows={rowData}
+              rows={tournamentRows}
               columns={columns}
               rowHeight={200}
             />
