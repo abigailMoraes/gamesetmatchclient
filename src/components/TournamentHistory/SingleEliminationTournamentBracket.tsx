@@ -1,34 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Match, SingleEliminationBracket, SVGViewer,
 } from '@g-loot/react-tournament-brackets';
-import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
-import exampleMatches from './exampleMatches';
+import { SingleBracketMatch } from './SingleEliminationBracketMatch';
 import { CompletedTournament } from '../BrowseTournaments/TournamentsService';
 
 interface CompletedTournamentCardProps {
   tournament:CompletedTournament,
+  bracketMatchList:SingleBracketMatch[],
 }
 
-function SingleEliminationTournamentBracket({ tournament }: CompletedTournamentCardProps) {
-  const [bracketMatches, setBracketMatches] = useState<SingleBracketMatch[]>(exampleMatches);
-
-  useEffect(() => {
-    async function fetchInformation() {
-      const answer = await BracketService.getBracketTournamentMatchInfo(tournament.tournamentID);
-      setBracketMatches(answer);
-    }
-    fetchInformation();
-  }, []);
-
+function SingleEliminationTournamentBracket({ bracketMatchList }: CompletedTournamentCardProps) {
   return (
     <SingleEliminationBracket
-      matches={bracketMatches}
+      matches={bracketMatchList}
       matchComponent={Match}
       // eslint-disable-next-line react/no-unstable-nested-components
       svgWrapper={({ children, ...props }) => (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <SVGViewer height={500} width={670} {...props}>
+        <SVGViewer height={500} width={650} {...props}>
           {children}
         </SVGViewer>
       )}
