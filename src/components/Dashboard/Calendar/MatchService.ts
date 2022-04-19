@@ -17,7 +17,16 @@ const getPastMatches = (id: number) => SecurityService.authorizationToken()
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
+  .then((response) => response.json()).then((data) => data.map((item: Match) => ({
+    results: item.results,
+    attendance: item.attendance,
+    matchID: item.matchID,
+    startTime: item.startTime,
+    endTime: item.endTime,
+    name: item.name,
+    location: item.location,
+    description: item.description,
+  })));
 
 const getMatchInformationByMatchID = (id: number) => SecurityService.authorizationToken()
   .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}`, {

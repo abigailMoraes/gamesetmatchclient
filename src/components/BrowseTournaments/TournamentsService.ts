@@ -100,7 +100,7 @@ const getRegistrants = (tournamentID:Number) => SecurityService.authorizationTok
   .then((response) => response.json());
 
 const getCompleted = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/completed`, {
+  .then((idToken) => fetch(`${baseURL}/user/${userID}/completed`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
@@ -142,7 +142,7 @@ const updateAvailabilities = (
 
 // eslint-disable-next-line max-len
 const getNumberOfCompletedTournaments = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/number/completed`, {
+  .then((idToken) => fetch(`${baseURL}/user/${userID}/number/completed`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
@@ -150,11 +150,12 @@ const getNumberOfCompletedTournaments = (userID:number) => SecurityService.autho
   .then((response) => response.json());
 
 const getNumberOfWonTournaments = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/tournaments/user/${userID}/number/won`, {
+  .then((idToken) => fetch(`${baseURL}/user/${userID}/number/won`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
-  })).then((response) => response.json());
+  }))
+  .then((response) => response.json());
 
 const TournamentService = {
   getAll,

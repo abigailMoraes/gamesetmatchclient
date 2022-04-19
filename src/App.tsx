@@ -95,6 +95,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<FirebaseAuth />} />
+            <Route path="/:invitationcode" element={<FirebaseAuth />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/" element={<RequireAuth><NavigationSideBar /></RequireAuth>}>
               <Route path={navigation.dashboard} element={<RequireAuth><Dashboard /></RequireAuth>} />

@@ -170,7 +170,7 @@ function ManageTournaments() {
               />
             </TabPanel>
             <TabPanel value={value} index={TabNames.Over}>
-              <CompletedTournamentsGrid />
+              <CompletedTournamentsGrid tournamentRows={tournamentRows} />
             </TabPanel>
           </Grid>
         </Grid>

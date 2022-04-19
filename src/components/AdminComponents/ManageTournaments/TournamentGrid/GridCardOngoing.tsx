@@ -74,7 +74,7 @@ function GridCardOngoing({
       .then((data:CurrentTournamentStatus) => {
         setLoading(false);
         setStatusModalText(`Round has been ended. You can now go to ${data.currentTournamentStatus === TournamentStatus.TournamentOver
-          ? "'Finished'" : "'Manage Schedule'"}.`);
+          ? "'Finished'" : "'Ready to Schedule'"}.`);
         setStatusModal(true);
       }).catch((err:Error) => {
         setLoading(false);
