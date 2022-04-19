@@ -5,9 +5,17 @@ const getAll = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/ma
   .then((resp) => handleErrors(resp))
   .then((response) => response.json());
 
-const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}
-/api/match/history/involves/user/${id}`)
-  .then((response) => response.json()).then((data) => data.map((item:Match) => setMatchDetails(item)));
+const getPastMatches = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/history/involves/user/${id}`)
+  .then((response) => response.json()).then((data) => data.map((item: Match) => ({
+    results: item.results,
+    attendance: item.attendance,
+    matchID: item.matchID,
+    startTime: item.startTime,
+    endTime: item.endTime,
+    name: item.name,
+    location: item.location,
+    description: item.description,
+  })));
 
 const getMatchInformationByMatchID = (id: number) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/match/${id}`)
   .then((response) => response.json()).then((data) => setMatchDetails(data));

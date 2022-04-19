@@ -27,6 +27,7 @@ function MatchHistoryDialogue(props: IMatchHistoryDialogProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const userID:number = useAtomValue(userIDAtom);
+
   const {
     match, participants, matches, setMatches, open, setOpen,
   } = props;

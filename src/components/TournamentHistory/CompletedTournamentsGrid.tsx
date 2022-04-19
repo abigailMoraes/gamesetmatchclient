@@ -72,7 +72,6 @@ interface CompletedTournamentsGridProps {
 }
 export default function CompletedTournamentsGrid({ tournamentRows }:CompletedTournamentsGridProps) {
   const mainTheme = useTheme() as Theme;
-
   const theme = createTheme(mainTheme, {
     components: {
       // Use `MuiDataGrid` on both DataGrid and DataGridPro
