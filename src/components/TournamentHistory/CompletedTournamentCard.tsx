@@ -15,6 +15,7 @@ import DoubleElimination from './DoubleEliminationTournamentBracket';
 import ReactVirtualizedTable from './RoundRobinTable';
 import { TournamentFormats } from '../AdminComponents/ManageTournaments/ManageTournamentsEnums';
 import BracketService, { SingleBracketMatch } from './SingleEliminationBracketMatch';
+import LoadingOverlay from '../General/LoadingOverlay';
 
 interface IDetail {
   label:String,
@@ -44,19 +45,13 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
   const theme = useTheme() as Theme;
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [bracketMatches, setBracketMatches] = useState<SingleBracketMatch[]>([]);
   const [doubleBracketMatches, setDoubleBracketMatches] = useState<
   { upper: SingleBracketMatch[], lower: SingleBracketMatch[] } >({ upper: [], lower: [] });
   const openDetails = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
     async function fetchInformation() {
+      setLoading(true);
       if (tournament.format === TournamentFormats.DoubleKnockout) {
         const answerUpper = await BracketService.getUpperBracketTournamentMatchInfo(tournament.tournamentID);
         const answerLower = await BracketService.getLowerBracketTournamentMatchInfo(tournament.tournamentID);
@@ -65,13 +60,20 @@ function CompletedTournamentCard({ tournament }:CompletedTournamentCardProps) {
         const answer = await BracketService.getBracketTournamentMatchInfo(tournament.tournamentID);
         setBracketMatches(answer);
       }
+      setLoading(false);
+      setOpen(true);
     }
     fetchInformation();
-  }, []);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Card style={{ width: '100%', backgroundColor: theme.palette.background.paper }}>
       <CardContent style={{ textAlign: 'left' }}>
+        <LoadingOverlay isOpen={loading} />
         <Typography variant="h5">
           {tournament.name}
         </Typography>
