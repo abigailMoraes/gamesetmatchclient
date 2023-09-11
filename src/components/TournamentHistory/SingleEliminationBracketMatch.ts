@@ -3,7 +3,7 @@
 import SecurityService from '../../security/SecurityService';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export interface Participant{
+export interface Participant {
   id: string | number;
   isWinner: boolean;
   name?: string;
@@ -33,18 +33,18 @@ export interface RoundRobinMatch {
   winner: string,
 }
 
-export interface NumberQuery{
+export interface NumberQuery {
   next: number | null | undefined;
 }
-export interface WinnerName{
+export interface WinnerName {
   winner: number | null | undefined;
 }
 
-export interface RoundNumber{
+export interface RoundNumber {
   roundNumber: number | null | undefined;
 }
 
-export interface ParticipantName{
+export interface ParticipantName {
   name: String;
 }
 // eslint-disable-next-line no-return-assign

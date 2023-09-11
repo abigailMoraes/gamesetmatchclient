@@ -14,7 +14,7 @@ import { getMatchResult, Match } from '../../../interfaces/MatchInterface';
 import { userIDAtom } from '../../../atoms/userAtom';
 import DialogDetail from '../../General/DialogDetail';
 
-interface IMatchHistoryDialogProps{
+interface IMatchHistoryDialogProps {
   match: Match,
   participants:User[],
   matches:Match[],

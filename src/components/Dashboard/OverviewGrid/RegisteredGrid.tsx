@@ -18,7 +18,7 @@ function CustomToolbar() {
   );
 }
 
-interface RegisteredGridProps{
+interface RegisteredGridProps {
   tournamentRows: TournamentRow[],
   setTournamentRows: (arg0:TournamentRow[]) => void,
 }

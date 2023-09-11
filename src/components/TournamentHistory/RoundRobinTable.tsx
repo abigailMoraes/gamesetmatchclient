@@ -64,7 +64,7 @@ interface Row {
 interface MuiVirtualizedTableProps extends WithStyles<typeof styles> {
   columns: readonly ColumnData[];
   headerHeight?: number;
-  onRowClick?: () => void;
+  onRowClick: () => void;
   rowCount: number;
   rowGetter: (row: Row) => RoundRobinMatch;
   rowHeight?: number;

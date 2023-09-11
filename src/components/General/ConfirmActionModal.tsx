@@ -10,7 +10,7 @@ import { useTheme } from '@emotion/react';
 import { Theme } from '@mui/material/styles';
 import styled from '@emotion/styled';
 
-interface ConfirmActionModalProps{
+interface ConfirmActionModalProps {
   open:boolean,
   setOpen:(arg0:boolean) => void,
   dialogTitle:string,

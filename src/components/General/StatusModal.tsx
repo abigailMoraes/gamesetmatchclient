@@ -13,7 +13,7 @@ import { Theme } from '@mui/material/styles';
 import styled from '@emotion/styled';
 import Typography from '@mui/material/Typography';
 
-interface StatusModalProps{
+interface StatusModalProps {
   open:boolean,
   handleDialogClose:() => void,
   dialogTitle:string,

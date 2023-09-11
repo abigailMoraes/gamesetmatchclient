@@ -21,7 +21,7 @@ import ManageTournamentService from '../ManageTournamentService';
 import { TournamentRow, TournamentStatus } from '../ManageTournamentsEnums';
 import ConfirmActionModal from '../../../General/ConfirmActionModal';
 
-interface GridCardManageTournamentBaseProps{
+interface GridCardManageTournamentBaseProps {
   tournament:Tournament,
   formTournament:Tournament | undefined,
   setFormTournament:(arg0:Tournament | undefined) => void,

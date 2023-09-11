@@ -30,7 +30,7 @@ export interface Participants {
   attendance:string,
 }
 
-export interface MatchForAdmin extends Match{
+export interface MatchForAdmin extends Match {
   playerOneID:number,
   playerTwoID:number,
   participants: Participants[],
