@@ -1,10 +1,8 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import TextField from '@mui/material/TextField';
-import DateAdapter from '@mui/lab/AdapterMoment';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import Grid from '@mui/material/Grid';
 
 interface StyledDatePickerProps {
@@ -20,13 +18,13 @@ function StyledDatePicker({
 }:StyledDatePickerProps) {
   return (
     <Grid item xs={6}>
-      <LocalizationProvider dateAdapter={DateAdapter}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           disabled={disabled}
           label={label}
           value={value}
           onChange={onChange}
-          renderInput={(params:any) => <TextField {...params} error={error} helperText={helperText} />}
+          slotProps={{ textField: { variant: 'outlined', helperText, error } }}
         />
       </LocalizationProvider>
     </Grid>
