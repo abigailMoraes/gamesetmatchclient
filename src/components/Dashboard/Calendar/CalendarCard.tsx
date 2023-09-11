@@ -32,7 +32,7 @@ function CalendarCard({ matches, setMatches }:CalendarCardProps) {
   const handleSelectedEvent = (event: Event) => {
     setSelectedEvent(event);
     setSelectedMatch(matches[events.indexOf(event)]);
-    UserService.getMatchParticipants(event.resource).then((data) => setParticipants(data));
+    UserService.getMatchParticipants(event.resource).then((data:any) => setParticipants(data));
     setModalState(true);
   };
 

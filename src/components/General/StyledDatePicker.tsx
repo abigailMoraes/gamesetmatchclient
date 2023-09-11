@@ -26,7 +26,7 @@ function StyledDatePicker({
           label={label}
           value={value}
           onChange={onChange}
-          renderInput={(params) => <TextField {...params} error={error} helperText={helperText} />}
+          renderInput={(params:any) => <TextField {...params} error={error} helperText={helperText} />}
         />
       </LocalizationProvider>
     </Grid>

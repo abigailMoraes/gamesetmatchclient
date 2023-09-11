@@ -134,7 +134,7 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
   const [snackbarType, setsnackbarType] = React.useState<AlertColor>('error');
 
   const handleSelectSlot = React.useCallback(
-    ({ start, end }) => {
+    ({ start, end }:{ start:any, end:any }) => {
       // round up the time slots
       const eventID = availabilities.length;
       const availability: ReactBigCalendarEvent = {
@@ -164,6 +164,10 @@ function AvailabilitySelector({ availabilities, setAvailabilities }:Availability
   const changeEventDetails = React.useCallback(
     ({
       event, start, end,
+    }:{
+      event: any;
+      start: any;
+      end: any;
     }) => {
       setSnackbarOpen(false);
       if (moment(start).day() !== moment(end).day()) {

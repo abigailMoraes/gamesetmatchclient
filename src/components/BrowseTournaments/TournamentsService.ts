@@ -25,13 +25,13 @@ export interface CompletedTournament {
 }
 
 const getRegisteredTournaments = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/user/${userID}/registeredTournaments`, {
+  .then((idToken:any) => fetch(`${process.env.REACT_APP_API_DOMAIN}/api/user/${userID}/registeredTournaments`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json())
-  .then((data) => data.map((item: Tournament) => ({
+  .then((response:any) => response.json())
+  .then((data:any) => data.map((item: Tournament) => ({
     id: item.tournamentID,
     name: item.name,
     description: item.description,
@@ -42,13 +42,13 @@ const getRegisteredTournaments = (userID:number) => SecurityService.authorizatio
   })));
 
 const getAll = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}?registeredUser=${userID}&status=${TournamentStatus.OpenForRegistration}`, {
+  .then((idToken:any) => fetch(`${baseURL}?registeredUser=${userID}&status=${TournamentStatus.OpenForRegistration}`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json())
-  .then((data) => data.map((item: Tournament) => ({
+  .then((response:any) => response.json())
+  .then((data:any) => data.map((item: Tournament) => ({
     id: item.tournamentID,
     name: item.name,
     description: item.description,
@@ -65,7 +65,7 @@ export interface RegisterForTournamentBody {
 }
 
 const registerForTournament = (tournamentID: Number, body: RegisterForTournamentBody) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/${tournamentID}/register`, {
+  .then((idToken:any) => fetch(`${baseURL}/${tournamentID}/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -73,16 +73,16 @@ const registerForTournament = (tournamentID: Number, body: RegisterForTournament
     },
     body: JSON.stringify(body),
   }))
-  .then((resp) => handleErrors(resp));
+  .then((resp:any) => handleErrors(resp));
 
 const deregisterForTournament = (tournamentID: Number, userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/${tournamentID}/deregister/${userID}`, {
+  .then((idToken:any) => fetch(`${baseURL}/${tournamentID}/deregister/${userID}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${idToken}`,
     },
-  })).then((resp) => handleErrors(resp));
+  })).then((resp:any) => handleErrors(resp));
 
 export interface Registrant {
   userID: Number,
@@ -92,21 +92,21 @@ export interface Registrant {
 }
 
 const getRegistrants = (tournamentID:Number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/${tournamentID}/registrants`, {
+  .then((idToken:any) => fetch(`${baseURL}/${tournamentID}/registrants`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json());
+  .then((response:any) => response.json());
 
 const getCompleted = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/user/${userID}/completed`, {
+  .then((idToken:any) => fetch(`${baseURL}/user/${userID}/completed`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json())
-  .then((data) => data.map((item: CompletedTournament) => ({
+  .then((response:any) => response.json())
+  .then((data:any) => data.map((item: CompletedTournament) => ({
     id: item.tournamentID,
     name: item.name,
     description: item.description,
@@ -118,44 +118,44 @@ const getCompleted = (userID:number) => SecurityService.authorizationToken()
   })));
 
 const getAvailabilityForATournament = (tournamentID: Number, userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/${tournamentID}/availabilities/${userID}`, {
+  .then((idToken:any) => fetch(`${baseURL}/${tournamentID}/availabilities/${userID}`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((resp) => handleErrors(resp))
-  .then((response) => response.json());
+  .then((resp:any) => handleErrors(resp))
+  .then((response:any) => response.json());
 
 const updateAvailabilities = (
   tournamentID: Number,
   userID:number,
   availabilities:Availability[],
 ) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/${tournamentID}/availabilities/${userID}`, {
+  .then((idToken:any) => fetch(`${baseURL}/${tournamentID}/availabilities/${userID}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${idToken}`,
     },
     body: JSON.stringify(availabilities),
-  })).then((resp) => handleErrors(resp));
+  })).then((resp:any) => handleErrors(resp));
 
 // eslint-disable-next-line max-len
 const getNumberOfCompletedTournaments = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/user/${userID}/number/completed`, {
+  .then((idToken:any) => fetch(`${baseURL}/user/${userID}/number/completed`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json());
+  .then((response:any) => response.json());
 
 const getNumberOfWonTournaments = (userID:number) => SecurityService.authorizationToken()
-  .then((idToken) => fetch(`${baseURL}/user/${userID}/number/won`, {
+  .then((idToken:any) => fetch(`${baseURL}/user/${userID}/number/won`, {
     headers: {
       Authorization: `Bearer ${idToken}`,
     },
   }))
-  .then((response) => response.json());
+  .then((response:any) => response.json());
 
 const TournamentService = {
   getAll,

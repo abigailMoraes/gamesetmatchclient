@@ -222,6 +222,7 @@ export default function ReactVirtualizedTable({ tournament }:CompletedTournament
       <VirtualizedTable
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}
+        onRowClick={() => {}}
         columns={[
           {
             width: 100,

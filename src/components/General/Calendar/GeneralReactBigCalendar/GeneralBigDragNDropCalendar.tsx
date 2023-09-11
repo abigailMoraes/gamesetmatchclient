@@ -32,7 +32,7 @@ function GeneralBigDragNDropCalendar({
   const localizer = momentLocalizer(moment);
 
   const eventPropGetter = React.useCallback(
-    (event) => ({
+    (event:any) => ({
       ...(event?.matchStatus === MatchStatus.BAD && {
         className: 'badMatch',
       }),

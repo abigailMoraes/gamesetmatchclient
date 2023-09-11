@@ -108,6 +108,10 @@ function ReviewSchedule({
   const changeEventDetails = React.useCallback(
     ({
       event, start, end,
+    }: {
+      event: any;
+      start: any;
+      end: any;
     }) => {
       setSnackbarOpen(false);
 
